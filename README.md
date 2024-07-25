@@ -4,4 +4,4 @@ Features:
 To view server on PC:
 * Download files
 * Go to Command Prompt and type in where files are located (Ex: cd Documents/DCA-Server-Frontend)
-* Do "npm install", wait for a few minutes, then do "npm start"
+* Do "npm install", wait until it's done loading, then do "npm start"
