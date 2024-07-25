@@ -49,32 +49,43 @@ const CoevolvingPairs = () => {
       textAlign: 'center',
       backgroundColor: '#d0d8e8',
       height: '100vh',
+      width: '100vw',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center'
+      alignItems: 'center',
+      overflow: 'hidden'
+    },
+    header: {
+      backgroundColor: '#4CAF50',
+      padding: '20px',
+      fontSize: '28px',
+      fontWeight: 'bold',
+      color: 'white',
+      width: '100%',
+      textAlign: 'center',
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      zIndex: 10
     },
     container: {
       backgroundColor: '#f8f8f8',
       padding: '20px',
-      width: '600px',
+      width: '90%',
+      maxWidth: '1200px',
       border: '1px solid #ccc',
       borderRadius: '10px',
       boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-      marginTop: '50px',
+      marginTop: '100px', // Adjust this to accommodate the fixed header
       textAlign: 'center',
-      position: 'relative'
-    },
-    header: {
-      backgroundColor: '#d0d8e8',
-      padding: '20px',
-      fontSize: '24px',
-      fontWeight: 'bold'
+      flexGrow: 1,
+      position: 'relative',
+      minHeight: 'calc(100vh - 100px)' // Ensure it takes full height minus header
     },
     tabs: {
       display: 'flex',
       borderBottom: '1px solid #ccc',
       marginBottom: '20px',
-      position: 'relative',
       justifyContent: 'center'
     },
     tab: {
@@ -84,13 +95,12 @@ const CoevolvingPairs = () => {
       textAlign: 'center',
       border: '2px solid #ccc',
       borderRadius: '5px',
-      backgroundColor: '#f8f8f8',
+      backgroundColor: '#e0e0e0',
       margin: '0 5px',
       transition: 'transform 0.3s ease, z-index 0.3s ease, background-color 0.3s ease',
       zIndex: (tab) => (tab === activeTab ? 1 : 0),
       transform: (tab) => (tab === activeTab ? 'translateY(-10px)' : 'translateY(0)'),
       boxShadow: (tab) => (tab === activeTab ? '0px 4px 8px rgba(0, 0, 0, 0.2)' : 'none'),
-      backgroundColor: (tab) => (tab === activeTab ? '#e0e0e0' : '#f8f8f8')
     },
     inputContainer: {
       marginBottom: '20px',
@@ -102,6 +112,7 @@ const CoevolvingPairs = () => {
       border: '1px solid black',
       borderRadius: '4px',
       borderColor: showError && !isValid ? 'red' : 'black',
+      boxSizing: 'border-box' // Include padding and border in the element's total width and height
     },
     invalidSequence: {
       color: 'red',
@@ -111,11 +122,13 @@ const CoevolvingPairs = () => {
     },
     button: {
       padding: '10px 20px',
+      marginRight: '10px',
       border: '1px solid #ccc',
       borderRadius: '4px',
       cursor: 'pointer',
-      backgroundColor: '#f8f8f8',
-      marginTop: '10px'
+      backgroundColor: '#e0e0e0',
+      marginTop: '10px',
+      transition: 'background-color 0.3s ease',
     },
     submitButton: {
       backgroundColor: '#4CAF50',
@@ -167,8 +180,7 @@ const CoevolvingPairs = () => {
               ...styles.tab,
               transform: styles.tab.transform('Tab1'),
               zIndex: styles.tab.zIndex('Tab1'),
-              boxShadow: styles.tab.boxShadow('Tab1'),
-              backgroundColor: styles.tab.backgroundColor('Tab1')
+              boxShadow: styles.tab.boxShadow('Tab1')
             }}
             onClick={() => handleTabClick('Tab1')}
           >
@@ -179,8 +191,7 @@ const CoevolvingPairs = () => {
               ...styles.tab,
               transform: styles.tab.transform('Tab2'),
               zIndex: styles.tab.zIndex('Tab2'),
-              boxShadow: styles.tab.boxShadow('Tab2'),
-              backgroundColor: styles.tab.backgroundColor('Tab2')
+              boxShadow: styles.tab.boxShadow('Tab2')
             }}
             onClick={() => handleTabClick('Tab2')}
           >
@@ -225,8 +236,7 @@ const CoevolvingPairs = () => {
           <div style={styles.settingsMenu}>
             <div style={styles.settingsOption}>Option 1</div>
             <div style={styles.settingsOption}>Option 2</div>
-            <div style={styles.settingsOption}>Option 3</div>
-            <div style={styles.settingsOptionLast}>Option 4</div>
+            <div style={styles.settingsOptionLast}>Option 3</div>
           </div>
         )}
       </div>

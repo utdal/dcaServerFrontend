@@ -9,36 +9,40 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <header style={{ backgroundColor: '#282c34', color: 'white', padding: '20px', textAlign: 'center', minHeight: '100px' }}>
-          <h1>DCA Server</h1>
-        </header>
-        <main>
-          <section className="web-servers">
-            <h2>Web Servers</h2>
-            <hr />
-            <div className="server-cards">
-              <Tile
-                link="/coevolving-pairs"
-                image="path/to/your/image1.jpg"
-                title="EV Coupling"
-                description="EV Coupling Information"
-              />
-              <Tile
-                link="/coevolving-pairs-results"
-                image="path/to/your/image2.jpg"
-                title="EV Complex"
-                description="EV Complex Information"
-              />
-            </div>
-          </section>
-          <Routes>
-            <Route path="/coevolving-pairs" element={<CoevolvingPairs />} />
-            <Route path="/coevolving-pairs-results" element={<CoevolvingPairsResults />} />
-          </Routes>
-        </main>
-        <footer>
-          <p>Designed by Nicholas Nguyen</p>
-        </footer>
+        <Routes>
+          <Route path="/coevolving-pairs" element={<CoevolvingPairs />} />
+          <Route path="/coevolving-pairs-results" element={<CoevolvingPairsResults />} />
+          <Route path="/" element={
+            <>
+              <header style={{ backgroundColor: '#282c34', color: 'white', padding: '20px', textAlign: 'center', minHeight: '100px' }}>
+                <h1>DCA Server</h1>
+              </header>
+              <main>
+                <section className="web-servers">
+                  <h2>Web Servers</h2>
+                  <hr />
+                  <div className="server-cards">
+                    <Tile
+                      link="/coevolving-pairs"
+                      image="path/to/your/image1.jpg"
+                      title="EV Coupling"
+                      description="EV Coupling Information"
+                    />
+                    <Tile
+                      link="/coevolving-pairs-results"
+                      image="path/to/your/image2.jpg"
+                      title="EV Complex"
+                      description="EV Complex Information"
+                    />
+                  </div>
+                </section>
+              </main>
+              <footer>
+                <p>Designed by Nicholas Nguyen</p>
+              </footer>
+            </>
+          } />
+        </Routes>
       </div>
     </BrowserRouter>
   );
