@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import HomeButton from '../components/HomeButton';
 
-const CoevolvingPairs = () => {
+const LDL = () => {
   const [inputValue, setInputValue] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -179,7 +179,7 @@ const CoevolvingPairs = () => {
     <div style={styles.app}>
       <div style={styles.header}>
         <HomeButton />
-        <span style={{ flex: 1, textAlign: 'center' }}>Coevolving Pairs</span>
+        <span style={{ flex: 1, textAlign: 'center' }}>Latent Generative Landscape Generation</span>
       </div>
       <div style={styles.container}>
         <div style={styles.tabs}>
@@ -247,4 +247,4 @@ const CoevolvingPairs = () => {
   );
 };
 
-export default CoevolvingPairs;
+export default LDL;

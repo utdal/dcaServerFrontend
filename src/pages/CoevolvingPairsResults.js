@@ -1,4 +1,5 @@
 import React from 'react';
+import HomeButton from '../components/HomeButton';
 
 const CoevolvingPairsResults = () => {
     const results = {
@@ -12,17 +13,28 @@ const CoevolvingPairsResults = () => {
             backgroundColor: '#e0e0e0',
             minHeight: '100vh',
             padding: '20px',
+            paddingTop: '80px', // Add padding top to account for the fixed header
         },
         header: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            backgroundColor: '#282c34',
+            padding: '20px',
             fontSize: '28px',
-            color: '#333',
-            marginBottom: '20px',
+            fontWeight: 'bold',
+            color: 'white',
+            width: '100%',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            zIndex: 10,
         },
         resultsSection: {
             display: 'flex',
-            justifyContent: 'space-around',  // Space out the sections evenly
-            flexWrap: 'wrap',                // Allow wrapping if there's not enough space
-            gap: '20px',                     // Gap between sections
+            justifyContent: 'space-around',
+            flexWrap: 'wrap',
+            gap: '20px',
             maxWidth: '1200px',
             margin: '0 auto',
         },
@@ -31,9 +43,9 @@ const CoevolvingPairsResults = () => {
             padding: '15px',
             borderRadius: '8px',
             boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-            flex: '1 1 calc(50% - 40px)',  // Flex-grow, flex-shrink, and flex-basis for responsive layout
-            minWidth: '300px',             // Minimum width for each section
-            maxWidth: '500px',             // Maximum width for each section
+            flex: '1 1 calc(50% - 40px)',
+            minWidth: '300px',
+            maxWidth: '500px',
         },
         heading: {
             fontSize: '22px',
@@ -48,7 +60,10 @@ const CoevolvingPairsResults = () => {
 
     return (
         <div style={styles.container}>
-            <h1 style={styles.header}>Coevolving Pairs Results</h1>
+            <div style={styles.header}>
+                <HomeButton />
+                <span style={{ flex: 1, textAlign: 'center' }}>EVCouplings Results</span>
+            </div>
             <div style={styles.resultsSection}>
                 <div style={styles.section}>
                     <h2 style={styles.heading}>Contact Map</h2>

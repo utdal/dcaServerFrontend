@@ -1,9 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';  // Import Link from react-router-dom
 
 const Tile = ({ title, description, link }) => {
   return (
     <div className="server-card">
-      <a href={link} target="_blank" rel="noopener noreferrer" className="server-card-link">
+      <Link to={link} className="server-card-link">
         <div className="flip-card">
           <div className="flip-card-inner">
             <div className="flip-card-front">
@@ -15,7 +16,7 @@ const Tile = ({ title, description, link }) => {
             </div>
           </div>
         </div>
-      </a>
+      </Link>
     </div>
   );
 };
