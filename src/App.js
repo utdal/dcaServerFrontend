@@ -60,7 +60,6 @@ function App() {
                   </section>
                 </main>
 
-                {/* Include Font Awesome CDN in your HTML head if not already included */}
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
                 <footer>
