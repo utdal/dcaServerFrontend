@@ -6,13 +6,22 @@
 }
 
 .App-header {
-  background-color: #f0f4fa;
+  background-color: #282c34;
   padding: 20px;
-  border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 10;
 }
 
-.App-header h1 {
+.header-title {
   margin: 0;
+  font-size: 28px;
+  font-weight: bold;
 }
 
 nav ul {
@@ -34,6 +43,7 @@ nav li.bold {
 main {
   flex: 1;
   padding: 20px;
+  padding-top: 80px; 
 }
 
 .web-servers {
@@ -93,7 +103,7 @@ main {
   position: absolute;
   width: 100%;
   height: 100%;
-  -webkit-backface-visibility: hidden; /* Safari */
+  -webkit-backface-visibility: hidden; 
   backface-visibility: hidden;
   display: flex;
   flex-direction: column;
@@ -107,9 +117,15 @@ main {
 }
 
 .flip-card-back {
-  background-color: #2980b9;
+  background-color: #1e7f4f;
   color: white;
   transform: rotateY(180deg);
+}
+
+.flip-card-back p {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 10px;
 }
 
 .server-image {
@@ -191,7 +207,6 @@ a {
   color: inherit;
 }
 
-/* Hide header and footer when displaying CoevolvingPairs */
 .hide-header-footer {
   display: none;
 }

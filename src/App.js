@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import CoevolvingPairs from './pages/CoevolvingPairs';
 import LDL from './pages/LDL';
+import Introvid from './pages/Introvid';
+import Bioguide from './pages/Bioguide';
 import CoevolvingPairsResults from './pages/CoevolvingPairsResults';
 import Tile from './components/Tile';
 import HomeButton from './components/HomeButton';
@@ -15,6 +17,8 @@ function App() {
           <Route path="/coevolving-pairs" element={<CoevolvingPairs />} />
           <Route path="/coevolving-pairs-results" element={<CoevolvingPairsResults />} />
           <Route path='/LDL' element={<LDL />} />
+          <Route path="/introductory-video" element={<Introvid />} />
+          <Route path="/guide-for-biologists" element={<Bioguide />} />
           <Route 
             path="/" 
             element={
@@ -33,7 +37,7 @@ function App() {
                   <HomeButton />
                   <h1 style={{ flex: 1, textAlign: 'center', margin: 0 }}>DCA Server</h1>
                 </header>
-                <main>
+                <main style={{ paddingBottom: '100px' }}>
                   <section className="web-servers">
                     <h2>DCA Tools</h2>
                     <hr />
@@ -55,6 +59,25 @@ function App() {
                         image="path/to/your/image3.jpg"
                         title="Latent Generative Landscape"
                         description="Models complex dependencies in an MSA by mapping high-dimensional structures to interpretable forms"
+                      />
+                    </div>
+                  </section>
+                  
+                  <section className="web-servers">
+                    <h2>Tutorials</h2>
+                    <hr />
+                    <div className="server-cards">
+                      <Tile
+                        link="/introductory-video"
+                        image="path/to/your/image4.jpg"
+                        title="Introductory video"
+                        description="Watch our introductory video"
+                      />
+                      <Tile
+                        link="/guide-for-biologists"
+                        image="path/to/your/image5.jpg"
+                        title="Guide for Biologists"
+                        description="Comprehensive guide for biologists"
                       />
                     </div>
                   </section>
