@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import HomeButton from '../components/HomeButton';
 
 const CoevolvingPairs = () => {
@@ -44,6 +44,10 @@ const CoevolvingPairs = () => {
       console.log('Submitted:', inputValue);
       setTimeout(() => setIsSubmitting(false), 300);
     }
+  };
+
+  const toggleMenu = () => {
+    setShowMenu((prev) => !prev);
   };
 
   const styles = {
@@ -138,7 +142,7 @@ const CoevolvingPairs = () => {
       transition: 'background-color 0.3s ease',
     },
     submitButton: {
-      backgroundColor: '#4CAF50',
+      backgroundColor: '#87CEEB',
       color: 'white',
       cursor: isValid ? 'pointer' : 'not-allowed',
       opacity: isValid ? 1 : 0.5,
@@ -149,7 +153,6 @@ const CoevolvingPairs = () => {
       boxShadow: isSubmitting ? '0px 2px 4px rgba(0, 0, 0, 0.5)' : '0px 4px 8px rgba(0, 0, 0, 0.2)',
       transform: isSubmitting ? 'scale(0.98)' : 'scale(1)',
       transition: 'transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ease',
-      backgroundColor: isSubmitting ? '#45a049' : '#4CAF50',
     },
     menu: {
       marginTop: '10px',
@@ -163,6 +166,8 @@ const CoevolvingPairs = () => {
       backgroundColor: '#e0e0e0',
       width: '100%',
       boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
+      maxHeight: '300px', // Adjust height as needed
+      overflowY: 'auto', // Scroll if content overflows
     },
     settingsOption: {
       padding: '10px',
@@ -173,13 +178,22 @@ const CoevolvingPairs = () => {
       padding: '10px',
       cursor: 'pointer',
     },
+    navigationButton: {
+      padding: '10px 20px',
+      margin: '10px', // Added margin for spacing
+      border: '1px solid #ccc',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      backgroundColor: '#e0e0e0',
+      transition: 'background-color 0.3s ease',
+    },
   };
 
   return (
     <div style={styles.app}>
       <div style={styles.header}>
         <HomeButton />
-        <span style={{ flex: 1, textAlign: 'center' }}>Coevolving Pairs</span>
+        <span style={{ flex: 1, textAlign: 'center' }}>Run MSA</span>
       </div>
       <div style={styles.container}>
         <div style={styles.tabs}>
@@ -227,17 +241,40 @@ const CoevolvingPairs = () => {
             >
               {isSubmitting ? 'Submitting...' : 'Submit'}
             </button>
+            <Link to="/pages/LoadingPage">
+              <button style={styles.navigationButton}>
+                Go to Loading Page
+              </button>
+            </Link>
+            <Link to="/404Page">
+              <button style={styles.navigationButton}>
+                Go to 404 Page
+              </button>
+            </Link>
           </>
         )}
         {activeTab === 'Tab2' && (
           <div style={styles.settingsMenu}>
-            <div style={styles.settingsOption} onClick={() => setShowMenu(!showMenu)}>
-              Settings Option 1
+            <div
+              style={styles.settingsOption}
+              onClick={toggleMenu}
+            >
+              Automatically Run MSA-DCA and Save All Data
             </div>
             {showMenu && (
               <div>
-                <div style={styles.settingsOption}>Settings Sub-Option 1</div>
-                <div style={styles.settingsOptionLast}>Settings Sub-Option 2</div>
+                <div style={styles.settingsOption}>
+                  <input type="checkbox" id="msaMatrix" name="msaMatrix" />
+                  <label htmlFor="msaMatrix">MSA Matrix</label>
+                </div>
+                <div style={styles.settingsOption}>
+                  <input type="checkbox" id="diPairs" name="diPairs" />
+                  <label htmlFor="diPairs">DI Pairs</label>
+                </div>
+                <div style={styles.settingsOptionLast}>
+                  <input type="checkbox" id="dcaMatrix" name="dcaMatrix" />
+                  <label htmlFor="dcaMatrix">DCA Matrix</label>
+                </div>
               </div>
             )}
           </div>

@@ -1,5 +1,7 @@
 import React from 'react';
 import HomeButton from '../components/HomeButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 const CoevolvingPairsResults = () => {
     const results = {
@@ -13,7 +15,8 @@ const CoevolvingPairsResults = () => {
             backgroundColor: '#e0e0e0',
             minHeight: '100vh',
             padding: '20px',
-            paddingTop: '80px', // Add padding top to account for the fixed header
+            paddingTop: '120px', // Increased padding top to accommodate the header and button
+            position: 'relative', // Added for positioning the button
         },
         header: {
             display: 'flex',
@@ -56,10 +59,34 @@ const CoevolvingPairsResults = () => {
             fontSize: '16px',
             color: '#666',
         },
+        downloadButton: {
+            position: 'fixed',
+            top: '80px', // Adjusted position to ensure it's not covered by the header
+            right: '20px',
+            padding: '15px', // Increased padding for a slightly larger button
+            backgroundColor: '#ccc', // Grey color
+            color: '#333',
+            border: 'none',
+            borderRadius: '8px', // Slightly larger border radius for a smoother look
+            cursor: 'pointer',
+            fontSize: '24px', // Increased font size for better visibility
+            transition: 'background-color 0.3s ease',
+            zIndex: 20,
+        },
+        downloadButtonHover: {
+            backgroundColor: '#aaa', // Darker grey on hover
+        }
     };
 
     return (
         <div style={styles.container}>
+            <button
+                style={styles.downloadButton}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = styles.downloadButtonHover.backgroundColor}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = styles.downloadButton.backgroundColor}
+            >
+                <FontAwesomeIcon icon={faArrowDown} /> {/* Font Awesome download arrow */}
+            </button>
             <div style={styles.header}>
                 <HomeButton />
                 <span style={{ flex: 1, textAlign: 'center' }}>EVCouplings Results</span>
