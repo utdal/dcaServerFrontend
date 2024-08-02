@@ -5,7 +5,9 @@ import LDL from './pages/LDL';
 import Introvid from './pages/Introvid';
 import Bioguide from './pages/Bioguide';
 import CoevolvingPairsResults from './pages/CoevolvingPairsResults';
+import LoadingPage from './pages/LoadingPage'; // Import the LoadingPage component correctly
 import Tile from './components/Tile';
+import ResultsPage from './pages/ResultsPage';
 import HomeButton from './components/HomeButton';
 import './App.css';
 
@@ -16,22 +18,24 @@ function App() {
         <Routes>
           <Route path="/coevolving-pairs" element={<CoevolvingPairs />} />
           <Route path="/coevolving-pairs-results" element={<CoevolvingPairsResults />} />
-          <Route path="/LDL" element={<LDL />} />
+          <Route path='/LDL' element={<LDL />} />
           <Route path="/introductory-video" element={<Introvid />} />
+          <Route path="/results" element={<ResultsPage />} />
           <Route path="/guide-for-biologists" element={<Bioguide />} />
-          <Route
-            path="/"
+          <Route path="/loading" element={<LoadingPage />} />
+          <Route 
+            path="/" 
             element={
               <>
-                <header
-                  style={{
-                    backgroundColor: '#282c34',
-                    color: 'white',
-                    padding: '20px',
-                    textAlign: 'center',
-                    minHeight: '100px',
-                    display: 'flex',
-                    alignItems: 'center'
+                <header 
+                  style={{ 
+                    backgroundColor: '#282c34', 
+                    color: 'white', 
+                    padding: '20px', 
+                    textAlign: 'center', 
+                    minHeight: '100px', 
+                    display: 'flex', 
+                    alignItems: 'center' 
                   }}
                 >
                   <HomeButton />
@@ -45,14 +49,14 @@ function App() {
                       <Tile
                         link="/coevolving-pairs"
                         image="path/to/your/image1.jpg"
-                        title="Run MSA"
-                        description="Multiple Sequence Alignment for Relationship Investigation"
+                        title="EV Coupling"
+                        description="EV Coupling Information"
                       />
                       <Tile
                         link="/coevolving-pairs-results"
                         image="path/to/your/image2.jpg"
-                        title="DCA Results"
-                        description="See the Results of Your DCA Here"
+                        title="EV Complex"
+                        description="EV Complex Information"
                       />
                       <Tile
                         link="/LDL"
@@ -62,7 +66,7 @@ function App() {
                       />
                     </div>
                   </section>
-
+                  
                   <section className="web-servers">
                     <h2>Tutorials</h2>
                     <hr />
@@ -93,15 +97,14 @@ function App() {
                     <a href="mailto:insert@gmail.com">
                       <i className="fas fa-envelope"></i> insert@gmail.com
                     </a>
-                    <a href="https://morcoslaboratory.org/" target="_blank" rel="noopener noreferrer">
+                    <a href="https://morcoslaboratory.org/" target="_blank">
                       <i className="fas fa-info-circle"></i> More Information
                     </a>
                   </div>
                 </footer>
               </>
-            }
+            } 
           />
-          <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
       </div>
     </BrowserRouter>
@@ -109,6 +112,3 @@ function App() {
 }
 
 export default App;
-
-
-//Ideas: reformat to look like eliksr, add options for MSA or DI generation, create template MSA results page, create 404 page, think about IDs?   

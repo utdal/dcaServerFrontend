@@ -241,7 +241,7 @@ const CoevolvingPairs = () => {
             >
               {isSubmitting ? 'Submitting...' : 'Submit'}
             </button>
-            <Link to="/pages/LoadingPage">
+            <Link to="/loading">
               <button style={styles.navigationButton}>
                 Go to Loading Page
               </button>
