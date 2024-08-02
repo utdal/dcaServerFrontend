@@ -15,8 +15,8 @@ const CoevolvingPairsResults = () => {
             backgroundColor: '#e0e0e0',
             minHeight: '100vh',
             padding: '20px',
-            paddingTop: '120px', // Increased padding top to accommodate the header and button
-            position: 'relative', // Added for positioning the button
+            paddingTop: '180px',
+            position: 'relative',
         },
         header: {
             display: 'flex',
@@ -32,6 +32,17 @@ const CoevolvingPairsResults = () => {
             top: 0,
             left: 0,
             zIndex: 10,
+        },
+        topBar: {
+            backgroundColor: '#ccc',
+            color: '#333',
+            padding: '10px',
+            fontSize: '20px',
+            position: 'fixed',
+            top: '60px',
+            left: 0,
+            width: '100%',
+            zIndex: 15,
         },
         resultsSection: {
             display: 'flex',
@@ -61,22 +72,24 @@ const CoevolvingPairsResults = () => {
         },
         downloadButton: {
             position: 'fixed',
-            top: '80px', // Adjusted position to ensure it's not covered by the header
+            top: '120px', // Adjusted position to move the button down
             right: '20px',
-            padding: '15px', // Increased padding for a slightly larger button
-            backgroundColor: '#ccc', // Grey color
+            padding: '15px',
+            backgroundColor: '#ccc',
             color: '#333',
             border: 'none',
-            borderRadius: '8px', // Slightly larger border radius for a smoother look
+            borderRadius: '8px',
             cursor: 'pointer',
-            fontSize: '24px', // Increased font size for better visibility
+            fontSize: '24px',
             transition: 'background-color 0.3s ease',
             zIndex: 20,
         },
         downloadButtonHover: {
-            backgroundColor: '#aaa', // Darker grey on hover
+            backgroundColor: '#aaa',
         }
     };
+
+    const currentDate = new Date().toLocaleDateString();
 
     return (
         <div style={styles.container}>
@@ -85,11 +98,14 @@ const CoevolvingPairsResults = () => {
                 onMouseOver={(e) => e.currentTarget.style.backgroundColor = styles.downloadButtonHover.backgroundColor}
                 onMouseOut={(e) => e.currentTarget.style.backgroundColor = styles.downloadButton.backgroundColor}
             >
-                <FontAwesomeIcon icon={faArrowDown} /> {/* Font Awesome download arrow */}
+                <FontAwesomeIcon icon={faArrowDown} />
             </button>
             <div style={styles.header}>
                 <HomeButton />
                 <span style={{ flex: 1, textAlign: 'center' }}>EVCouplings Results</span>
+            </div>
+            <div style={styles.topBar}>
+                Task ({currentDate}) results
             </div>
             <div style={styles.resultsSection}>
                 <div style={styles.section}>
