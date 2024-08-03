@@ -9,6 +9,13 @@ const CoevolvingPairs = () => {
   const [activeTab, setActiveTab] = useState('Tab1');
   const [showError, setShowError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [advancedSearch, setAdvancedSearch] = useState({
+    contains: false,
+    startsWith: false,
+    endsWith: false,
+    matches: false,
+  });
 
   const validateInput = (value) => {
     return value.length >= 3;
@@ -48,6 +55,18 @@ const CoevolvingPairs = () => {
 
   const toggleMenu = () => {
     setShowMenu((prev) => !prev);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleAdvancedSearchChange = (event) => {
+    const { name, checked } = event.target;
+    setAdvancedSearch((prev) => ({
+      ...prev,
+      [name]: checked,
+    }));
   };
 
   const styles = {
@@ -187,6 +206,30 @@ const CoevolvingPairs = () => {
       backgroundColor: '#e0e0e0',
       transition: 'background-color 0.3s ease',
     },
+    searchContainer: {
+      marginTop: '20px',
+      width: '100%',
+    },
+    searchInput: {
+      width: '100%',
+      padding: '10px',
+      borderRadius: '4px',
+      border: '1px solid #ccc',
+      marginBottom: '10px',
+      marginLeft: '-10px',
+    },    
+    advancedSearchContainer: {
+      marginTop: '10px',
+      textAlign: 'left',
+    },
+    advancedSearchOption: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: '10px',
+    },
+    checkboxLabel: {
+      marginLeft: '10px',
+    },
   };
 
   return (
@@ -279,6 +322,57 @@ const CoevolvingPairs = () => {
             )}
           </div>
         )}
+        <div style={styles.searchContainer}>
+          <input
+            type="text"
+            style={styles.searchInput}
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Search..."
+          />
+          <div style={styles.advancedSearchContainer}>
+            <div style={styles.advancedSearchOption}>
+              <input
+                type="checkbox"
+                id="contains"
+                name="contains"
+                checked={advancedSearch.contains}
+                onChange={handleAdvancedSearchChange}
+              />
+              <label htmlFor="contains" style={styles.checkboxLabel}>Contains</label>
+            </div>
+            <div style={styles.advancedSearchOption}>
+              <input
+                type="checkbox"
+                id="startsWith"
+                name="startsWith"
+                checked={advancedSearch.startsWith}
+                onChange={handleAdvancedSearchChange}
+              />
+              <label htmlFor="startsWith" style={styles.checkboxLabel}>Starts with</label>
+            </div>
+            <div style={styles.advancedSearchOption}>
+              <input
+                type="checkbox"
+                id="endsWith"
+                name="endsWith"
+                checked={advancedSearch.endsWith}
+                onChange={handleAdvancedSearchChange}
+              />
+              <label htmlFor="endsWith" style={styles.checkboxLabel}>Ends with</label>
+            </div>
+            <div style={styles.advancedSearchOption}>
+              <input
+                type="checkbox"
+                id="matches"
+                name="matches"
+                checked={advancedSearch.matches}
+                onChange={handleAdvancedSearchChange}
+              />
+              <label htmlFor="matches" style={styles.checkboxLabel}>Matches</label>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
