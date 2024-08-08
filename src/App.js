@@ -49,8 +49,8 @@ function App() {
                       <Tile
                         link="/coevolving-pairs"
                         image="path/to/your/image1.jpg"
-                        title="EV Coupling"
-                        description="EV Coupling Information"
+                        title="Coevolving Pairs"
+                        description="Estimates possible protein structure using pairs of amino acids that tend to evolve together"
                       />
                       <Tile
                         link="/coevolving-pairs-results"

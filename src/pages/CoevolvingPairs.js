@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import React, { useState, useRef } from 'react';
 import HomeButton from '../components/HomeButton';
 
 const CoevolvingPairs = () => {
@@ -9,17 +8,12 @@ const CoevolvingPairs = () => {
   const [activeTab, setActiveTab] = useState('Tab1');
   const [showError, setShowError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [advancedSearch, setAdvancedSearch] = useState({
-    contains: false,
-    startsWith: false,
-    endsWith: false,
-    matches: false,
-  });
+  const [showExamplesMenu, setShowExamplesMenu] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const existingTab = useRef(null);
 
-  const validateInput = (value) => {
-    return value.length >= 3;
-  };
+  const validateInput = (value) => value.length >= 3;
 
   const handleInputChange = (event) => {
     const value = event.target.value;
@@ -29,8 +23,7 @@ const CoevolvingPairs = () => {
   };
 
   const handleBlur = () => {
-    const valid = validateInput(inputValue);
-    setIsValid(valid);
+    setIsValid(validateInput(inputValue));
     setShowError(true);
   };
 
@@ -38,218 +31,105 @@ const CoevolvingPairs = () => {
     setInputValue(example);
     setIsValid(true);
     setShowError(false);
-    setShowMenu(false);
+    setShowExamplesMenu(false);
   };
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
+  const handleTabClick = (tab) => setActiveTab(tab);
 
   const handleSubmitClick = () => {
     if (isValid) {
-      setIsSubmitting(true);
-      console.log('Submitted:', inputValue);
-      setTimeout(() => setIsSubmitting(false), 300);
+      setShowModal(true);
     }
   };
 
-  const toggleMenu = () => {
-    setShowMenu((prev) => !prev);
+  const handleSubmit = () => {
+    setShowModal(false);
+    setIsSubmitting(true);
+    console.log('Submitted:', inputValue);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setShowMessage(true);
+      setTimeout(() => setShowMessage(false), 2000); // Hide message after 2 seconds
+
+      // Handle tab opening or refreshing
+      const url = '/coevolving-pairs-results'; // Update this to the actual path you want to open
+      if (existingTab.current) {
+        existingTab.current.location.reload(); // Refresh the existing tab
+      } else {
+        existingTab.current = window.open(url, '_blank'); // Open a new tab
+      }
+    }, 300);
   };
 
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
+  const handleCancel = () => {
+    setShowModal(false);
   };
 
-  const handleAdvancedSearchChange = (event) => {
-    const { name, checked } = event.target;
-    setAdvancedSearch((prev) => ({
-      ...prev,
-      [name]: checked,
-    }));
+  const toggleMenu = () => setShowMenu((prev) => !prev);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type === 'text/plain') {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setInputValue(e.target.result);
+        setIsValid(validateInput(e.target.result));
+        setShowError(false);
+      };
+      reader.readAsText(file);
+    }
   };
 
   const styles = {
-    app: {
-      textAlign: 'center',
-      backgroundColor: '#d0d8e8',
-      height: '100vh',
-      width: '100vw',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      overflow: 'hidden',
-    },
-    header: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      backgroundColor: '#282c34',
-      padding: '20px',
-      fontSize: '28px',
-      fontWeight: 'bold',
-      color: 'white',
-      width: '100%',
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      zIndex: 10,
-    },
-    container: {
-      backgroundColor: '#f8f8f8',
-      padding: '20px',
-      width: '90%',
-      maxWidth: '1200px',
-      border: '1px solid #ccc',
-      borderRadius: '10px',
-      boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-      marginTop: '100px',
-      textAlign: 'center',
-      flexGrow: 1,
-      position: 'relative',
-      minHeight: 'calc(100vh - 100px)',
-    },
-    tabs: {
-      display: 'flex',
-      borderBottom: '1px solid #ccc',
-      marginBottom: '20px',
-      justifyContent: 'center',
-    },
-    tab: {
-      padding: '15px 25px',
-      cursor: 'pointer',
-      flex: 1,
-      textAlign: 'center',
-      border: '2px solid #ccc',
-      borderRadius: '5px',
-      backgroundColor: '#e0e0e0',
-      margin: '0 5px',
-      transition: 'transform 0.3s ease, z-index 0.3s ease, background-color 0.3s ease',
-    },
-    activeTab: {
-      transform: 'translateY(-10px)',
-      zIndex: 1,
-      boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-      backgroundColor: '#d0d0d0',
-    },
-    inputContainer: {
-      marginBottom: '20px',
-    },
-    inputTextBox: {
-      width: '100%',
-      height: '100px',
-      padding: '10px',
-      border: '1px solid black',
-      borderRadius: '4px',
-      borderColor: showError && !isValid ? 'red' : 'black',
-      boxSizing: 'border-box',
-    },
-    invalidSequence: {
-      color: 'red',
-      fontWeight: 'bold',
-      marginTop: '10px',
-      display: showError && !isValid ? 'block' : 'none',
-    },
-    button: {
-      padding: '10px 20px',
-      marginRight: '10px',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      backgroundColor: '#e0e0e0',
-      marginTop: '10px',
-      transition: 'background-color 0.3s ease',
-    },
-    submitButton: {
-      backgroundColor: '#87CEEB',
-      color: 'white',
-      cursor: isValid ? 'pointer' : 'not-allowed',
-      opacity: isValid ? 1 : 0.5,
-      marginTop: '20px',
-      padding: '10px 20px',
-      border: 'none',
-      borderRadius: '8px',
-      boxShadow: isSubmitting ? '0px 2px 4px rgba(0, 0, 0, 0.5)' : '0px 4px 8px rgba(0, 0, 0, 0.2)',
-      transform: isSubmitting ? 'scale(0.98)' : 'scale(1)',
-      transition: 'transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ease',
-    },
-    menu: {
-      marginTop: '10px',
-    },
-    settingsMenu: {
-      marginTop: '20px',
-      textAlign: 'left',
-      padding: '10px',
-      border: '1px solid #ccc',
-      borderRadius: '5px',
-      backgroundColor: '#e0e0e0',
-      width: '100%',
-      boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-      maxHeight: '300px', // Adjust height as needed
-      overflowY: 'auto', // Scroll if content overflows
-    },
-    settingsOption: {
-      padding: '10px',
-      cursor: 'pointer',
-      borderBottom: '1px solid #ccc',
-    },
-    settingsOptionLast: {
-      padding: '10px',
-      cursor: 'pointer',
-    },
-    navigationButton: {
-      padding: '10px 20px',
-      margin: '10px', // Added margin for spacing
-      border: '1px solid #ccc',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      backgroundColor: '#e0e0e0',
-      transition: 'background-color 0.3s ease',
-    },
-    searchContainer: {
-      marginTop: '20px',
-      width: '100%',
-    },
-    searchInput: {
-      width: '100%',
-      padding: '10px',
-      borderRadius: '4px',
-      border: '1px solid #ccc',
-      marginBottom: '10px',
-      marginLeft: '-10px',
-    },    
-    advancedSearchContainer: {
-      marginTop: '10px',
-      textAlign: 'left',
-    },
-    advancedSearchOption: {
-      display: 'flex',
-      alignItems: 'center',
-      marginBottom: '10px',
-    },
-    checkboxLabel: {
-      marginLeft: '10px',
-    },
+    app: { textAlign: 'center', backgroundColor: '#d0d8e8', height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', overflow: 'auto' },
+    header: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#282c34', padding: '20px', fontSize: '28px', fontWeight: 'bold', color: 'white', width: '100%', position: 'fixed', top: 0, left: 0, zIndex: 10 },
+    container: { backgroundColor: '#f8f8f8', padding: '20px', width: '90%', maxWidth: '1200px', border: '1px solid #ccc', borderRadius: '10px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', marginTop: '100px', textAlign: 'center', flexGrow: 1, position: 'relative', height: 'auto', minHeight: 'calc(100vh - 100px)' },
+    tabs: { display: 'flex', borderBottom: '1px solid #ccc', marginBottom: '20px', justifyContent: 'center' },
+    tab: { padding: '15px 25px', cursor: 'pointer', flex: 1, textAlign: 'center', border: '2px solid #ccc', borderRadius: '5px', backgroundColor: '#e0e0e0', margin: '0 5px', transition: 'transform 0.3s ease, z-index 0.3s ease, background-color 0.3s ease' },
+    activeTab: { transform: 'translateY(-10px)', zIndex: 1, boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)', backgroundColor: '#d0d0d0' },
+    inputContainer: { marginBottom: '20px' },
+    inputTextBox: { width: '100%', height: '100px', padding: '10px', border: '1px solid black', borderRadius: '4px', borderColor: showError && !isValid ? 'red' : 'black', boxSizing: 'border-box' },
+    invalidSequence: { color: 'red', fontWeight: 'bold', marginTop: '10px', display: showError && !isValid ? 'block' : 'none' },
+    button: { padding: '10px 20px', marginRight: '10px', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#e0e0e0', marginTop: '10px', transition: 'background-color 0.3s ease' },
+    submitButton: { backgroundColor: '#87CEEB', color: 'white', cursor: isValid ? 'pointer' : 'not-allowed', opacity: isValid ? 1 : 0.5, marginTop: '20px', padding: '10px 20px', border: 'none', borderRadius: '8px', boxShadow: isSubmitting ? '0px 2px 4px rgba(0, 0, 0, 0.5)' : '0px 4px 8px rgba(0, 0, 0, 0.2)', transform: isSubmitting ? 'scale(0.98)' : 'scale(1)', transition: 'transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ease' },
+    examplesMenu: { marginTop: '10px', position: 'absolute', backgroundColor: '#e0e0e0', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', padding: '10px', width: '200px', textAlign: 'left' },
+    examplesOption: { padding: '10px', cursor: 'pointer', borderBottom: '1px solid #ccc' },
+    examplesOptionLast: { padding: '10px', cursor: 'pointer' },
+    fileInput: { marginTop: '10px' },
+    settingsMenu: { marginTop: '20px', textAlign: 'left', padding: '10px', border: '1px solid #ccc', borderRadius: '5px', backgroundColor: '#e0e0e0', width: '100%', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', maxHeight: '300px', overflowY: 'auto' },
+    settingsOption: { padding: '10px', cursor: 'pointer', borderBottom: '1px solid #ccc' },
+    settingsOptionLast: { padding: '10px', cursor: 'pointer' },
+    modal: { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)', zIndex: 1000 },
+    modalOverlay: { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 999 },
+    modalButtons: { display: 'flex', justifyContent: 'space-between', marginTop: '20px' },
+    modalButton: { padding: '10px 20px', border: 'none', borderRadius: '4px', cursor: 'pointer' },
+    modalSubmitButton: { backgroundColor: '#87CEEB', color: 'white' },
+    modalCancelButton: { backgroundColor: '#e0e0e0' },
+    message: { 
+      position: 'fixed', 
+      bottom: '20px', 
+      right: '20px', 
+      padding: '10px', 
+      backgroundColor: '#d0f0c0', 
+      borderRadius: '5px', 
+      boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)', 
+      opacity: showMessage ? 1 : 0, 
+      transition: 'opacity 1s ease' 
+    }
   };
 
   return (
     <div style={styles.app}>
       <div style={styles.header}>
         <HomeButton />
-        <span style={{ flex: 1, textAlign: 'center' }}>Run MSA</span>
+        <span style={{ flex: 1, textAlign: 'center' }}>Coevolving Pairs</span>
       </div>
       <div style={styles.container}>
         <div style={styles.tabs}>
-          <div
-            style={activeTab === 'Tab1' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
-            onClick={() => handleTabClick('Tab1')}
-          >
+          <div style={activeTab === 'Tab1' ? { ...styles.tab, ...styles.activeTab } : styles.tab} onClick={() => handleTabClick('Tab1')}>
             Input
           </div>
-          <div
-            style={activeTab === 'Tab2' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
-            onClick={() => handleTabClick('Tab2')}
-          >
+          <div style={activeTab === 'Tab2' ? { ...styles.tab, ...styles.activeTab } : styles.tab} onClick={() => handleTabClick('Tab2')}>
             Settings
           </div>
         </div>
@@ -265,18 +145,24 @@ const CoevolvingPairs = () => {
               />
               <div style={styles.invalidSequence}>Invalid Sequence</div>
             </div>
+            <input
+              type="file"
+              accept=".txt"
+              onChange={handleFileChange}
+              style={styles.fileInput}
+            />
             <button
               style={styles.button}
-              onClick={() => handleExampleClick('Example 1')}
+              onClick={() => setShowExamplesMenu((prev) => !prev)}
             >
-              Example 1
+              Examples
             </button>
-            <button
-              style={styles.button}
-              onClick={() => handleExampleClick('Example 2')}
-            >
-              Example 2
-            </button>
+            {showExamplesMenu && (
+              <div style={styles.examplesMenu}>
+                <div style={styles.examplesOption} onClick={() => handleExampleClick('Example 1')}>Example 1</div>
+                <div style={styles.examplesOption} onClick={() => handleExampleClick('Example 2')}>Example 2</div>
+              </div>
+            )}
             <button
               style={styles.submitButton}
               onClick={handleSubmitClick}
@@ -284,24 +170,11 @@ const CoevolvingPairs = () => {
             >
               {isSubmitting ? 'Submitting...' : 'Submit'}
             </button>
-            <Link to="/loading">
-              <button style={styles.navigationButton}>
-                Go to Loading Page
-              </button>
-            </Link>
-            <Link to="/404Page">
-              <button style={styles.navigationButton}>
-                Go to 404 Page
-              </button>
-            </Link>
           </>
         )}
         {activeTab === 'Tab2' && (
           <div style={styles.settingsMenu}>
-            <div
-              style={styles.settingsOption}
-              onClick={toggleMenu}
-            >
+            <div style={styles.settingsOption} onClick={toggleMenu}>
               Automatically Run MSA-DCA and Save All Data
             </div>
             {showMenu && (
@@ -322,57 +195,27 @@ const CoevolvingPairs = () => {
             )}
           </div>
         )}
-        <div style={styles.searchContainer}>
-          <input
-            type="text"
-            style={styles.searchInput}
-            value={searchQuery}
-            onChange={handleSearchChange}
-            placeholder="Search..."
-          />
-          <div style={styles.advancedSearchContainer}>
-            <div style={styles.advancedSearchOption}>
-              <input
-                type="checkbox"
-                id="contains"
-                name="contains"
-                checked={advancedSearch.contains}
-                onChange={handleAdvancedSearchChange}
-              />
-              <label htmlFor="contains" style={styles.checkboxLabel}>Contains</label>
-            </div>
-            <div style={styles.advancedSearchOption}>
-              <input
-                type="checkbox"
-                id="startsWith"
-                name="startsWith"
-                checked={advancedSearch.startsWith}
-                onChange={handleAdvancedSearchChange}
-              />
-              <label htmlFor="startsWith" style={styles.checkboxLabel}>Starts with</label>
-            </div>
-            <div style={styles.advancedSearchOption}>
-              <input
-                type="checkbox"
-                id="endsWith"
-                name="endsWith"
-                checked={advancedSearch.endsWith}
-                onChange={handleAdvancedSearchChange}
-              />
-              <label htmlFor="endsWith" style={styles.checkboxLabel}>Ends with</label>
-            </div>
-            <div style={styles.advancedSearchOption}>
-              <input
-                type="checkbox"
-                id="matches"
-                name="matches"
-                checked={advancedSearch.matches}
-                onChange={handleAdvancedSearchChange}
-              />
-              <label htmlFor="matches" style={styles.checkboxLabel}>Matches</label>
+      </div>
+
+      {showModal && (
+        <>
+          <div style={styles.modalOverlay} onClick={handleCancel}></div>
+          <div style={styles.modal}>
+            <div>Are you sure you want to submit?</div>
+            <div style={styles.modalButtons}>
+              <button style={{ ...styles.modalButton, ...styles.modalSubmitButton }} onClick={handleSubmit}>
+                Submit
+              </button>
+              <button style={{ ...styles.modalButton, ...styles.modalCancelButton }} onClick={handleCancel}>
+                Cancel
+              </button>
             </div>
           </div>
-        </div>
+        </>
+      )}
+
+      <div style={styles.message}>
+        Your Task was Submitted!
       </div>
     </div>
   );
