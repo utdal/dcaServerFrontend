@@ -17,9 +17,11 @@ const CoevolvingPairs = () => {
 
   const handleInputChange = (event) => {
     const value = event.target.value;
-    setInputValue(value);
-    setIsValid(validateInput(value));
-    setShowError(false);
+    if (value.length <= 700) {
+      setInputValue(value);
+      setIsValid(validateInput(value));
+      setShowError(false);
+    }
   };
 
   const handleBlur = () => {
@@ -28,10 +30,12 @@ const CoevolvingPairs = () => {
   };
 
   const handleExampleClick = (example) => {
-    setInputValue(example);
-    setIsValid(true);
-    setShowError(false);
-    setShowExamplesMenu(false);
+    if (example.length <= 700) {
+      setInputValue(example);
+      setIsValid(true);
+      setShowError(false);
+      setShowExamplesMenu(false);
+    }
   };
 
   const handleTabClick = (tab) => setActiveTab(tab);
@@ -72,9 +76,14 @@ const CoevolvingPairs = () => {
     if (file && file.type === 'text/plain') {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setInputValue(e.target.result);
-        setIsValid(validateInput(e.target.result));
-        setShowError(false);
+        const text = e.target.result;
+        if (text.length <= 700) {
+          setInputValue(text);
+          setIsValid(validateInput(text));
+          setShowError(false);
+        } else {
+          alert("File content exceeds the 700 character limit.");
+        }
       };
       reader.readAsText(file);
     }
@@ -143,7 +152,7 @@ const CoevolvingPairs = () => {
                 onBlur={handleBlur}
                 placeholder="Enter sequence"
               />
-              <div style={styles.invalidSequence}>Invalid Sequence</div>
+              {showError && !isValid && <div style={styles.invalidSequence}>Please enter a valid sequence (at least 3 characters)</div>}
             </div>
             <input
               type="file"
