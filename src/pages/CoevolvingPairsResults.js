@@ -72,21 +72,26 @@ const CoevolvingPairsResults = () => {
         },
         downloadButton: {
             position: 'fixed',
-            top: '120px', // Adjusted position to move the button down
+            top: '120px',
             right: '20px',
-            padding: '15px',
-            backgroundColor: '#ccc',
-            color: '#333',
+            padding: '15px 20px',
+            backgroundColor: '#4CAF50', // Green color to make it more visible
+            color: '#fff',
             border: 'none',
-            borderRadius: '8px',
+            borderRadius: '50px',
             cursor: 'pointer',
-            fontSize: '24px',
-            transition: 'background-color 0.3s ease',
+            fontSize: '20px',
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)', // Add shadow for a 3D effect
+            transition: 'background-color 0.3s ease, box-shadow 0.3s ease',
             zIndex: 20,
         },
         downloadButtonHover: {
-            backgroundColor: '#aaa',
-        }
+            backgroundColor: '#45A049',
+            boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.3)',
+        },
+        icon: {
+            marginRight: '10px',
+        },
     };
 
     const currentDate = new Date().toLocaleDateString();
@@ -95,10 +100,17 @@ const CoevolvingPairsResults = () => {
         <div style={styles.container}>
             <button
                 style={styles.downloadButton}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = styles.downloadButtonHover.backgroundColor}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = styles.downloadButton.backgroundColor}
+                onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = styles.downloadButtonHover.backgroundColor;
+                    e.currentTarget.style.boxShadow = styles.downloadButtonHover.boxShadow;
+                }}
+                onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = styles.downloadButton.backgroundColor;
+                    e.currentTarget.style.boxShadow = styles.downloadButton.boxShadow;
+                }}
             >
-                <FontAwesomeIcon icon={faArrowDown} />
+                <FontAwesomeIcon icon={faArrowDown} style={styles.icon} />
+                Download Results
             </button>
             <div style={styles.header}>
                 <HomeButton />
