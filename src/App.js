@@ -52,13 +52,13 @@ function App() {
                       <Tile
                         link="/coevolving-pairs"
                         image="path/to/your/image1.jpg"
-                        title="Coevolving Pairs"
+                        title="MSA-DCA"
                         description="Estimates possible protein structure using pairs of amino acids that tend to evolve together"
                       />
                       <Tile
                         link="/coevolving-pairs-results"
                         image="path/to/your/image2.jpg"
-                        title="EV Complex"
+                        title="DCA Results"
                         description="EV Complex Information"
                       />
                       <Tile
