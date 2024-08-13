@@ -1,13 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import HomeButton from '../components/HomeButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { useLocation } from 'react-router-dom';
+import ContactMap from '../components/ContactMap';
+import DiTable from '../components/DiTable';
+import { Task, DCA } from '../backend/api';
 
 const CoevolvingPairsResults = () => {
-    const results = {
-        contactMap: 'Contact Map data here',
-        diPairs: 'DI Pairs data here'
-    };
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [dca, setDca] = useState(null);
+    const [selectedDi, setSelectedDi] = useState(null);
+
+
+    const query = new URLSearchParams(useLocation().search);
+    const task_id = query.get('task_id');
+
+    useEffect(() => {
+        async function fetchDCA() {
+            setLoading(true);
+            try {
+                const task = await Task.fetch(task_id);
+                if (!task.successful) {
+                    if (task.state === 'FAILURE') {
+                        setError('Task failed: ' + task.message);
+                    } else {
+                        let msg = 'Task has not completed.';
+                        msg += ' State: ' + task.state;
+                        msg += ' ' + task.percent + '%';
+                        if (task.message) msg += ' (' + task.message + ')';
+                        setError(msg)
+                    }
+                    return;
+                }
+
+                setDca(await DCA.fetch(task_id));
+            
+            } catch (error) {
+                setError('Error: ' + error.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchDCA();
+    }, [task_id]);
 
     const styles = {
         container: {
@@ -117,17 +154,33 @@ const CoevolvingPairsResults = () => {
                 <span style={{ flex: 1, textAlign: 'center' }}>EVCouplings Results</span>
             </div>
             <div style={styles.topBar}>
-                Task ({currentDate}) results
+                Task ({task_id || ''}) results
             </div>
             <div style={styles.resultsSection}>
-                <div style={styles.section}>
-                    <h2 style={styles.heading}>Contact Map</h2>
-                    <div style={styles.content}>{results.contactMap}</div>
-                </div>
-                <div style={styles.section}>
-                    <h2 style={styles.heading}>DI Pairs</h2>
-                    <div style={styles.content}>{results.diPairs}</div>
-                </div>
+                {loading ? <>
+                    <p style={{ fontStyle: 'italic' }}>Loading...</p>
+                </> : (error ? <>
+                    <p style={{ color: 'maroon' }}>{error}</p>
+                </> : <>
+                    <div style={styles.section}>
+                        <h2 style={styles.heading}>Contact Map</h2>
+                        <div style={styles.content}>
+                            <ContactMap
+                                dca={dca}
+                                highlightPoint={selectedDi}
+                                onPointClick={setSelectedDi} />
+                        </div>
+                    </div>
+                    <div style={styles.section}>
+                        <h2 style={styles.heading}>DI Pairs</h2>
+                        <div style={styles.content}>
+                            <DiTable
+                                dca={dca}
+                                highlightRow={selectedDi}
+                                onRowClick={setSelectedDi} />
+                        </div>
+                    </div>
+                </>)}
             </div>
         </div>
     );
