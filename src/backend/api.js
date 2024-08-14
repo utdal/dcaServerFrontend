@@ -1,4 +1,4 @@
-const apiBaseUrl = 'http://18.213.103.176:8000/api/';
+const apiBaseUrl = '/api/';
 
 
 export class Task {
