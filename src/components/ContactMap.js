@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
 
 const ContactMap = ({ dca, highlightPoint = null, onPointClick = null }) => {
-    const [diCount, setDiCount] = useState(dca ? dca.seq_length * 1.5 : 50);
+    const [diCount, setDiCount] = useState(dca ? Math.floor(dca.seq_length * 1.5) : 50);
     const [plotData, setPlotData] = useState(null);
 
     useEffect(() => {
