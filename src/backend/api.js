@@ -130,3 +130,46 @@ export class DCA {
         });
     }
 }
+
+
+export async function generateMsa(seed, msaName) {
+    let data = {
+        seed: seed
+    };
+    if (msaName) data.msa_name = msaName;
+
+    const response = await fetch(apiBaseUrl + 'generate-msa/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+        throw new Error('Bad network response');
+    }
+
+    const result = await response.json();
+
+    return new Task(result);
+}
+
+
+export async function computeDca(msaId) {
+    const data = {
+        msa_id: msaId
+    };
+
+    const response = await fetch(apiBaseUrl + 'compute-dca/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+        throw new Error('Bad network response');
+    }
+
+    const result = await response.json();
+
+    return new Task(result);
+}
