@@ -23,19 +23,20 @@ const CoevolvingPairsResults = () => {
         async function fetchDCA() {
             setLoading(true);
             try {
-                const task = await Task.fetch(task_id);
-                if (!task.successful) {
-                    if (task.state === 'FAILURE') {
-                        setError('Task failed: ' + task.message);
-                    } else {
-                        let msg = 'Task has not completed.';
-                        msg += ' State: ' + task.state;
-                        msg += ' ' + task.percent + '%';
-                        if (task.message) msg += ' (' + task.message + ')';
-                        setError(msg)
-                    }
-                    return;
-                }
+                // Assume valid id, this should be comming from the tasks page
+                // const task = await Task.fetch(task_id);
+                // if (!task.successful) {
+                //     if (task.state === 'FAILURE') {
+                //         setError('Task failed: ' + task.message);
+                //     } else {
+                //         let msg = 'Task has not completed.';
+                //         msg += ' State: ' + task.state;
+                //         msg += ' ' + task.percent + '%';
+                //         if (task.message) msg += ' (' + task.message + ')';
+                //         setError(msg)
+                //     }
+                //     return;
+                // }
 
                 setDca(await DCA.fetch(task_id));
             

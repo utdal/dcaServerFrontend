@@ -9,6 +9,7 @@ import LoadingPage from './pages/LoadingPage';
 import Tile from './components/Tile';
 import ResultsPage from './pages/ResultsPage';
 import HomeButton from './components/HomeButton';
+import ViewTasks from './pages/ViewTasks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons'; // Import GitHub icon
 import { faAtom } from '@fortawesome/free-solid-svg-icons'; // Import molecule/atom icon
@@ -26,6 +27,7 @@ function App() {
           <Route path="/results" element={<ResultsPage />} />
           <Route path="/guide-for-biologists" element={<Bioguide />} />
           <Route path="/loading" element={<LoadingPage />} />
+          <Route path="/tasks" element={<ViewTasks />} />
           <Route 
             path="/" 
             element={

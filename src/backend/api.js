@@ -19,7 +19,7 @@ export class Task {
         const response = await fetch(apiBaseUrl + 'tasks/' + id + '/');
 
         if (!response.ok) {
-            if (response.status === 404) throw new Error('Task "' + id + '" not found');
+            if (response.status === 403) throw new Error('Task "' + id + '" not found');
             throw new Error('Bad network response');
         }
 
@@ -28,14 +28,38 @@ export class Task {
         return new Task(result);
     }
 
-    update() {
-        const updated = Task.fetch(this.id);
+    static async fetchAll(id) {
+        const response = await fetch(apiBaseUrl + 'tasks/');
+
+        if (!response.ok) {
+            if (response.status === 403) throw new Error('You must be logged in to view your tasks');
+            throw new Error('Bad network response');
+        }
+
+        const result = await response.json();
+
+        return result.map(t => new Task(t));
+    }
+
+    async update() {
+        // Nothing should change
+        if (this.state === 'SUCCESS' || this.state === 'FAILURE') return;
+
+        const updated = await Task.fetch(this.id);
         this.state = updated.state;
         this.time_started = updated.time_started;
         this.time_ended = updated.time_ended;
         this.message = updated.message;
         this.percent = this.percent;
         this.successful = updated.successful;
+    }
+
+    getNiceName() {
+        const nameMap = {
+            'api.tasks.compute_dca_task': 'Compute DCA Task',
+            'api.tasks.generate_msa_task': 'Generate MSA Task',
+        }
+        return nameMap[this.name] || this.name;
     }
 }
 
