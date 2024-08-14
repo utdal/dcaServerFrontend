@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import HomeButton from '../components/HomeButton';
+import { generateMsa, computeDca } from '../backend/api';
 
 const CoevolvingPairs = () => {
   const [inputValue, setInputValue] = useState('');
@@ -46,23 +47,28 @@ const CoevolvingPairs = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setShowModal(false);
     setIsSubmitting(true);
     console.log('Submitted:', inputValue);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setShowMessage(true);
-      setTimeout(() => setShowMessage(false), 2000); // Hide message after 2 seconds
+
+    const msaTask = await generateMsa(inputValue);
+    const dcaTask = await computeDca(msaTask.id);
+
+    const url = '/tasks?ids=' + msaTask.id + ',' + dcaTask.id;
+    window.open(url, '_blank');
+
+    setIsSubmitting(false);
+    setShowMessage(true);
+    setTimeout(() => setShowMessage(false), 2000); // Hide message after 2 seconds
 
       // Handle tab opening or refreshing
-      const url = '/coevolving-pairs-results'; // Update this to the actual path you want to open
-      if (existingTab.current) {
-        existingTab.current.location.reload(); // Refresh the existing tab
-      } else {
-        existingTab.current = window.open(url, '_blank'); // Open a new tab
-      }
-    }, 300);
+      // const url = '/coevolving-pairs-results'; // Update this to the actual path you want to open
+      // if (existingTab.current) {
+      //   existingTab.current.location.reload(); // Refresh the existing tab
+      // } else {
+      //   existingTab.current = window.open(url, '_blank'); // Open a new tab
+      // }
   };
 
   const handleCancel = () => {
@@ -170,6 +176,7 @@ const CoevolvingPairs = () => {
               <div style={styles.examplesMenu}>
                 <div style={styles.examplesOption} onClick={() => handleExampleClick('Example 1')}>Example 1</div>
                 <div style={styles.examplesOption} onClick={() => handleExampleClick('Example 2')}>Example 2</div>
+                <div style={styles.examplesOption} onClick={() => handleExampleClick('ATGCGTACGTAGCTAGCTAG2')}>ATGCGTACGTAGCTAGCTAG</div>
               </div>
             )}
             <button

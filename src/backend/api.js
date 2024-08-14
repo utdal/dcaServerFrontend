@@ -2,13 +2,13 @@ const apiBaseUrl = 'http://18.213.103.176:8000/api/';
 
 
 export class Task {
-    constructor({ id, user, state, name, time_started, time_ended, expires, message, percent, successful}) {
+    constructor({ id, user, state, name, time_started, time_ended, expires, message, percent, successful }) {
         this.id = id;
         this.user_id = user;
         this.state = state;
         this.name = name;
-        this.time_started = new Date(time_started);
-        this.time_ended = new Date(time_ended);
+        this.time_started = time_started ? new Date(time_started) : null;
+        this.time_ended = time_ended ? new Date(time_ended) : null;
         this.expires = new Date(expires);
         this.message = message;
         this.percent = percent;
@@ -19,7 +19,7 @@ export class Task {
         const response = await fetch(apiBaseUrl + 'tasks/' + id + '/');
 
         if (!response.ok) {
-            if (response.status === 404) throw new Error('Task "' + id + '" not found');
+            if (response.status === 403) throw new Error('Task "' + id + '" not found');
             throw new Error('Bad network response');
         }
 
@@ -28,14 +28,65 @@ export class Task {
         return new Task(result);
     }
 
-    update() {
-        const updated = Task.fetch(this.id);
+    static async fetchAll(id) {
+        const response = await fetch(apiBaseUrl + 'tasks/');
+
+        if (!response.ok) {
+            if (response.status === 403) throw new Error('You must be logged in to view your tasks');
+            throw new Error('Bad network response');
+        }
+
+        const result = await response.json();
+
+        return result.map(t => new Task(t));
+    }
+
+    async update() {
+        // Nothing should change
+        if (this.state === 'SUCCESS' || this.state === 'FAILURE') return;
+
+        const updated = await Task.fetch(this.id);
         this.state = updated.state;
         this.time_started = updated.time_started;
         this.time_ended = updated.time_ended;
         this.message = updated.message;
-        this.percent = this.percent;
+        this.percent = updated.percent;
         this.successful = updated.successful;
+    }
+
+    getNiceName() {
+        const nameMap = {
+            'api.tasks.compute_dca_task': 'Compute DCA Task',
+            'api.tasks.generate_msa_task': 'Generate MSA Task',
+        }
+        return nameMap[this.name] || this.name;
+    }
+}
+
+
+export class MSA {
+    constructor({ id, user, created, expires, fasta, depth, cols, quality }) {
+        this.id = id;
+        this.user_id = user;
+        this.created = new Date(created);
+        this.expires = new Date(expires);
+        this.fasta = fasta;
+        this.depth = depth;
+        this.cols = cols;
+        this.quality = quality;
+    }
+
+    static async fetch(id) {
+        const response = await fetch(apiBaseUrl + 'msas/' + id + '/');
+
+        if (!response.ok) {
+            if (response.status === 404) throw new Error('MSA "' + id + '" not found');
+            throw new Error('Bad network response');
+        }
+
+        const result = await response.json();
+
+        return new MSA(result);
     }
 }
 
@@ -78,4 +129,47 @@ export class DCA {
             return [row[0], row[1]];
         });
     }
+}
+
+
+export async function generateMsa(seed, msaName) {
+    let data = {
+        seed: seed
+    };
+    if (msaName) data.msa_name = msaName;
+
+    const response = await fetch(apiBaseUrl + 'generate-msa/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+        throw new Error('Bad network response');
+    }
+
+    const result = await response.json();
+
+    return new Task(result);
+}
+
+
+export async function computeDca(msaId) {
+    const data = {
+        msa_id: msaId
+    };
+
+    const response = await fetch(apiBaseUrl + 'compute-dca/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+        throw new Error('Bad network response');
+    }
+
+    const result = await response.json();
+
+    return new Task(result);
 }

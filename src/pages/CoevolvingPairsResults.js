@@ -6,6 +6,8 @@ import { useLocation } from 'react-router-dom';
 import ContactMap from '../components/ContactMap';
 import DiTable from '../components/DiTable';
 import { Task, DCA } from '../backend/api';
+import PdbViewer from '../components/MolViewer';
+import { CirclePlot } from '../components/CirclePlot';
 
 const CoevolvingPairsResults = () => {
     const [loading, setLoading] = useState(true);
@@ -21,19 +23,20 @@ const CoevolvingPairsResults = () => {
         async function fetchDCA() {
             setLoading(true);
             try {
-                const task = await Task.fetch(task_id);
-                if (!task.successful) {
-                    if (task.state === 'FAILURE') {
-                        setError('Task failed: ' + task.message);
-                    } else {
-                        let msg = 'Task has not completed.';
-                        msg += ' State: ' + task.state;
-                        msg += ' ' + task.percent + '%';
-                        if (task.message) msg += ' (' + task.message + ')';
-                        setError(msg)
-                    }
-                    return;
-                }
+                // Assume valid id, this should be comming from the tasks page
+                // const task = await Task.fetch(task_id);
+                // if (!task.successful) {
+                //     if (task.state === 'FAILURE') {
+                //         setError('Task failed: ' + task.message);
+                //     } else {
+                //         let msg = 'Task has not completed.';
+                //         msg += ' State: ' + task.state;
+                //         msg += ' ' + task.percent + '%';
+                //         if (task.message) msg += ' (' + task.message + ')';
+                //         setError(msg)
+                //     }
+                //     return;
+                // }
 
                 setDca(await DCA.fetch(task_id));
             
@@ -178,6 +181,18 @@ const CoevolvingPairsResults = () => {
                                 dca={dca}
                                 highlightRow={selectedDi}
                                 onRowClick={setSelectedDi} />
+                        </div>
+                    </div>
+                    <div style={styles.section}>
+                        <h2 style={styles.heading}>3D View</h2>
+                        <div style={styles.content}>
+                            <PdbViewer pdb={'1gfl'} />
+                        </div>
+                    </div>
+                    <div style={styles.section}>
+                        <h2 style={styles.heading}>Circle Plot</h2>
+                        <div style={styles.content}>
+                            <CirclePlot />
                         </div>
                     </div>
                 </>)}
