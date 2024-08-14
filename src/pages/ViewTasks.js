@@ -3,8 +3,8 @@ import HomeButton from '../components/HomeButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
-import { Task } from '../backend/api'
-import TaskTile from '../components/TaskTile'
+import { Task } from '../backend/api';
+import TaskTile from '../components/TaskTile';
 
 const ViewTasks = () => {
     const [message, setMessage] = useState(null);
@@ -31,16 +31,16 @@ const ViewTasks = () => {
     }, [queryTaskIds]);
 
     if (message) {
-        return <p>{message}</p>
+        return <p style={{ color: '#0066cc', fontStyle: 'italic' }}>{message}</p>;
     }
 
     return (
-        <div>
-            <h1>Tasks</h1>
+        <div style={{ padding: '20px', backgroundColor: '#e6f2ff', borderRadius: '10px', margin: '20px' }}>
+            <h1 style={{ color: '#003366' }}>Tasks</h1>
             {taskIds ? taskIds.map(id => (
                 <TaskTile key={id} task_id={id} />
             )) : (
-                <p>You have no tasks.</p>
+                <p style={{ color: '#003366' }}>You have no tasks.</p>
             )}
         </div>
     );

@@ -35,16 +35,15 @@ const TaskTile = ({ task_id, updateInterval = 5 }) => {
 
     const linkStyle = {
         fontSize: 16,
-        color: 'blue',
+        color: '#0066cc',  // Updated color
         textDecoration: 'underline',
         backgroundColor: 'transparent',
         border: 'none',
         cursor: 'pointer',
-        textDecoration: 'underline',
         display: 'inline',
         margin: 0,
         padding: 0,
-      };
+    };
 
     const downloadMsa = async (id) => {
         const msa = await MSA.fetch(id);
@@ -75,21 +74,26 @@ const TaskTile = ({ task_id, updateInterval = 5 }) => {
     }
 
     return (
-        <div style={{ border: '1px solid black', background: '#eee', margin: '20px' }}>
+        <div style={{ 
+            border: '2px solid #0066cc', 
+            background: '#f0f8ff', 
+            borderRadius: '10px', 
+            padding: '20px', 
+            margin: '20px' }}>
             {loading ? <>
-                <p style={{ fontStyle: 'italic' }}>Loading...</p>
+                <p style={{ fontStyle: 'italic', color: '#0066cc' }}>Loading...</p>
             </> : (error ? <>
                 <p style={{ color: 'maroon' }}>{error}</p>
             </> : <>
-                <div style={{ fontWeight: 'bold' }}>
+                <div style={{ fontWeight: 'bold', color: '#003366' }}>
                     {task.getNiceName() + ' (' + task.state + ' ' + task.percent + '%)'}
                 </div>
-                <div style={{ fontSize: '10px', fontStyle: 'italic' }}>ID: {task.id}</div>
+                <div style={{ fontSize: '10px', fontStyle: 'italic', color: '#003366' }}>ID: {task.id}</div>
                 {task.time_started ? <div><b>Started:</b> {task.time_started.toISOString()}</div> : undefined}
                 {task.time_ended ? <div><b>Ended:</b> {task.time_ended.toISOString()}</div> : undefined}
                 {task.message ? <div><i>{task.message}</i></div> : undefined}
                 {task.successful ? resultsLink() : undefined}
-                {lastUpdated ? <div style={{ fontSize: '10px', fontStyle: 'italic' }}>
+                {lastUpdated ? <div style={{ fontSize: '10px', fontStyle: 'italic', color: '#003366' }}>
                     Last updated {new Date(lastUpdated).toISOString()}
                 </div> : undefined}
             </>)}

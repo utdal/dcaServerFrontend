@@ -15,7 +15,6 @@ const CoevolvingPairsResults = () => {
     const [dca, setDca] = useState(null);
     const [selectedDi, setSelectedDi] = useState(null);
 
-
     const query = new URLSearchParams(useLocation().search);
     const task_id = query.get('task_id');
 
@@ -23,23 +22,7 @@ const CoevolvingPairsResults = () => {
         async function fetchDCA() {
             setLoading(true);
             try {
-                // Assume valid id, this should be comming from the tasks page
-                // const task = await Task.fetch(task_id);
-                // if (!task.successful) {
-                //     if (task.state === 'FAILURE') {
-                //         setError('Task failed: ' + task.message);
-                //     } else {
-                //         let msg = 'Task has not completed.';
-                //         msg += ' State: ' + task.state;
-                //         msg += ' ' + task.percent + '%';
-                //         if (task.message) msg += ' (' + task.message + ')';
-                //         setError(msg)
-                //     }
-                //     return;
-                // }
-
                 setDca(await DCA.fetch(task_id));
-            
             } catch (error) {
                 setError('Error: ' + error.message);
             } finally {
@@ -51,22 +34,21 @@ const CoevolvingPairsResults = () => {
 
     const styles = {
         container: {
-            textAlign: 'center',
-            backgroundColor: '#e0e0e0',
+            backgroundColor: '#f4f4f4',
             minHeight: '100vh',
             padding: '20px',
-            paddingTop: '180px',
-            position: 'relative',
+            paddingTop: '160px',
+            fontFamily: '"Roboto", sans-serif',
         },
         header: {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: '#282c34',
-            padding: '20px',
+            backgroundColor: '#0D47A1',
+            padding: '15px 25px',
             fontSize: '28px',
             fontWeight: 'bold',
-            color: 'white',
+            color: '#ffffff',
             width: '100%',
             position: 'fixed',
             top: 0,
@@ -74,10 +56,11 @@ const CoevolvingPairsResults = () => {
             zIndex: 10,
         },
         topBar: {
-            backgroundColor: '#ccc',
-            color: '#333',
-            padding: '10px',
+            backgroundColor: '#BBDEFB',
+            color: '#0D47A1',
+            padding: '10px 0',
             fontSize: '20px',
+            textAlign: 'center',
             position: 'fixed',
             top: '60px',
             left: 0,
@@ -86,55 +69,55 @@ const CoevolvingPairsResults = () => {
         },
         resultsSection: {
             display: 'flex',
-            justifyContent: 'space-around',
+            justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: '20px',
             maxWidth: '1200px',
             margin: '0 auto',
         },
         section: {
-            backgroundColor: '#fff',
-            padding: '15px',
-            borderRadius: '8px',
-            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-            flex: '1 1 calc(50% - 40px)',
-            minWidth: '300px',
-            maxWidth: '500px',
+            backgroundColor: '#FFFFFF',
+            padding: '20px',
+            borderRadius: '10px',
+            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+            flex: '1 1 calc(48% - 20px)',
+            minWidth: '320px',
+            transition: 'transform 0.3s ease',
         },
         heading: {
-            fontSize: '22px',
-            marginBottom: '10px',
-            color: '#444',
+            fontSize: '24px',
+            marginBottom: '15px',
+            color: '#0D47A1',
+            borderBottom: '2px solid #0D47A1',
+            paddingBottom: '5px',
         },
         content: {
             fontSize: '16px',
-            color: '#666',
+            color: '#333',
         },
         downloadButton: {
             position: 'fixed',
             top: '120px',
             right: '20px',
-            padding: '15px 20px',
-            backgroundColor: '#4CAF50', // Green color to make it more visible
-            color: '#fff',
+            padding: '15px 25px',
+            backgroundColor: '#0D47A1',
+            color: '#FFFFFF',
             border: 'none',
             borderRadius: '50px',
             cursor: 'pointer',
-            fontSize: '20px',
-            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)', // Add shadow for a 3D effect
+            fontSize: '18px',
+            boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.2)',
             transition: 'background-color 0.3s ease, box-shadow 0.3s ease',
             zIndex: 20,
         },
         downloadButtonHover: {
-            backgroundColor: '#45A049',
-            boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.3)',
+            backgroundColor: '#0A417A',
+            boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.3)',
         },
         icon: {
             marginRight: '10px',
         },
     };
-
-    const currentDate = new Date().toLocaleDateString();
 
     return (
         <div style={styles.container}>
@@ -160,42 +143,38 @@ const CoevolvingPairsResults = () => {
                 Task ({task_id || ''}) results
             </div>
             <div style={styles.resultsSection}>
-                {loading ? <>
-                    <p style={{ fontStyle: 'italic' }}>Loading...</p>
-                </> : (error ? <>
-                    <p style={{ color: 'maroon' }}>{error}</p>
-                </> : <>
-                    <div style={styles.section}>
-                        <h2 style={styles.heading}>Contact Map</h2>
-                        <div style={styles.content}>
-                            <ContactMap
-                                dca={dca}
-                                highlightPoint={selectedDi}
-                                onPointClick={setSelectedDi} />
+                {loading ? (
+                    <p style={{ fontStyle: 'italic', color: '#333' }}>Loading...</p>
+                ) : error ? (
+                    <p style={{ color: '#B71C1C', fontWeight: 'bold' }}>{error}</p>
+                ) : (
+                    <>
+                        <div style={{ ...styles.section, ':hover': { transform: 'scale(1.05)' } }}>
+                            <h2 style={styles.heading}>Contact Map</h2>
+                            <div style={styles.content}>
+                                <ContactMap dca={dca} highlightPoint={selectedDi} onPointClick={setSelectedDi} />
+                            </div>
                         </div>
-                    </div>
-                    <div style={styles.section}>
-                        <h2 style={styles.heading}>DI Pairs</h2>
-                        <div style={styles.content}>
-                            <DiTable
-                                dca={dca}
-                                highlightRow={selectedDi}
-                                onRowClick={setSelectedDi} />
+                        <div style={{ ...styles.section, ':hover': { transform: 'scale(1.05)' } }}>
+                            <h2 style={styles.heading}>DI Pairs</h2>
+                            <div style={styles.content}>
+                                <DiTable dca={dca} highlightRow={selectedDi} onRowClick={setSelectedDi} />
+                            </div>
                         </div>
-                    </div>
-                    <div style={styles.section}>
-                        <h2 style={styles.heading}>3D View</h2>
-                        <div style={styles.content}>
-                            <PdbViewer pdb={'1gfl'} />
+                        <div style={{ ...styles.section, ':hover': { transform: 'scale(1.05)' } }}>
+                            <h2 style={styles.heading}>3D View</h2>
+                            <div style={styles.content}>
+                                <PdbViewer pdb={'1gfl'} />
+                            </div>
                         </div>
-                    </div>
-                    <div style={styles.section}>
-                        <h2 style={styles.heading}>Circle Plot</h2>
-                        <div style={styles.content}>
-                            <CirclePlot />
+                        <div style={{ ...styles.section, ':hover': { transform: 'scale(1.05)' } }}>
+                            <h2 style={styles.heading}>Circle Plot</h2>
+                            <div style={styles.content}>
+                                <CirclePlot />
+                            </div>
                         </div>
-                    </div>
-                </>)}
+                    </>
+                )}
             </div>
         </div>
     );
