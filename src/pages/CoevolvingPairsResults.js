@@ -32,6 +32,27 @@ const CoevolvingPairsResults = () => {
         fetchDCA();
     }, [task_id]);
 
+    const handleDownload = () => {
+        // Example logic to download data
+        if (dca) {
+            // Convert data to a downloadable format (e.g., JSON, CSV)
+            const dataStr = JSON.stringify(dca, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            // Create a temporary link to trigger the download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dca_results_${task_id}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            // Release the URL object
+            URL.revokeObjectURL(url);
+        }
+    };
+
     const styles = {
         container: {
             backgroundColor: '#f4f4f4',
@@ -123,6 +144,7 @@ const CoevolvingPairsResults = () => {
         <div style={styles.container}>
             <button
                 style={styles.downloadButton}
+                onClick={handleDownload}
                 onMouseOver={(e) => {
                     e.currentTarget.style.backgroundColor = styles.downloadButtonHover.backgroundColor;
                     e.currentTarget.style.boxShadow = styles.downloadButtonHover.boxShadow;
