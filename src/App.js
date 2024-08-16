@@ -5,6 +5,7 @@ import LDL from './pages/LDL';
 import Introvid from './pages/Introvid';
 import Bioguide from './pages/Bioguide';
 import CoevolvingPairsResults from './pages/CoevolvingPairsResults';
+import DCATaskList from './pages/DCATaskList';
 import LoadingPage from './pages/LoadingPage';
 import Tile from './components/Tile';
 import ResultsPage from './pages/ResultsPage';
@@ -27,6 +28,7 @@ function App() {
           <Route path="/results" element={<ResultsPage />} />
           <Route path="/guide-for-biologists" element={<Bioguide />} />
           <Route path="/loading" element={<LoadingPage />} />
+          <Route path="/dca-task-list" element={<DCATaskList />} />
           <Route path="/tasks" element={<ViewTasks />} />
           <Route 
             path="/" 
@@ -58,7 +60,7 @@ function App() {
                         description="Estimates possible protein structure using pairs of amino acids that tend to evolve together"
                       />
                       <Tile
-                        link="/coevolving-pairs-results"
+                        link="/dca-task-list"
                         image="path/to/your/image2.jpg"
                         title="DCA Results"
                         description="EV Complex Information"

@@ -52,24 +52,36 @@ const CoevolvingPairs = () => {
     setIsSubmitting(true);
     console.log('Submitted:', inputValue);
 
-    const msaTask = await generateMsa(inputValue);
-    const dcaTask = await computeDca(msaTask.id);
+    try {
+        const msaTask = await generateMsa(inputValue);
+        const dcaTask = await computeDca(msaTask.id);
 
-    const url = '/tasks?ids=' + msaTask.id + ',' + dcaTask.id;
-    window.open(url, '_blank');
+        // Retrieve existing last task IDs from localStorage
+        const lastTaskIds = JSON.parse(localStorage.getItem('lastTaskIds')) || [];
 
-    setIsSubmitting(false);
-    setShowMessage(true);
-    setTimeout(() => setShowMessage(false), 2000); // Hide message after 2 seconds
+        // Add the new last task ID
+        const newLastTaskId = { id: dcaTask.id, time: new Date().getTime() };
+        lastTaskIds.push(newLastTaskId);
 
-      // Handle tab opening or refreshing
-      // const url = '/coevolving-pairs-results'; // Update this to the actual path you want to open
-      // if (existingTab.current) {
-      //   existingTab.current.location.reload(); // Refresh the existing tab
-      // } else {
-      //   existingTab.current = window.open(url, '_blank'); // Open a new tab
-      // }
-  };
+        // Save updated last task IDs back to localStorage
+        localStorage.setItem('lastTaskIds', JSON.stringify(lastTaskIds));
+
+        // Log to confirm the updated localStorage
+        console.log('Updated lastTaskIds in localStorage:', lastTaskIds);
+
+        const url = '/tasks?ids=' + msaTask.id + ',' + dcaTask.id;
+        window.open(url, '_blank');
+    } catch (error) {
+        console.error('Error submitting tasks:', error);
+    } finally {
+        setIsSubmitting(false);
+        setShowMessage(true);
+        setTimeout(() => setShowMessage(false), 2000);
+    }
+};
+
+
+
 
   const handleCancel = () => {
     setShowModal(false);

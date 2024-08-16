@@ -23,6 +23,15 @@ const TaskTile = ({ task_id, updateInterval = 5 }) => {
     }, [task_id]);
 
     useEffect(() => {
+        if (task && task.successful && task.name === 'api.tasks.compute_dca_task') {
+            const existingTasks = JSON.parse(localStorage.getItem('dcaTasks')) || [];
+            const taskEntry = { id: task.id, time: new Date().getTime() };
+            existingTasks.push(taskEntry);
+            localStorage.setItem('dcaTasks', JSON.stringify(existingTasks));
+        }
+    }, [task]);
+    
+    useEffect(() => {
         if (task) {
             const interval = setInterval(() => {
                 task.update();
