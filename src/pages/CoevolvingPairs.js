@@ -137,7 +137,7 @@ const CoevolvingPairs = () => {
     <div style={styles.app}>
       <div style={styles.header}>
         <HomeButton />
-        <span style={{ flex: 1, textAlign: 'center' }}>Coevolving Pairs</span>
+        <span style={{ flex: 1, textAlign: 'center' }}>MSA-DCA</span>
       </div>
       <div style={styles.container}>
         <div style={styles.tabs}>

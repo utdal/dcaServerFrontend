@@ -159,7 +159,7 @@ const CoevolvingPairsResults = () => {
             </button>
             <div style={styles.header}>
                 <HomeButton />
-                <span style={{ flex: 1, textAlign: 'center' }}>EVCouplings Results</span>
+                <span style={{ flex: 1, textAlign: 'center' }}>DCA Results</span>
             </div>
             <div style={styles.topBar}>
                 Task ({task_id || ''}) results
