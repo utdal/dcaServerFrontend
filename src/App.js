@@ -63,7 +63,7 @@ function App() {
                         link="/dca-task-list"
                         image="path/to/your/image2.jpg"
                         title="DCA Results"
-                        description="EV Complex Information"
+                        description="Past DCA Results"
                       />
                       <Tile
                         link="/LDL"

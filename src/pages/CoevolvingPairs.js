@@ -55,18 +55,10 @@ const CoevolvingPairs = () => {
     try {
         const msaTask = await generateMsa(inputValue);
         const dcaTask = await computeDca(msaTask.id);
-
-        // Retrieve existing last task IDs from localStorage
         const lastTaskIds = JSON.parse(localStorage.getItem('lastTaskIds')) || [];
-
-        // Add the new last task ID
         const newLastTaskId = { id: dcaTask.id, time: new Date().getTime() };
         lastTaskIds.push(newLastTaskId);
-
-        // Save updated last task IDs back to localStorage
         localStorage.setItem('lastTaskIds', JSON.stringify(lastTaskIds));
-
-        // Log to confirm the updated localStorage
         console.log('Updated lastTaskIds in localStorage:', lastTaskIds);
 
         const url = '/tasks?ids=' + msaTask.id + ',' + dcaTask.id;
@@ -117,11 +109,45 @@ const CoevolvingPairs = () => {
     inputContainer: { marginBottom: '20px' },
     inputTextBox: { width: '100%', height: '100px', padding: '10px', border: '1px solid black', borderRadius: '4px', borderColor: showError && !isValid ? 'red' : 'black', boxSizing: 'border-box' },
     invalidSequence: { color: 'red', fontWeight: 'bold', marginTop: '10px', display: showError && !isValid ? 'block' : 'none' },
-    button: { padding: '10px 20px', marginRight: '10px', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#e0e0e0', marginTop: '10px', transition: 'background-color 0.3s ease' },
     submitButton: { backgroundColor: '#87CEEB', color: 'white', cursor: isValid ? 'pointer' : 'not-allowed', opacity: isValid ? 1 : 0.5, marginTop: '20px', padding: '10px 20px', border: 'none', borderRadius: '8px', boxShadow: isSubmitting ? '0px 2px 4px rgba(0, 0, 0, 0.5)' : '0px 4px 8px rgba(0, 0, 0, 0.2)', transform: isSubmitting ? 'scale(0.98)' : 'scale(1)', transition: 'transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ease' },
-    examplesMenu: { marginTop: '10px', position: 'absolute', backgroundColor: '#e0e0e0', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', padding: '10px', width: '200px', textAlign: 'left' },
-    examplesOption: { padding: '10px', cursor: 'pointer', borderBottom: '1px solid #ccc' },
-    examplesOptionLast: { padding: '10px', cursor: 'pointer' },
+    button: { 
+      padding: '10px 20px', 
+      marginRight: '10px', 
+      border: '1px solid #ccc', 
+      borderRadius: '4px', 
+      cursor: 'pointer', 
+      backgroundColor: '#007BFF', 
+      color: 'white', 
+      marginTop: '10px', 
+      transition: 'background-color 0.3s ease' 
+    },
+    
+    examplesMenu: { 
+      marginTop: '10px', 
+      position: 'absolute', 
+      backgroundColor: '#ffffff', 
+      border: '1px solid #ddd', 
+      borderRadius: '5px', 
+      boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', 
+      padding: '10px', 
+      textAlign: 'left', 
+      zIndex: 1000,
+      minWidth: '200px', 
+      display: 'inline-block' 
+    },
+    
+    examplesOption: { 
+      padding: '10px', 
+      cursor: 'pointer', 
+      borderBottom: '1px solid #ddd',
+      transition: 'background-color 0.3s ease',
+      whiteSpace: 'nowrap' 
+    },
+    
+    examplesOptionLast: { 
+      padding: '10px', 
+      cursor: 'pointer' 
+    },
     fileInput: { marginTop: '10px' },
     settingsMenu: { marginTop: '20px', textAlign: 'left', padding: '10px', border: '1px solid #ccc', borderRadius: '5px', backgroundColor: '#e0e0e0', width: '100%', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', maxHeight: '300px', overflowY: 'auto' },
     settingsOption: { padding: '10px', cursor: 'pointer', borderBottom: '1px solid #ccc' },
@@ -179,18 +205,19 @@ const CoevolvingPairs = () => {
               style={styles.fileInput}
             />
             <button
-              style={styles.button}
-              onClick={() => setShowExamplesMenu((prev) => !prev)}
-            >
-              Examples
-            </button>
-            {showExamplesMenu && (
-              <div style={styles.examplesMenu}>
-                <div style={styles.examplesOption} onClick={() => handleExampleClick('Example 1')}>Example 1</div>
-                <div style={styles.examplesOption} onClick={() => handleExampleClick('Example 2')}>Example 2</div>
-                <div style={styles.examplesOption} onClick={() => handleExampleClick('ATGCGTACGTAGCTAGCTAG2')}>ATGCGTACGTAGCTAGCTAG</div>
-              </div>
-            )}
+  style={styles.button}
+  onClick={() => setShowExamplesMenu((prev) => !prev)}
+>
+  Examples
+</button>
+{showExamplesMenu && (
+  <div style={styles.examplesMenu}>
+    <div style={styles.examplesOption} onClick={() => handleExampleClick('Example 1')}>Example 1</div>
+    <div style={styles.examplesOption} onClick={() => handleExampleClick('Example 2')}>Example 2</div>
+    <div style={styles.examplesOption} onClick={() => handleExampleClick('ATGCGTACGTAGCTAGCTAG')}>ATGCGTACGTAGCTAGCTAG</div>
+  </div>
+)}
+
             <button
               style={styles.submitButton}
               onClick={handleSubmitClick}
