@@ -5,12 +5,12 @@ import { faHome, faFlask, faTasks, faVideo, faBook } from '@fortawesome/free-sol
 import './Sidebar.css'; 
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true); 
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
   return (
-    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+    <div className={`sidebar ${isOpen ? 'open' : 'collapsed'}`}>
       <button className="toggle-btn" onClick={toggleSidebar}>
         {isOpen ? '◁' : '▷'}
       </button>
@@ -18,32 +18,32 @@ const Sidebar = () => {
         <ul>
           <li>
             <Link to="/">
-              <FontAwesomeIcon icon={faHome} /> {isOpen && 'Home'}
+              <FontAwesomeIcon icon={faHome} /> {isOpen && <span>Home</span>}
             </Link>
           </li>
           <li>
             <Link to="/coevolving-pairs">
-              <FontAwesomeIcon icon={faFlask} /> {isOpen && 'MSA-DCA'}
+              <FontAwesomeIcon icon={faFlask} /> {isOpen && <span>MSA-DCA</span>}
             </Link>
           </li>
           <li>
             <Link to="/dca-task-list">
-              <FontAwesomeIcon icon={faTasks} /> {isOpen && 'DCA Results'}
+              <FontAwesomeIcon icon={faTasks} /> {isOpen && <span>DCA Results</span>}
             </Link>
           </li>
           <li>
             <Link to="/LDL">
-              <FontAwesomeIcon icon={faFlask} /> {isOpen && 'LDL'}
+              <FontAwesomeIcon icon={faFlask} /> {isOpen && <span>LDL</span>}
             </Link>
           </li>
           <li>
             <Link to="/introductory-video">
-              <FontAwesomeIcon icon={faVideo} /> {isOpen && 'Intro Video'}
+              <FontAwesomeIcon icon={faVideo} /> {isOpen && <span>Intro Video</span>}
             </Link>
           </li>
           <li>
             <Link to="/guide-for-biologists">
-              <FontAwesomeIcon icon={faBook} /> {isOpen && 'Bio Guide'}
+              <FontAwesomeIcon icon={faBook} /> {isOpen && <span>Bio Guide</span>}
             </Link>
           </li>
         </ul>

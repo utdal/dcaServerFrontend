@@ -102,11 +102,67 @@ const CoevolvingPairs = () => {
 
   const styles = {
     app: { textAlign: 'center', backgroundColor: '#d0d8e8', height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', overflow: 'auto' },
-    header: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#282c34', padding: '20px', fontSize: '28px', fontWeight: 'bold', color: 'white', width: '100%', position: 'fixed', top: 0, left: 0, zIndex: 10 },
-    container: { backgroundColor: '#f8f8f8', padding: '20px', width: '90%', maxWidth: '1200px', border: '1px solid #ccc', borderRadius: '10px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', marginTop: '100px', textAlign: 'center', flexGrow: 1, position: 'relative', height: 'auto', minHeight: 'calc(100vh - 100px)' },
-    tabs: { display: 'flex', borderBottom: '1px solid #ccc', marginBottom: '20px', justifyContent: 'center' },
-    tab: { padding: '15px 25px', cursor: 'pointer', flex: 1, textAlign: 'center', border: '2px solid #ccc', borderRadius: '5px', backgroundColor: '#e0e0e0', margin: '0 5px', transition: 'transform 0.3s ease, z-index 0.3s ease, background-color 0.3s ease' },
-    activeTab: { transform: 'translateY(-10px)', zIndex: 1, boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)', backgroundColor: '#d0d0d0' },
+    header: { 
+      backgroundColor: '#282c34', 
+      padding: '20px', 
+      fontSize: '28px', 
+      fontWeight: 'bold', 
+      color: 'white', 
+      width: '100%', 
+      position: 'fixed', 
+      top: 0, 
+      left: 0, 
+      zIndex: 10 
+    },
+    contentContainer: {
+      flex: 1,  // Allows the content to take up the remaining space
+      display: 'flex',
+      flexDirection: 'column',
+      overflowY: 'auto',
+      padding: '20px',
+    },
+    container: { 
+      backgroundColor: '#f8f8f8', 
+      padding: '20px', 
+      width: '90%', 
+      maxWidth: '1200px', 
+      border: '1px solid #ccc', 
+      borderRadius: '10px', 
+      boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', 
+      marginTop: '100px', 
+      textAlign: 'center', 
+      flexGrow: 1, 
+      position: 'relative', 
+      height: 'auto', 
+      minHeight: 'calc(100vh - 100px)' 
+    },
+    sidebarContainer: {
+      flexShrink: 0,  // Prevents the sidebar from shrinking
+      transition: 'width 0.3s ease',
+    },
+    tabs: { 
+      display: 'flex', 
+      borderBottom: '1px solid #ccc', 
+      marginBottom: '20px', 
+      justifyContent: 'center' 
+    },
+    tab: { 
+      padding: '15px 25px', 
+      cursor: 'pointer', 
+      flex: 1, 
+      textAlign: 'center', 
+      border: '2px solid #ccc', 
+      borderRadius: '5px', 
+      backgroundColor: '#e0e0e0', 
+      margin: '0 5px', 
+      transition: 'transform 0.3s ease, z-index 0.3s ease, background-color 0.3s ease' 
+    },
+    activeTab: { 
+      transform: 'translateY(-10px)', 
+      zIndex: 1, 
+      boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)', 
+      backgroundColor: '#d0d0d0' 
+    },
     inputContainer: { marginBottom: '20px' },
     inputTextBox: { width: '100%', height: '100px', padding: '10px', border: '1px solid black', borderRadius: '4px', borderColor: showError && !isValid ? 'red' : 'black', boxSizing: 'border-box' },
     invalidSequence: { color: 'red', fontWeight: 'bold', marginTop: '10px', display: showError && !isValid ? 'block' : 'none' },
@@ -174,7 +230,10 @@ const CoevolvingPairs = () => {
 
   return (
     <div style={styles.app}>
+      <div style={styles.sidebarContainer}>
       <Sidebar />
+    </div>
+    <div style={styles.contentContainer}>
       <div style={styles.header}>
         <HomeButton />
         <span style={{ flex: 1, textAlign: 'center' }}>MSA-DCA</span>
@@ -274,6 +333,7 @@ const CoevolvingPairs = () => {
       <div style={styles.message}>
         Your Task was Submitted!
       </div>
+    </div>
     </div>
   );
 };
