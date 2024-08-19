@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import HomeButton from '../components/HomeButton';
 import { generateMsa, computeDca } from '../backend/api';
-//import Sidebar from '../components/Sidebar';
 
 const CoevolvingPairs = () => {
   const [inputValue, setInputValue] = useState('');
@@ -12,7 +11,8 @@ const CoevolvingPairs = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showExamplesMenu, setShowExamplesMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [showMessage, setShowMessage] = useState(false);
+  const [msaOnly, setMsaOnly] = useState(false);
+  const [saveMsaId, setSaveMsaId] = useState(false);
   const existingTab = useRef(null);
 
   const validateInput = (value) => value.length >= 3;
@@ -54,7 +54,19 @@ const CoevolvingPairs = () => {
     console.log('Submitted:', inputValue);
 
     try {
-        const msaTask = await generateMsa(inputValue);
+      const msaTask = await generateMsa(inputValue);
+
+      if (saveMsaId) {
+        const blob = new Blob([msaTask.id], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'msa_id.txt';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+
+      if (!msaOnly) {
         const dcaTask = await computeDca(msaTask.id);
         const lastTaskIds = JSON.parse(localStorage.getItem('lastTaskIds')) || [];
         const newLastTaskId = { id: dcaTask.id, time: new Date().getTime() };
@@ -64,17 +76,16 @@ const CoevolvingPairs = () => {
 
         const url = '/tasks?ids=' + msaTask.id + ',' + dcaTask.id;
         window.open(url, '_blank');
+      } else {
+        const url = '/tasks?ids=' + msaTask.id;
+        window.open(url, '_blank');
+      }
     } catch (error) {
-        console.error('Error submitting tasks:', error);
+      console.error('Error submitting task:', error);
     } finally {
-        setIsSubmitting(false);
-        setShowMessage(true);
-        setTimeout(() => setShowMessage(false), 2000);
+      setIsSubmitting(false);
     }
-};
-
-
-
+  };
 
   const handleCancel = () => {
     setShowModal(false);
@@ -99,6 +110,9 @@ const CoevolvingPairs = () => {
       reader.readAsText(file);
     }
   };
+
+  const handleMsaOnlyChange = () => setMsaOnly((prev) => !prev);
+  const handleSaveMsaIdChange = () => setSaveMsaId((prev) => !prev);
 
   const styles = {
     app: { textAlign: 'center', backgroundColor: '#d0d8e8', height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', overflow: 'auto' },
@@ -213,7 +227,7 @@ const CoevolvingPairs = () => {
       cursor: 'pointer' 
     },
     fileInput: { marginTop: '10px' },
-    settingsMenu: { marginTop: '20px', textAlign: 'left', padding: '10px', border: '1px solid #ccc', borderRadius: '5px', backgroundColor: '#e0e0e0', width: '100%', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', maxHeight: '300px', overflowY: 'auto' },
+    settingsMenu: { marginTop: '20px', marginRight: '200px', textAlign: 'left', padding: '5px', border: '1px solid #ccc', borderRadius: '5px', backgroundColor: '#e0e0e0', width: '100%', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', maxHeight: '300px', overflowY: 'auto' },
     settingsOption: { padding: '10px', cursor: 'pointer', borderBottom: '1px solid #ccc' },
     settingsOptionLast: { padding: '10px', cursor: 'pointer' },
     modal: { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)', zIndex: 1000 },
@@ -222,17 +236,6 @@ const CoevolvingPairs = () => {
     modalButton: { padding: '10px 20px', border: 'none', borderRadius: '4px', cursor: 'pointer' },
     modalSubmitButton: { backgroundColor: '#87CEEB', color: 'white' },
     modalCancelButton: { backgroundColor: '#e0e0e0' },
-    message: { 
-      position: 'fixed', 
-      bottom: '20px', 
-      right: '20px', 
-      padding: '10px', 
-      backgroundColor: '#d0f0c0', 
-      borderRadius: '5px', 
-      boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)', 
-      opacity: showMessage ? 1 : 0, 
-      transition: 'opacity 1s ease' 
-    }
   };
 
   return (
@@ -295,25 +298,14 @@ const CoevolvingPairs = () => {
         )}
         {activeTab === 'Tab2' && (
           <div style={styles.settingsMenu}>
-            <div style={styles.settingsOption} onClick={toggleMenu}>
-              Automatically Run MSA-DCA and Save All Data
+            <div style={styles.settingsOption} onClick={handleMsaOnlyChange}>
+              <input type="checkbox" id="msaOnly" name="msaOnly" checked={msaOnly} readOnly />
+              <label htmlFor="msaOnly">MSA Only</label>
             </div>
-            {showMenu && (
-              <div>
-                <div style={styles.settingsOption}>
-                  <input type="checkbox" id="msaMatrix" name="msaMatrix" />
-                  <label htmlFor="msaMatrix">MSA Matrix</label>
-                </div>
-                <div style={styles.settingsOption}>
-                  <input type="checkbox" id="diPairs" name="diPairs" />
-                  <label htmlFor="diPairs">DI Pairs</label>
-                </div>
-                <div style={styles.settingsOptionLast}>
-                  <input type="checkbox" id="dcaMatrix" name="dcaMatrix" />
-                  <label htmlFor="dcaMatrix">DCA Matrix</label>
-                </div>
-              </div>
-            )}
+            <div style={styles.settingsOptionLast} onClick={handleSaveMsaIdChange}>
+              <input type="checkbox" id="saveMsaId" name="saveMsaId" checked={saveMsaId} readOnly />
+              <label htmlFor="saveMsaId">Save MSA ID</label>
+            </div>
           </div>
         )}
       </div>
@@ -334,10 +326,6 @@ const CoevolvingPairs = () => {
           </div>
         </>
       )}
-
-      <div style={styles.message}>
-        Your Task was Submitted!
-      </div>
     </div>
   );
 };
