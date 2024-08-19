@@ -6,12 +6,12 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #E5EEFC;
   padding: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: black;
   position: fixed;
   width: 100%;
   top: 0;
@@ -44,6 +44,7 @@ main {
   flex: 1;
   padding: 20px;
   padding-top: 80px; 
+  margin-bottom: 20px; /* Ensure there's space for the footer */
 }
 
 .web-servers {
@@ -151,18 +152,16 @@ main {
 }
 
 footer {
-  background-color: #f0f4fa;
+  background-color: #C4CEDC;
   padding: 10px 20px; 
   border-top: 1px solid #ccc;
-  position: fixed;
-  width: 100%;
-  bottom: 0;
   display: flex;
   flex-direction: column; 
   justify-content: center;
   align-items: center;
   font-size: 14px; /* Reduced font size */
   box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+  position: relative;
 }
 
 .footer-content {
@@ -192,6 +191,15 @@ footer {
 
 .footer-right a i {
   margin-right: 5px;
+}
+
+.footer-logo {
+  margin-top: 10px;
+}
+
+.utd-logo {
+  width: 150px;
+  height: auto;
 }
 
 @media (min-width: 600px) {

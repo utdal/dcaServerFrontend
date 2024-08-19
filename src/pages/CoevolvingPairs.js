@@ -112,10 +112,17 @@ const CoevolvingPairs = () => {
       position: 'fixed', 
       top: 0, 
       left: 0, 
-      zIndex: 10 
+      zIndex: 10,
+      display: 'flex',            
+      alignItems: 'center',       
+    },
+    headerText: {
+      flex: 1,                   
+      textAlign: 'center',        
+      margin: 0,                  
     },
     contentContainer: {
-      flex: 1,  // Allows the content to take up the remaining space
+      flex: 1,  
       display: 'flex',
       flexDirection: 'column',
       overflowY: 'auto',
@@ -232,10 +239,10 @@ const CoevolvingPairs = () => {
     <div style={styles.app}>
       <div style={styles.sidebarContainer}>
     </div>
-      <div style={styles.header}>
-        <HomeButton />
-        <span style={{ flex: 1, textAlign: 'center' }}>MSA-DCA</span>
-      </div>
+    <div style={styles.header}>
+  <HomeButton />
+  <span style={styles.headerText}>MSA-DCA</span>
+</div>
       <div style={styles.container}>
         <div style={styles.tabs}>
           <div style={activeTab === 'Tab1' ? { ...styles.tab, ...styles.activeTab } : styles.tab} onClick={() => handleTabClick('Tab1')}>

@@ -12,8 +12,9 @@ import ResultsPage from './pages/ResultsPage';
 import HomeButton from './components/HomeButton';
 import ViewTasks from './pages/ViewTasks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub } from '@fortawesome/free-brands-svg-icons'; // Import GitHub icon
-import { faAtom } from '@fortawesome/free-solid-svg-icons'; // Import molecule/atom icon
+import { faGithub} from '@fortawesome/free-brands-svg-icons'; // Import GitHub icon
+import { faAtom, faMagnifyingGlass, faVideo} from '@fortawesome/free-solid-svg-icons'; // Import molecule/atom icon
+import UTDLogo from './pages/UTDLogo.png';
 import './App.css';
 
 function App() {
@@ -36,8 +37,8 @@ function App() {
               <>
                 <header 
                   style={{ 
-                    backgroundColor: '#282c34', 
-                    color: 'white', 
+                    backgroundColor: '#E5EEFC', 
+                    color: 'black', 
                     padding: '20px', 
                     textAlign: 'center', 
                     minHeight: '100px', 
@@ -47,6 +48,12 @@ function App() {
                 >
                   <HomeButton />
                   <h1 style={{ flex: 1, textAlign: 'center', margin: 0 }}>DCA Server</h1>
+                  <a href="/guide-for-biologists" style={{ color: 'black', marginLeft: '10px' }}>
+                    <FontAwesomeIcon icon={faMagnifyingGlass} size="2x" />
+                  </a>
+                  <a href="/introductory-video" style={{ color: 'black', marginLeft: '50px' }}>
+                    <FontAwesomeIcon icon={faVideo} size="2x" />
+                  </a>
                 </header>
                 <main style={{ paddingBottom: '100px' }}>
                   <section className="web-servers">
@@ -74,24 +81,6 @@ function App() {
                     </div>
                   </section>
                   
-                  <section className="web-servers">
-                    <h2>Tutorials</h2>
-                    <hr />
-                    <div className="server-cards">
-                      <Tile
-                        link="/introductory-video"
-                        image="path/to/your/image4.jpg"
-                        title="Introductory video"
-                        description="Watch our introductory video"
-                      />
-                      <Tile
-                        link="/guide-for-biologists"
-                        image="path/to/your/image5.jpg"
-                        title="Guide for Biologists"
-                        description="Comprehensive guide for biologists"
-                      />
-                    </div>
-                  </section>
 
                   {/* New Source Code Section */}
                   <section className="web-servers">
@@ -129,6 +118,11 @@ function App() {
                     </a>
                     <a href="https://www.moleculego.com/" target="_blank">
                       <FontAwesomeIcon icon={faAtom} /> MoleculeGo
+                    </a>
+                  </div>
+                  <div className="footer-logo">
+                    <a href="https://www.utdallas.edu/" target="_blank">
+                      <img src={UTDLogo} alt="UTD Logo" className="utd-logo" />
                     </a>
                   </div>
                 </footer>
