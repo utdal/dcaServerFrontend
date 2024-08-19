@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import HomeButton from '../components/HomeButton';
 import { generateMsa, computeDca } from '../backend/api';
-import Sidebar from '../components/Sidebar';
+//import Sidebar from '../components/Sidebar';
 
 const CoevolvingPairs = () => {
   const [inputValue, setInputValue] = useState('');
@@ -231,9 +231,7 @@ const CoevolvingPairs = () => {
   return (
     <div style={styles.app}>
       <div style={styles.sidebarContainer}>
-      <Sidebar />
     </div>
-    <div style={styles.contentContainer}>
       <div style={styles.header}>
         <HomeButton />
         <span style={{ flex: 1, textAlign: 'center' }}>MSA-DCA</span>
@@ -333,7 +331,6 @@ const CoevolvingPairs = () => {
       <div style={styles.message}>
         Your Task was Submitted!
       </div>
-    </div>
     </div>
   );
 };
