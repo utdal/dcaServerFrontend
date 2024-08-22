@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
 
 export const CirclePlot = ({dca}) => {
-    const [diCount, setDiCount] = useState(dca ? Math.floor(dca.seq_length * 1.5) : 50);
+    const [diCount, setDiCount] = useState(dca ? dca.ranked_di.length : 50);
     const nodes = diCount;
 
     let edges = [];

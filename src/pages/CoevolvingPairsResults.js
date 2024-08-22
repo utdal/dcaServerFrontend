@@ -291,7 +291,7 @@ const CoevolvingPairsResults = () => {
                                     ...(collapsedSections.circlePlot ? styles.contentCollapsed : styles.contentExpanded),
                                 }}
                             >
-                                <CirclePlot />
+                                <CirclePlot dca={dca}/>
                             </div>
                         </div>
                     </>
