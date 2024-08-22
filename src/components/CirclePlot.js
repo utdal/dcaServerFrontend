@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
 
-export const CirclePlot = () => {
-    const nodes = 50;
+export const CirclePlot = ({dca}) => {
+    const [diCount, setDiCount] = useState(dca ? Math.floor(dca.seq_length * 1.5) : 50);
+    const nodes = diCount;
+
     let edges = [];
-    for (let i = 0; i < 10; i++) {
-        edges.push([Math.floor(Math.random() * nodes), Math.floor(Math.random() * nodes)]);
-    }
+    useEffect(() => {
+        if (dca !== null) {
+            const pairs = dca.topDiPairs(diCount);
+            for (let i = 0; i < nodes; i++) {
+                edges.push(pairs[i][0], pairs[i][1])
+            }
+        }
+    }, [dca, diCount]);
 
     return (
         <div style={{ }}>
