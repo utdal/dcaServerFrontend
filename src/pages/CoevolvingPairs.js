@@ -144,6 +144,7 @@ const CoevolvingPairs = () => {
     headerText: {
       textAlign: 'center',
       flex: 1,
+      marginRight: '-100px', 
     },
     contentContainer: {
       flex: 1,
@@ -327,11 +328,21 @@ const CoevolvingPairs = () => {
         <HomeButton />
         <span style={styles.headerText}>MSA-DCA</span>
         <button
-          style={{ ...styles.button, backgroundColor: '#28a745' }}
-          onClick={handleDcaTaskListClick}
-        >
-          DCA Task List
-        </button>
+  style={{
+    backgroundColor: '#e0e0e0', 
+    color: '#333', 
+    border: '1px solid #ccc', 
+    borderRadius: '5px', 
+    padding: '10px 20px', 
+    cursor: 'pointer', 
+    marginRight: '100px', 
+    fontSize: '16px' 
+  }}
+  onClick={handleDcaTaskListClick}
+>
+  DCA Task List
+</button>
+
       </div>
       <div style={styles.container}>
         <div style={styles.tabs}>
@@ -371,7 +382,7 @@ const CoevolvingPairs = () => {
               style={styles.fileInput}
             />
             <button
-              style={styles.button} // Use updated light grey button style
+              style={styles.button} 
               onClick={() => setShowExamplesMenu((prev) => !prev)}
             >
               Examples

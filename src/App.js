@@ -49,10 +49,10 @@ function App() {
                   <HomeButton />
                   <h1 style={{ flex: 1, textAlign: 'center', margin: 0 }}>DCA Server</h1>
                   <a href="/guide-for-biologists" style={{ color: 'black', marginLeft: '10px' }}>
-                    Intro
+                    <FontAwesomeIcon icon={faMagnifyingGlass} />
                   </a>
                   <a href="/introductory-video" style={{ color: 'black', marginLeft: '50px' }}>
-                    Misc.
+                    <FontAwesomeIcon icon={faVideo} />
                   </a>
                 </header>
                 <main style={{ paddingBottom: '100px' }}>
