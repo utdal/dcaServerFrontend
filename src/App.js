@@ -11,9 +11,6 @@ import Tile from './components/Tile';
 import ResultsPage from './pages/ResultsPage';
 import HomeButton from './components/HomeButton';
 import ViewTasks from './pages/ViewTasks';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub} from '@fortawesome/free-brands-svg-icons'; // Import GitHub icon
-import { faAtom, faMagnifyingGlass, faVideo} from '@fortawesome/free-solid-svg-icons'; // Import molecule/atom icon
 import UTDLogo from './pages/UTDLogo.png';
 import './App.css';
 
@@ -48,11 +45,11 @@ function App() {
                 >
                   <HomeButton />
                   <h1 style={{ flex: 1, textAlign: 'center', margin: 0 }}>DCA Server</h1>
-                  <a href="/guide-for-biologists" style={{ color: 'black', marginLeft: '10px' }}>
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
+                  <a href="/guide-for-biologists" className="header-button" style={{ marginLeft: '10px' }}>
+                    Guide
                   </a>
-                  <a href="/introductory-video" style={{ color: 'black', marginLeft: '50px' }}>
-                    <FontAwesomeIcon icon={faVideo} />
+                  <a href="/introductory-video" className="header-button" style={{ marginLeft: '10px' }}>
+                    Intro Video
                   </a>
                 </header>
                 <main style={{ paddingBottom: '100px' }}>
@@ -74,7 +71,6 @@ function App() {
                       />
                     </div>
                   </section>
-                  
 
                   {/* New Source Code Section */}
                   <section className="web-servers">
@@ -85,19 +81,17 @@ function App() {
                         link="https://github.com/utdal/py-mfdca"
                         image="path/to/github-logo.jpg"
                         title="MfDCA Source Code"
-                        description={<><FontAwesomeIcon icon={faGithub} /> View on GitHub</>}
+                        description="View on GitHub"
                       />
                       <Tile
                         link="https://github.com/utdal/seec-nt"
                         image="path/to/github-logo.jpg"
                         title="SEEC Source Code"
-                        description={<><FontAwesomeIcon icon={faGithub} /> View on GitHub</>}
+                        description="View on GitHub"
                       />
                     </div>
                   </section>
                 </main>
-
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
                 <footer>
                   <div className="footer-left">
@@ -111,7 +105,7 @@ function App() {
                       <i className="fas fa-info-circle"></i> About the Lab
                     </a>
                     <a href="https://www.moleculego.com/" target="_blank">
-                      <FontAwesomeIcon icon={faAtom} /> MoleculeGo
+                      MoleculeGo
                     </a>
                   </div>
                   <div className="footer-logo">
