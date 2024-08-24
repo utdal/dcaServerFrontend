@@ -49,10 +49,10 @@ function App() {
                   <HomeButton />
                   <h1 style={{ flex: 1, textAlign: 'center', margin: 0 }}>DCA Server</h1>
                   <a href="/guide-for-biologists" style={{ color: 'black', marginLeft: '10px' }}>
-                    <FontAwesomeIcon icon={faMagnifyingGlass} size="2x" />
+                    Intro
                   </a>
                   <a href="/introductory-video" style={{ color: 'black', marginLeft: '50px' }}>
-                    <FontAwesomeIcon icon={faVideo} size="2x" />
+                    Misc.
                   </a>
                 </header>
                 <main style={{ paddingBottom: '100px' }}>
@@ -65,12 +65,6 @@ function App() {
                         image="path/to/your/image1.jpg"
                         title="MSA-DCA"
                         description="Estimates possible protein structure using pairs of amino acids that tend to evolve together"
-                      />
-                      <Tile
-                        link="/dca-task-list"
-                        image="path/to/your/image2.jpg"
-                        title="DCA Results"
-                        description="Past DCA Results"
                       />
                       <Tile
                         link="/LDL"

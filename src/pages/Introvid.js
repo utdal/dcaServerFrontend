@@ -39,15 +39,7 @@ function Introvid() {
         <div style={styles.homeButtonContainer}>
           <HomeButton />
         </div>
-        <span style={styles.title}>Introductory Video</span>
-      </div>
-      <div style={styles.content}>
-        <h2>Welcome to the Introductory Video</h2>
-        <p>Here you will find a video introduction to our DCA tools.</p>
-        <video controls style={{ width: '80%', marginTop: '20px' }}>
-          <source src="path/to/your/intro_video.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <span style={styles.title}>Additional Info</span>
       </div>
     </div>
   );
