@@ -11,7 +11,7 @@ const CoevolvingPairs = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showExamplesMenu, setShowExamplesMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [msaOnly, setMsaOnly] = useState(false);
+  const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: false }); // Use object to track file types
   const [saveMsaId, setSaveMsaId] = useState(false);
   const existingTab = useRef(null);
 
@@ -63,7 +63,7 @@ const CoevolvingPairs = () => {
         a.click();
         window.URL.revokeObjectURL(url);
       }
-      if (!msaOnly) {
+      if (!selectedFileTypes.MSA && !selectedFileTypes.Seed) {
         const dcaTask = await computeDca(msaTask.id);
         const lastTaskIds = JSON.parse(localStorage.getItem('lastTaskIds')) || [];
         const newLastTaskId = { id: dcaTask.id, time: new Date().getTime() };
@@ -72,7 +72,10 @@ const CoevolvingPairs = () => {
         console.log('Updated lastTaskIds in localStorage:', lastTaskIds);
         const url = '/tasks?ids=' + msaTask.id + ',' + dcaTask.id;
         window.open(url, '_blank');
-      } else {
+      } else if (selectedFileTypes.MSA) {
+        const url = '/tasks?ids=' + msaTask.id;
+        window.open(url, '_blank');
+      } else if (selectedFileTypes.Seed) {
         const url = '/tasks?ids=' + msaTask.id;
         window.open(url, '_blank');
       }
@@ -91,7 +94,7 @@ const CoevolvingPairs = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (file && file.type === 'text/plain') {
+    if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const text = e.target.result;
@@ -103,11 +106,25 @@ const CoevolvingPairs = () => {
           alert("File content exceeds the 700 character limit.");
         }
       };
-      reader.readAsText(file);
+
+      // Determine which file type is allowed based on selection
+      if (selectedFileTypes.MSA && file.name.endsWith('.msa')) {
+        reader.readAsText(file);
+      } else if (selectedFileTypes.Seed && file.name.endsWith('.seed')) {
+        reader.readAsText(file);
+      } else {
+        alert("Please upload a valid file based on the selected type.");
+      }
     }
   };
 
-  const handleMsaOnlyChange = () => setMsaOnly((prev) => !prev);
+const handleFileTypeChange = (type) => {
+  setSelectedFileTypes((prev) => ({
+    MSA: type === 'MSA' ? !prev.MSA : false,
+    Seed: type === 'Seed' ? !prev.Seed : false,
+  }));
+};
+
 
   const handleSaveMsaIdChange = () => setSaveMsaId((prev) => !prev);
 
@@ -144,7 +161,7 @@ const CoevolvingPairs = () => {
     headerText: {
       textAlign: 'center',
       flex: 1,
-      marginRight: '-100px', 
+      marginRight: '-100px',
     },
     contentContainer: {
       flex: 1,
@@ -219,8 +236,8 @@ const CoevolvingPairs = () => {
       border: 'none',
       borderRadius: '8px',
       boxShadow: isSubmitting ? '0 2px 4px rgba(0, 0, 0, 0.5)' : '0 4px 8px rgba(0, 0, 0, 0.2)',
-      transform: isSubmitting ? 'scale(0.98)' : 'scale(1)',
-      transition: 'transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ease',
+      transform: isSubmitting ? 'scale(0.98)' : 'scale(1)',      
+transition: 'transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ease',
     },
     button: {
       padding: '10px 20px',
@@ -228,7 +245,7 @@ const CoevolvingPairs = () => {
       border: '1px solid #ccc',
       borderRadius: '4px',
       cursor: 'pointer',
-      backgroundColor: '#e0e0e0', // Updated to light grey
+      backgroundColor: '#e0e0e0', // Updated to light grey    
       color: '#000', // Updated text color for contrast
       marginTop: '10px',
       transition: 'background-color 0.3s ease',
@@ -259,6 +276,13 @@ const CoevolvingPairs = () => {
     },
     fileInput: {
       marginTop: '10px',
+    },
+    fileTypeSelection: {
+      marginTop: '10px',
+      textAlign: 'center',
+    },
+    fileTypeCheckbox: {
+      marginRight: '10px',
     },
     settingsMenu: {
       marginTop: '20px',
@@ -328,21 +352,20 @@ const CoevolvingPairs = () => {
         <HomeButton />
         <span style={styles.headerText}>MSA-DCA</span>
         <button
-  style={{
-    backgroundColor: '#e0e0e0', 
-    color: '#333', 
-    border: '1px solid #ccc', 
-    borderRadius: '5px', 
-    padding: '10px 20px', 
-    cursor: 'pointer', 
-    marginRight: '100px', 
-    fontSize: '16px' 
-  }}
-  onClick={handleDcaTaskListClick}
->
-  DCA Task List
-</button>
-
+          style={{
+            backgroundColor: '#e0e0e0',
+            color: '#333',
+            border: '1px solid #ccc',
+            borderRadius: '5px',
+            padding: '10px 20px',
+            cursor: 'pointer',
+            marginRight: '100px',
+            fontSize: '16px',
+          }}
+          onClick={handleDcaTaskListClick}
+        >
+          DCA Task List
+        </button>
       </div>
       <div style={styles.container}>
         <div style={styles.tabs}>
@@ -361,6 +384,30 @@ const CoevolvingPairs = () => {
         </div>
         {activeTab === 'Tab1' && (
           <>
+            <div style={styles.fileTypeSelection}>
+              <label>
+                <input
+                  type="checkbox"
+                  name="fileType"
+                  value="FASTA"
+                  checked={selectedFileTypes.MSA}
+                  onChange={() => handleFileTypeChange('MSA')}
+                  style={styles.fileTypeCheckbox}
+                />
+                MSA File
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="fileType"
+                  value="FASTA"
+                  checked={selectedFileTypes.Seed}
+                  onChange={() => handleFileTypeChange('Seed')}
+                  style={styles.fileTypeCheckbox}
+                />
+                Seed File
+              </label>
+            </div>
             <div style={styles.inputContainer}>
               <textarea
                 style={styles.inputTextBox}
@@ -377,12 +424,12 @@ const CoevolvingPairs = () => {
             </div>
             <input
               type="file"
-              accept=".txt"
+              accept=".FASTA"
               onChange={handleFileChange}
               style={styles.fileInput}
             />
             <button
-              style={styles.button} 
+              style={styles.button}
               onClick={() => setShowExamplesMenu((prev) => !prev)}
             >
               Examples
@@ -422,19 +469,6 @@ const CoevolvingPairs = () => {
           <div style={styles.settingsMenu}>
             <div
               style={styles.settingsOption}
-              onClick={handleMsaOnlyChange}
-            >
-              <input
-                type="checkbox"
-                id="msaOnly"
-                name="msaOnly"
-                checked={msaOnly}
-                readOnly
-              />
-              <label htmlFor="msaOnly">MSA Only</label>
-            </div>
-            <div
-              style={styles.settingsOptionLast}
               onClick={handleSaveMsaIdChange}
             >
               <input
