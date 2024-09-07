@@ -59,7 +59,7 @@ function App() {
                     <div className="server-cards">
                       <Tile
                         link="/coevolving-pairs"
-                        image="path/to/your/image1.jpg"
+                        image="..."
                         title="MSA-DCA"
                         description="Estimates possible protein structure using pairs of amino acids that tend to evolve together"
                       />

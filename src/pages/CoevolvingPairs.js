@@ -345,160 +345,161 @@ transition: 'transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ea
       backgroundColor: '#e0e0e0',
     },
   };
-
-  return (
-    <div style={styles.app}>
-      <div style={styles.header}>
-        <HomeButton />
-        <span style={styles.headerText}>MSA-DCA</span>
-        <button
-          style={{
-            backgroundColor: '#e0e0e0',
-            color: '#333',
-            border: '1px solid #ccc',
-            borderRadius: '5px',
-            padding: '10px 20px',
-            cursor: 'pointer',
-            marginRight: '100px',
-            fontSize: '16px',
-          }}
-          onClick={handleDcaTaskListClick}
+return (
+  <div style={styles.app}>
+    <div style={styles.header}>
+      <HomeButton />
+      <span style={styles.headerText}>MSA-DCA</span>
+      <button
+        style={{
+          backgroundColor: '#e0e0e0',
+          color: '#333',
+          border: '1px solid #ccc',
+          borderRadius: '5px',
+          padding: '10px 20px',
+          cursor: 'pointer',
+          marginRight: '100px',
+          fontSize: '16px',
+        }}
+        onClick={handleDcaTaskListClick}
+      >
+        DCA Task List
+      </button>
+    </div>
+    <div style={styles.container}>
+      <div style={styles.tabs}>
+        <div
+          style={activeTab === 'Tab1' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
+          onClick={() => handleTabClick('Tab1')}
         >
-          DCA Task List
-        </button>
-      </div>
-      <div style={styles.container}>
-        <div style={styles.tabs}>
-          <div
-            style={activeTab === 'Tab1' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
-            onClick={() => handleTabClick('Tab1')}
-          >
-            Input
-          </div>
-          <div
-            style={activeTab === 'Tab2' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
-            onClick={() => handleTabClick('Tab2')}
-          >
-            Settings
-          </div>
+          Input
         </div>
-        {activeTab === 'Tab1' && (
-          <>
-            <div style={styles.fileTypeSelection}>
-              <label>
-                <input
-                  type="checkbox"
-                  name="fileType"
-                  value="FASTA"
-                  checked={selectedFileTypes.MSA}
-                  onChange={() => handleFileTypeChange('MSA')}
-                  style={styles.fileTypeCheckbox}
-                />
-                MSA File
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="fileType"
-                  value="FASTA"
-                  checked={selectedFileTypes.Seed}
-                  onChange={() => handleFileTypeChange('Seed')}
-                  style={styles.fileTypeCheckbox}
-                />
-                Seed File
-              </label>
-            </div>
-            <div style={styles.inputContainer}>
-              <textarea
-                style={styles.inputTextBox}
-                value={inputValue}
-                onChange={handleInputChange}
-                onBlur={handleBlur}
-                placeholder="Enter sequence"
-              />
-              {showError && !isValid && (
-                <div style={styles.invalidSequence}>
-                  Please enter a valid sequence (at least 3 characters)
-                </div>
-              )}
-            </div>
-            <input
-              type="file"
-              accept=".FASTA"
-              onChange={handleFileChange}
-              style={styles.fileInput}
+        <div
+          style={activeTab === 'Tab2' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
+          onClick={() => handleTabClick('Tab2')}
+        >
+          Settings
+        </div>
+      </div>
+      {activeTab === 'Tab1' && (
+        <>
+          <div style={styles.inputContainer}>
+            <textarea
+              style={styles.inputTextBox}
+              value={inputValue}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              placeholder="Enter sequence"
             />
-            <button
-              style={styles.button}
-              onClick={() => setShowExamplesMenu((prev) => !prev)}
-            >
-              Examples
-            </button>
-            {showExamplesMenu && (
-              <div style={styles.examplesMenu}>
-                <div
-                  style={styles.examplesOption}
-                  onClick={() => handleExampleClick('Example 1')}
-                >
-                  Example 1
-                </div>
-                <div
-                  style={styles.examplesOption}
-                  onClick={() => handleExampleClick('Example 2')}
-                >
-                  Example 2
-                </div>
-                <div
-                  style={styles.examplesOption}
-                  onClick={() => handleExampleClick('ATGCGTACGTAGCTAGCTAG')}
-                >
-                  ATGCGTACGTAGCTAGCTAG
-                </div>
+            {showError && !isValid && (
+              <div style={styles.invalidSequence}>
+                Please enter a valid sequence (at least 3 characters)
               </div>
             )}
-            <button
-              style={styles.submitButton}
-              onClick={handleSubmitClick}
-              disabled={!isValid}
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit'}
-            </button>
-          </>
-        )}
-        {activeTab === 'Tab2' && (
-          <div style={styles.settingsMenu}>
-            <div
-              style={styles.settingsOption}
-              onClick={handleSaveMsaIdChange}
-            >
-              <input
-                type="checkbox"
-                id="saveMsaId"
-                name="saveMsaId"
-                checked={saveMsaId}
-                readOnly
-              />
-              <label htmlFor="saveMsaId">Save MSA ID</label>
-            </div>
           </div>
-        )}
-      </div>
-      {showModal && (
-        <>
-          <div style={styles.modalOverlay} onClick={handleCancel}></div>
-          <div style={styles.modal}>
-            <div>Are you sure you want to submit?</div>
-            <div style={styles.modalButtons}>
-              <button
-                style={{ ...styles.modalButton, ...styles.modalSubmitButton }}
-                onClick={handleSubmit}
+          <input
+            type="file"
+            accept=".FASTA"
+            onChange={handleFileChange}
+            style={styles.fileInput}
+          />
+          <button
+            style={styles.button}
+            onClick={() => setShowExamplesMenu((prev) => !prev)}
+          >
+            Examples
+          </button>
+          {showExamplesMenu && (
+            <div style={styles.examplesMenu}>
+              <div
+                style={styles.examplesOption}
+                onClick={() => handleExampleClick('Example 1')}
               >
-                Submit
-              </button>
-              <button
-                style={{ ...styles.modalButton, ...styles.modalCancelButton }}
-                onClick={handleCancel}
+                Example 1
+              </div>
+              <div
+                style={styles.examplesOption}
+                onClick={() => handleExampleClick('Example 2')}
               >
+                Example 2
+              </div>
+              <div
+                style={styles.examplesOption}
+                onClick={() => handleExampleClick('ATGCGTACGTAGCTAGCTAG')}
+              >
+                ATGCGTACGTAGCTAGCTAG
+              </div>
+            </div>
+          )}
+          <button
+            style={styles.submitButton}
+            onClick={handleSubmitClick}
+            disabled={!isValid}
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit'}
+          </button>
+        </>
+      )}
+      {activeTab === 'Tab2' && (
+        <div style={styles.settingsMenu}>
+          <div
+            style={styles.settingsOption}
+            onClick={handleSaveMsaIdChange}
+          >
+            <input
+              type="checkbox"
+              id="saveMsaId"
+              name="saveMsaId"
+              checked={saveMsaId}
+              readOnly
+              style={styles.checkbox}
+            />
+            <label htmlFor="saveMsaId" style={styles.checkboxLabel}>Save MSA ID</label>
+          </div>
+          <div style={{ marginTop: '0px', padding: '10px', borderTop: '2px solid #ddd' }}>
+            <span style={{ fontWeight: 'bold', marginRight: '10px' }}>Currently Accepted Files:</span>
+            <label style={{ marginRight: '20px', display: 'flex', alignItems: 'center' }}>
+              <input
+                type="radio"
+                name="fileType"
+                value="MSA"
+                checked={selectedFileTypes.MSA}
+                onChange={() => handleFileTypeChange('MSA')}
+                style={{ marginRight: '5px' }}
+              />
+              MSA File
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center' }}>
+              <input
+                type="radio"
+                name="fileType"
+                value="Seed"
+                checked={selectedFileTypes.Seed}
+                onChange={() => handleFileTypeChange('Seed')}
+                style={{ marginRight: '5px' }}
+              />
+              Seed File
+            </label>
+          </div>
+        </div>
+      )}
+    </div>
+    {showModal && (
+      <>
+        <div style={styles.modalOverlay} onClick={handleCancel}></div>
+        <div style={styles.modal}>
+          <div>Are you sure you want to submit?</div>
+          <div style={styles.modalButtons}>
+            <button
+              style={{ ...styles.modalButton, ...styles.modalSubmitButton }}
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+            <button
+              style={{ ...styles.modalButton, ...styles.modalCancelButton }}
+              onClick={handleCancel}
+            >
                 Cancel
               </button>
             </div>
@@ -508,5 +509,7 @@ transition: 'transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ea
     </div>
   );
 };
+
+
 
 export default CoevolvingPairs;
