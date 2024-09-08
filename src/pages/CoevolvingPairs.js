@@ -507,49 +507,106 @@ return (
         </>
       )}
       {activeTab === 'Tab2' && (
-        <div style={styles.settingsMenu}>
-          <div
-            style={styles.settingsOption}
-            onClick={handleSaveMsaIdChange}
-          >
-            <input
-              type="checkbox"
-              id="saveMsaId"
-              name="saveMsaId"
-              checked={saveMsaId}
-              readOnly
-              style={styles.checkbox}
-            />
-            <label htmlFor="saveMsaId" style={styles.checkboxLabel}>Save MSA ID</label>
-          </div>
-          <div style={{ marginTop: '0px', padding: '10px', borderTop: '2px solid #ddd' }}>
-            <span style={{ fontWeight: 'bold', marginRight: '10px' }}>Currently Accepted Files:</span>
-            <label style={{ marginRight: '20px', display: 'flex', alignItems: 'center' }}>
-              <input
-                type="radio"
-                name="fileType"
-                value="MSA"
-                checked={selectedFileTypes.MSA}
-                onChange={() => handleFileTypeChange('MSA')}
-                style={{ marginRight: '5px' }}
-              />
-              MSA File
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center' }}>
-              <input
-                type="radio"
-                name="fileType"
-                value="Seed"
-                checked={selectedFileTypes.Seed}
-                onChange={() => handleFileTypeChange('Seed')}
-                style={{ marginRight: '5px' }}
-              />
-              Seed File
-            </label>
-          </div>
+
+        <div style={{
+            background: '#E5E5E52',
+            borderRadius: '12px',
+            padding: '20px',
+            marginBottom: '20px',
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
+            color: '#f0f0f0',
+            fontFamily: "'Roboto', sans-serif"
+        }}>
+            <h2 style={{
+                fontSize: '1.8rem',
+                color: '#1c1f24',
+                marginBottom: '10px',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                fontWeight: 'bold'
+            }}>
+                Settings
+            </h2>
+
+            <div style={{ overflowY: 'auto', maxHeight: '400px' }}>
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '10px 0',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
+                }}>
+                    <input
+                        type="checkbox"
+                        id="option1"
+                        style={{
+                            WebkitAppearance: 'none',
+                            appearance: 'none',
+                            backgroundColor: '#1c1f24',
+                            border: '2px solid #4d4d4d',
+                            padding: '9px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            marginRight: '10px',
+                            transition: 'all 0.3s ease'
+                        }}
+                        onClick={(e) => e.target.style.backgroundColor = e.target.checked ? '#4caf50' : '#2c3036'}
+                    />
+                    <label
+                        htmlFor="option1"
+                        style={{
+                            color: '#1c1f24',
+                            fontSize: '1rem',
+                            fontWeight: '500',
+                            transition: 'color 0.3s ease'
+                        }}
+                        onMouseOver={(e) => e.target.style.color = '#4caf50'}
+                        onMouseOut={(e) => e.target.style.color = '#1c1f24'}
+                        onClick={handleSaveMsaIdChange}
+                    >
+                        Save MSA ID
+                    </label>
+                </div>
+
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '10px 0',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
+                }}>
+                    <input
+                        type="checkbox"
+                        id="option2"
+                        style={{
+                            WebkitAppearance: 'none',
+                            appearance: 'none',
+                            backgroundColor: '#1c1f24',
+                            border: '2px solid #4d4d4d',
+                            padding: '9px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            marginRight: '10px',
+                            transition: 'all 0.3s ease'
+                        }}
+                        onClick={(e) => e.target.style.backgroundColor = e.target.checked ? '#4caf50' : '#2c3036'}
+                    />
+                    <label
+                        htmlFor="option2"
+                        style={{
+                            color: '#1c1f24',
+                            fontSize: '1rem',
+                            fontWeight: '500',
+                            transition: 'color 0.3s ease'
+                        }}
+                        onMouseOver={(e) => e.target.style.color = '#4caf50'}
+                        onMouseOut={(e) => e.target.style.color = '#1c1f24'}
+                    >
+                        Input Root
+                    </label>
+                </div>
+            </div>
         </div>
-      )}
-    </div>
+)}
+
     {showModal && (
       <>
         <div style={styles.modalOverlay} onClick={handleCancel}></div>
@@ -572,6 +629,7 @@ return (
           </div>
         </>
       )}
+    </div>
     </div>
   );
 };
