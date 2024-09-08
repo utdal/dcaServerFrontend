@@ -13,9 +13,13 @@ const CoevolvingPairs = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: false }); // Use object to track file types
   const [saveMsaId, setSaveMsaId] = useState(false);
+  const [inputType, setInputType] = useState('Sequence'); 
+  const [showDropdown, setShowDropdown] = useState(false);
   const existingTab = useRef(null);
+  
 
   const validateInput = (value) => value.length >= 3;
+  
 
   const handleInputChange = (event) => {
     const value = event.target.value;
@@ -38,6 +42,14 @@ const CoevolvingPairs = () => {
       setShowError(false);
       setShowExamplesMenu(false);
     }
+  };
+
+  const handleInputTypeChange = (type) => {
+    setInputType(type);
+  };
+
+  const handleDropdownToggle = () => {
+    setShowDropdown(!showDropdown);
   };
 
   const handleTabClick = (tab) => setActiveTab(tab);
@@ -220,6 +232,33 @@ const handleFileTypeChange = (type) => {
       borderColor: showError && !isValid ? 'red' : 'black',
       boxSizing: 'border-box',
     },
+    dropdownButton: {
+      backgroundColor: '#87CEEB',
+      color: 'white',
+      border: 'none',
+      padding: '10px 20px',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      marginTop: '20px',
+      marginRight: '100px',
+    },
+    dropdownMenu: {
+      display: showDropdown ? 'block' : 'none',
+      backgroundColor: '#f1f1f1',
+      boxShadow: '0px 8px 16px rgba(0,0,0,0.2)',
+      position: 'absolute',
+      minWidth: '160px',
+      zIndex: 1,
+    },
+    dropdownOption: {
+      padding: '12px 16px',
+      cursor: 'pointer',
+      backgroundColor: '#fff',
+      borderBottom: '1px solid #ddd',
+    },
+    checkbox: {
+      marginRight: '10px',
+    },
     invalidSequence: {
       color: 'red',
       fontWeight: 'bold',
@@ -383,20 +422,47 @@ return (
       </div>
       {activeTab === 'Tab1' && (
         <>
-          <div style={styles.inputContainer}>
-            <textarea
-              style={styles.inputTextBox}
-              value={inputValue}
-              onChange={handleInputChange}
-              onBlur={handleBlur}
-              placeholder="Enter sequence"
-            />
-            {showError && !isValid && (
-              <div style={styles.invalidSequence}>
-                Please enter a valid sequence (at least 3 characters)
-              </div>
-            )}
-          </div>
+          <h3 style={{ fontWeight: 'normal', fontSize: '18px', margin: '10px 0' }}>
+  Enter {inputType === 'Sequence' ? 'sequence' : 'PDB ID'}
+</h3>
+<div style={styles.inputContainer}>
+  <textarea
+    style={styles.inputTextBox}
+    placeholder={inputType === 'Sequence' ? 'Enter sequence' : 'Enter PDB ID'}
+    value={inputValue}
+    onChange={handleInputChange}
+    onBlur={handleBlur}
+  />
+</div>
+
+<button style={styles.dropdownButton} onClick={handleDropdownToggle}>
+  Select Input Type
+</button>
+<div style={styles.dropdownMenu}>
+  <div style={styles.dropdownOption}>
+    <input
+      type="radio"
+      id="sequence"
+      name="inputType"
+      style={styles.checkbox}
+      checked={inputType === 'Sequence'}
+      onChange={() => handleInputTypeChange('Sequence')}
+    />
+    <label htmlFor="sequence">Sequence</label>
+  </div>
+  <div style={styles.dropdownOption}>
+    <input
+      type="radio"
+      id="pdbid"
+      name="inputType"
+      style={styles.checkbox}
+      checked={inputType === 'PDB ID'}
+      onChange={() => handleInputTypeChange('PDB ID')}
+    />
+    <label htmlFor="pdbid">PDB ID</label>
+  </div>
+</div>
+
           <input
             type="file"
             accept=".FASTA"
