@@ -78,6 +78,24 @@ const TaskTile = ({ task_id, updateInterval = 5 }) => {
                     View DCA Results
                 </a>
             );
+        } else if (task.name === 'api.tasks.map_residues_task') {
+            return (
+                <a
+                    href={'/coevolving-pairs-results?task_id=' + task.id}
+                    style={linkStyle}
+                    target='_blank'>
+                    View Results
+                </a>
+            );
+        } else if (task.name === 'api.tasks.generate_contacts_task') {
+            return (
+                <a
+                    href={'/coevolving-pairs-results?structure_id=' + task.id}
+                    style={linkStyle}
+                    target='_blank'>
+                    View Results
+                </a>
+            );
         }
         return undefined;
     }

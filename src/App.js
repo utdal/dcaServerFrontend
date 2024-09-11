@@ -12,6 +12,7 @@ import ResultsPage from './pages/ResultsPage';
 import HomeButton from './components/HomeButton';
 import ViewTasks from './pages/ViewTasks';
 import UTDLogo from './pages/UTDLogo.png';
+import ApiTest from './backend/ApiTest';
 import './App.css';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/loading" element={<LoadingPage />} />
           <Route path="/dca-task-list" element={<DCATaskList />} />
           <Route path="/tasks" element={<ViewTasks />} />
+          <Route path="/test" element={<ApiTest />} />
           <Route 
             path="/" 
             element={
