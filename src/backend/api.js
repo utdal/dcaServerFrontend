@@ -1,5 +1,5 @@
 // const apiBaseUrl = 'http://localhost:8000/api/';
-const apiBaseUrl = 'http://18.213.103.176:8000/api/';
+const apiBaseUrl = 'http://18.213.103.176/api/';
 
 
 class APIObject {
@@ -76,6 +76,8 @@ export class Task extends APIObject {
         const nameMap = {
             'api.tasks.compute_dca_task': 'Compute DCA Task',
             'api.tasks.generate_msa_task': 'Generate MSA Task',
+            'api.tasks.map_residues_task': 'Map Residues Task',
+            'api.tasks.generate_contacts_task': 'Generate Contacts Task',
         }
         return nameMap[this.name] || this.name;
     }
