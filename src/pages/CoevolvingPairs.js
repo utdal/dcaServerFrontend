@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import HomeButton from '../components/HomeButton';
 import { generateMsa, computeDca } from '../backend/api';
@@ -14,13 +13,11 @@ const CoevolvingPairs = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: false }); // Use object to track file types
   const [saveMsaId, setSaveMsaId] = useState(false);
-  const [inputType, setInputType] = useState('Sequence'); 
-  const [showDropdown, setShowDropdown] = useState(false);
   const existingTab = useRef(null);
-  
+  const [pdbId, setPdbId] = useState('');
+
 
   const validateInput = (value) => value.length >= 3;
-  
 
   const handleInputChange = (event) => {
     const value = event.target.value;
@@ -30,6 +27,9 @@ const CoevolvingPairs = () => {
       setShowError(false);
     }
   };
+const handlePdbIdChange = (event) => {
+  setPdbId(event.target.value);
+};
 
   const handleBlur = () => {
     setIsValid(validateInput(inputValue));
@@ -43,14 +43,6 @@ const CoevolvingPairs = () => {
       setShowError(false);
       setShowExamplesMenu(false);
     }
-  };
-
-  const handleInputTypeChange = (type) => {
-    setInputType(type);
-  };
-
-  const handleDropdownToggle = () => {
-    setShowDropdown(!showDropdown);
   };
 
   const handleTabClick = (tab) => setActiveTab(tab);
@@ -233,33 +225,6 @@ const handleFileTypeChange = (type) => {
       borderColor: showError && !isValid ? 'red' : 'black',
       boxSizing: 'border-box',
     },
-    dropdownButton: {
-      backgroundColor: '#87CEEB',
-      color: 'white',
-      border: 'none',
-      padding: '10px 20px',
-      borderRadius: '8px',
-      cursor: 'pointer',
-      marginTop: '20px',
-      marginRight: '100px',
-    },
-    dropdownMenu: {
-      display: showDropdown ? 'block' : 'none',
-      backgroundColor: '#f1f1f1',
-      boxShadow: '0px 8px 16px rgba(0,0,0,0.2)',
-      position: 'absolute',
-      minWidth: '160px',
-      zIndex: 1,
-    },
-    dropdownOption: {
-      padding: '12px 16px',
-      cursor: 'pointer',
-      backgroundColor: '#fff',
-      borderBottom: '1px solid #ddd',
-    },
-    checkbox: {
-      marginRight: '10px',
-    },
     invalidSequence: {
       color: 'red',
       fontWeight: 'bold',
@@ -385,188 +350,181 @@ transition: 'transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ea
       backgroundColor: '#e0e0e0',
     },
   };
-return (
-  <div style={styles.app}>
-    <div style={styles.header}>
-      <HomeButton />
-      <span style={styles.headerText}>MSA-DCA</span>
-      <button
-        style={{
-          backgroundColor: '#e0e0e0',
-          color: '#333',
-          border: '1px solid #ccc',
-          borderRadius: '5px',
-          padding: '10px 20px',
-          cursor: 'pointer',
-          marginRight: '100px',
-          fontSize: '16px',
-        }}
-        onClick={handleDcaTaskListClick}
-      >
-        DCA Task List
-      </button>
-    </div>
-    <div style={styles.container}>
-      <div style={styles.tabs}>
-        <div
-          style={activeTab === 'Tab1' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
-          onClick={() => handleTabClick('Tab1')}
+  return (
+    <div style={styles.app}>
+      <div style={styles.header}>
+        <HomeButton />
+        <span style={styles.headerText}>Coevolving Pairs</span>
+        <button
+          style={{
+            backgroundColor: '#e0e0e0',
+            color: '#333',
+            border: '1px solid #ccc',
+            borderRadius: '5px',
+            padding: '10px 20px',
+            cursor: 'pointer',
+            marginRight: '100px',
+            fontSize: '16px',
+          }}
+          onClick={handleDcaTaskListClick}
         >
-          Input
-        </div>
-        <div
-          style={activeTab === 'Tab2' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
-          onClick={() => handleTabClick('Tab2')}
-        >
-          Settings
-        </div>
+          DCA Task List
+        </button>
       </div>
-      {activeTab === 'Tab1' && (
-        <>
-          <h3 style={{ fontWeight: 'normal', fontSize: '18px', margin: '10px 0' }}>
-  Enter {inputType === 'Sequence' ? 'sequence' : 'PDB ID'}
-</h3>
-<div style={styles.inputContainer}>
-  <textarea
-    style={styles.inputTextBox}
-    placeholder={inputType === 'Sequence' ? 'Enter sequence' : 'Enter PDB ID'}
-    value={inputValue}
-    onChange={handleInputChange}
-    onBlur={handleBlur}
-  />
-</div>
-
-<button style={styles.dropdownButton} onClick={handleDropdownToggle}>
-  Select Input Type
-</button>
-<div style={styles.dropdownMenu}>
-  <div style={styles.dropdownOption}>
-    <input
-      type="radio"
-      id="sequence"
-      name="inputType"
-      style={styles.checkbox}
-      checked={inputType === 'Sequence'}
-      onChange={() => handleInputTypeChange('Sequence')}
-    />
-    <label htmlFor="sequence">Sequence</label>
-  </div>
-  <div style={styles.dropdownOption}>
-    <input
-      type="radio"
-      id="pdbid"
-      name="inputType"
-      style={styles.checkbox}
-      checked={inputType === 'PDB ID'}
-      onChange={() => handleInputTypeChange('PDB ID')}
-    />
-    <label htmlFor="pdbid">PDB ID</label>
-  </div>
-</div>
-
-          <input
-            type="file"
-            accept=".FASTA"
-            onChange={handleFileChange}
-            style={styles.fileInput}
-          />
-          <button
-            style={styles.button}
-            onClick={() => setShowExamplesMenu((prev) => !prev)}
-          >
-            Examples
-          </button>
-          {showExamplesMenu && (
-            <div style={styles.examplesMenu}>
-              <div
-                style={styles.examplesOption}
-                onClick={() => handleExampleClick('Example 1')}
-              >
-                Example 1
-              </div>
-              <div
-                style={styles.examplesOption}
-                onClick={() => handleExampleClick('Example 2')}
-              >
-                Example 2
-              </div>
-              <div
-                style={styles.examplesOption}
-                onClick={() => handleExampleClick('ATGCGTACGTAGCTAGCTAG')}
-              >
-                ATGCGTACGTAGCTAGCTAG
-              </div>
-            </div>
-          )}
-          <button
-            style={styles.submitButton}
-            onClick={handleSubmitClick}
-            disabled={!isValid}
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit'}
-          </button>
-        </>
-      )}
-      {activeTab === 'Tab2' && (
-        <div style={styles.settingsMenu}>
+      <div style={styles.container}>
+        <div style={styles.tabs}>
           <div
-            style={styles.settingsOption}
-            onClick={handleSaveMsaIdChange}
+            style={activeTab === 'Tab1' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
+            onClick={() => handleTabClick('Tab1')}
           >
-            <input
-              type="checkbox"
-              id="saveMsaId"
-              name="saveMsaId"
-              checked={saveMsaId}
-              readOnly
-              style={styles.checkbox}
-            />
-            <label htmlFor="saveMsaId" style={styles.checkboxLabel}>Save MSA ID</label>
+            Input
           </div>
-          <div style={{ marginTop: '0px', padding: '10px', borderTop: '2px solid #ddd' }}>
-            <span style={{ fontWeight: 'bold', marginRight: '10px' }}>Currently Accepted Files:</span>
-            <label style={{ marginRight: '20px', display: 'flex', alignItems: 'center' }}>
-              <input
-                type="radio"
-                name="fileType"
-                value="MSA"
-                checked={selectedFileTypes.MSA}
-                onChange={() => handleFileTypeChange('MSA')}
-                style={{ marginRight: '5px' }}
-              />
-              MSA File
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center' }}>
-              <input
-                type="radio"
-                name="fileType"
-                value="Seed"
-                checked={selectedFileTypes.Seed}
-                onChange={() => handleFileTypeChange('Seed')}
-                style={{ marginRight: '5px' }}
-              />
-              Seed File
-            </label>
+          <div
+            style={activeTab === 'Tab2' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
+            onClick={() => handleTabClick('Tab2')}
+          >
+            Settings
           </div>
         </div>
-      )}
-    </div>
-    {showModal && (
-      <>
-        <div style={styles.modalOverlay} onClick={handleCancel}></div>
-        <div style={styles.modal}>
-          <div>Are you sure you want to submit?</div>
-          <div style={styles.modalButtons}>
+        {activeTab === 'Tab1' && (
+          <>
+            <div style={styles.inputContainer}>
+              <textarea
+                style={styles.inputTextBox}
+                value={inputValue}
+                onChange={handleInputChange}
+                onBlur={handleBlur}
+                placeholder="Enter sequence"
+              />
+              {showError && !isValid && (
+                <div style={styles.invalidSequence}>
+                  Please enter a valid sequence (at least 3 characters)
+                </div>
+              )}
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+
+              <input
+                type="file"
+                accept=".FASTA"
+                onChange={handleFileChange}
+                style={styles.fileInput}
+              />
+            </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+		<input
+ 		 type="text"
+ 		 value={pdbId}
+ 		onChange={handlePdbIdChange}
+  		maxLength="4"
+  		placeholder="Enter PDB ID"
+  		style={{ width: '80px', marginRight: '10px' }}
+		/>
+
+              <input
+                type="file"
+                accept=".FASTA"
+                onChange={handleFileChange}
+                style={styles.fileInput}
+              />
+            </div>
             <button
-              style={{ ...styles.modalButton, ...styles.modalSubmitButton }}
-              onClick={handleSubmit}
+              style={styles.button}
+              onClick={() => setShowExamplesMenu((prev) => !prev)}
             >
-              Submit
+              Examples
             </button>
+            {showExamplesMenu && (
+              <div style={styles.examplesMenu}>
+                <div
+                  style={styles.examplesOption}
+                  onClick={() => handleExampleClick('Example 1')}
+                >
+                  Example 1
+                </div>
+                <div
+                  style={styles.examplesOption}
+                  onClick={() => handleExampleClick('Example 2')}
+                >
+                  Example 2
+                </div>
+                <div
+                  style={styles.examplesOption}
+                  onClick={() => handleExampleClick('ATGCGTACGTAGCTAGCTAG')}
+                >
+                  ATGCGTACGTAGCTAGCTAG
+                </div>
+              </div>
+            )}
             <button
-              style={{ ...styles.modalButton, ...styles.modalCancelButton }}
-              onClick={handleCancel}
+              style={styles.submitButton}
+              onClick={handleSubmitClick}
+              disabled={!isValid}
             >
+              {isSubmitting ? 'Submitting...' : 'Submit'}
+            </button>
+          </>
+        )}
+        {activeTab === 'Tab2' && (
+          <div style={styles.settingsMenu}>
+            <div
+              style={styles.settingsOption}
+              onClick={handleSaveMsaIdChange}
+            >
+              <input
+                type="checkbox"
+                id="saveMsaId"
+                name="saveMsaId"
+                checked={saveMsaId}
+                readOnly
+                style={styles.checkbox}
+              />
+              <label htmlFor="saveMsaId" style={styles.checkboxLabel}>Save MSA ID</label>
+            </div>
+            <div style={{ marginTop: '0px', padding: '10px', borderTop: '2px solid #ddd' }}>
+              <span style={{ fontWeight: 'bold', marginRight: '10px' }}>Currently Accepted Files:</span>
+              <label style={{ marginRight: '20px', display: 'flex', alignItems: 'center' }}>
+                <input
+                  type="radio"
+                  name="fileType"
+                  value="MSA"
+                  checked={selectedFileTypes.MSA}
+                  onChange={() => handleFileTypeChange('MSA')}
+                  style={{ marginRight: '5px' }}
+                />
+                MSA File
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center' }}>
+                <input
+                  type="radio"
+                  name="fileType"
+                  value="Seed"
+                  checked={selectedFileTypes.Seed}
+                  onChange={() => handleFileTypeChange('Seed')}
+                  style={{ marginRight: '5px' }}
+                />
+                Seed File
+              </label>
+            </div>
+          </div>
+        )}
+      </div>
+      {showModal && (
+        <>
+          <div style={styles.modalOverlay} onClick={handleCancel}></div>
+          <div style={styles.modal}>
+            <div>Are you sure you want to submit?</div>
+            <div style={styles.modalButtons}>
+              <button
+                style={{ ...styles.modalButton, ...styles.modalSubmitButton }}
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+              <button
+                style={{ ...styles.modalButton, ...styles.modalCancelButton }}
+                onClick={handleCancel}
+              >
                 Cancel
               </button>
             </div>
@@ -575,7 +533,7 @@ return (
       )}
     </div>
   );
-};
+}
 
 
 
