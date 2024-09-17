@@ -5,6 +5,7 @@ import LDL from './pages/LDL';
 import Introvid from './pages/Introvid';
 import Bioguide from './pages/Bioguide';
 import CoevolvingPairsResults from './pages/CoevolvingPairsResults';
+import CoevolvingPairsThumbnail from './pages/CoevolvingPairsThumbnail.png'; 
 import DCATaskList from './pages/DCATaskList';
 import LoadingPage from './pages/LoadingPage';
 import Tile from './components/Tile';
@@ -59,12 +60,12 @@ function App() {
                     <h2>DCA Tools</h2>
                     <hr />
                     <div className="server-cards">
-                      <Tile
-                        link="/coevolving-pairs"
-                        image="..."
-                        title="Coevolving Pairs"
-                        description="Estimates possible protein structure using pairs of amino acids that tend to evolve together"
-                      />
+                    <Tile
+  link="/coevolving-pairs"
+  image={CoevolvingPairsThumbnail}
+  title="Coevolving Pairs"
+  description="Estimates possible protein structure using pairs of amino acids that tend to evolve together"
+/>
                       <Tile
                         link="/LDL"
                         image="path/to/your/image3.jpg"
