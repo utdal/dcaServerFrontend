@@ -5,14 +5,15 @@ import LDL from './pages/LDL';
 import Introvid from './pages/Introvid';
 import Bioguide from './pages/Bioguide';
 import CoevolvingPairsResults from './pages/CoevolvingPairsResults';
+import CoevolvingPairsThumbnail from './pages/CoevolvingPairsThumbnail.png'; 
+import DCATaskList from './pages/DCATaskList';
 import LoadingPage from './pages/LoadingPage';
 import Tile from './components/Tile';
 import ResultsPage from './pages/ResultsPage';
 import HomeButton from './components/HomeButton';
 import ViewTasks from './pages/ViewTasks';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub } from '@fortawesome/free-brands-svg-icons'; // Import GitHub icon
-import { faAtom } from '@fortawesome/free-solid-svg-icons'; // Import molecule/atom icon
+import UTDLogo from './pages/UTDLogo.png';
+import ApiTest from './backend/ApiTest';
 import './App.css';
 
 function App() {
@@ -27,15 +28,17 @@ function App() {
           <Route path="/results" element={<ResultsPage />} />
           <Route path="/guide-for-biologists" element={<Bioguide />} />
           <Route path="/loading" element={<LoadingPage />} />
+          <Route path="/dca-task-list" element={<DCATaskList />} />
           <Route path="/tasks" element={<ViewTasks />} />
+          <Route path="/test" element={<ApiTest />} />
           <Route 
             path="/" 
             element={
               <>
                 <header 
                   style={{ 
-                    backgroundColor: '#282c34', 
-                    color: 'white', 
+                    backgroundColor: '#E5EEFC', 
+                    color: 'black', 
                     padding: '20px', 
                     textAlign: 'center', 
                     minHeight: '100px', 
@@ -45,48 +48,29 @@ function App() {
                 >
                   <HomeButton />
                   <h1 style={{ flex: 1, textAlign: 'center', margin: 0 }}>DCA Server</h1>
+                  <a href="/guide-for-biologists" className="header-button" style={{ marginLeft: '10px' }}>
+                    Guide
+                  </a>
+                  <a href="/introductory-video" className="header-button" style={{ marginLeft: '10px' }}>
+                    Intro Video
+                  </a>
                 </header>
                 <main style={{ paddingBottom: '100px' }}>
                   <section className="web-servers">
                     <h2>DCA Tools</h2>
                     <hr />
                     <div className="server-cards">
-                      <Tile
-                        link="/coevolving-pairs"
-                        image="path/to/your/image1.jpg"
-                        title="MSA-DCA"
-                        description="Estimates possible protein structure using pairs of amino acids that tend to evolve together"
-                      />
-                      <Tile
-                        link="/coevolving-pairs-results"
-                        image="path/to/your/image2.jpg"
-                        title="DCA Results"
-                        description="EV Complex Information"
-                      />
+                    <Tile
+  link="/coevolving-pairs"
+  image={CoevolvingPairsThumbnail}
+  title="Coevolving Pairs"
+  description="Estimates possible protein structure using pairs of amino acids that tend to evolve together"
+/>
                       <Tile
                         link="/LDL"
                         image="path/to/your/image3.jpg"
                         title="Latent Generative Landscape"
                         description="Models complex dependencies in an MSA by mapping high-dimensional structures to interpretable forms"
-                      />
-                    </div>
-                  </section>
-                  
-                  <section className="web-servers">
-                    <h2>Tutorials</h2>
-                    <hr />
-                    <div className="server-cards">
-                      <Tile
-                        link="/introductory-video"
-                        image="path/to/your/image4.jpg"
-                        title="Introductory video"
-                        description="Watch our introductory video"
-                      />
-                      <Tile
-                        link="/guide-for-biologists"
-                        image="path/to/your/image5.jpg"
-                        title="Guide for Biologists"
-                        description="Comprehensive guide for biologists"
                       />
                     </div>
                   </section>
@@ -100,19 +84,17 @@ function App() {
                         link="https://github.com/utdal/py-mfdca"
                         image="path/to/github-logo.jpg"
                         title="MfDCA Source Code"
-                        description={<><FontAwesomeIcon icon={faGithub} /> View on GitHub</>}
+                        description="View on GitHub"
                       />
                       <Tile
                         link="https://github.com/utdal/seec-nt"
                         image="path/to/github-logo.jpg"
                         title="SEEC Source Code"
-                        description={<><FontAwesomeIcon icon={faGithub} /> View on GitHub</>}
+                        description="View on GitHub"
                       />
                     </div>
                   </section>
                 </main>
-
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
                 <footer>
                   <div className="footer-left">
@@ -126,7 +108,12 @@ function App() {
                       <i className="fas fa-info-circle"></i> About the Lab
                     </a>
                     <a href="https://www.moleculego.com/" target="_blank">
-                      <FontAwesomeIcon icon={faAtom} /> MoleculeGo
+                      MoleculeGo
+                    </a>
+                  </div>
+                  <div className="footer-logo">
+                    <a href="https://www.utdallas.edu/" target="_blank">
+                      <img src={UTDLogo} alt="UTD Logo" className="utd-logo" />
                     </a>
                   </div>
                 </footer>

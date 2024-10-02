@@ -10,4 +10,11 @@
   .home-button:hover {
     color: lightgray;
   }
+
+  .home-logo {
+    width: 50px;
+    height: auto;
+    margin: 0 8px; 
+  }
+  
   

@@ -1,0 +1,80 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 250px; 
+  background-color: #f0f8ff; 
+  transition: width 0.3s ease; 
+  z-index: 1000;
+  padding: 20px 15px 20px 20px; 
+  box-sizing: border-box; 
+}
+
+.sidebar.collapsed {
+  width: 60px; 
+  padding: 20px 10px; 
+  overflow: hidden; 
+}
+
+.sidebar .toggle-btn {
+  position: fixed;
+  top: 20px; 
+  left: 65px; 
+  transform: translateX(-50%); 
+  background-color: #f0f8ff;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+  z-index: 1010;
+}
+
+.sidebar.collapsed .toggle-btn {
+  left: 60px; 
+}
+
+.sidebar .toggle-btn:hover {
+  background-color: #87cefa; 
+}
+
+.sidebar nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px; 
+}
+
+.sidebar nav ul li {
+  padding: 12px 0; 
+}
+
+.sidebar nav ul li a {
+  text-decoration: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+  padding-left: 10px; 
+}
+
+.sidebar nav ul li a:hover {
+  color: #4682b4;
+  background-color: #e0f7ff;
+  border-radius: 5px; 
+}
+
+.sidebar nav ul li a svg {
+  margin-right: 12px; 
+}
+
+
+.main-content {
+  margin-left: 250px; 
+  transition: margin-left 0.3s ease;
+  padding: 20px; 
+}
+
+.sidebar.collapsed ~ .main-content {
+  margin-left: 60px; 
+}

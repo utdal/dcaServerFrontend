@@ -23,6 +23,15 @@ const TaskTile = ({ task_id, updateInterval = 5 }) => {
     }, [task_id]);
 
     useEffect(() => {
+        if (task && task.successful && task.name === 'api.tasks.compute_dca_task') {
+            const existingTasks = JSON.parse(localStorage.getItem('dcaTasks')) || [];
+            const taskEntry = { id: task.id, time: new Date().getTime() };
+            existingTasks.push(taskEntry);
+            localStorage.setItem('dcaTasks', JSON.stringify(existingTasks));
+        }
+    }, [task]);
+    
+    useEffect(() => {
         if (task) {
             const interval = setInterval(() => {
                 task.update();
@@ -67,6 +76,24 @@ const TaskTile = ({ task_id, updateInterval = 5 }) => {
                     style={linkStyle}
                     target='_blank'>
                     View DCA Results
+                </a>
+            );
+        } else if (task.name === 'api.tasks.map_residues_task') {
+            return (
+                <a
+                    href={'/coevolving-pairs-results?task_id=' + task.id}
+                    style={linkStyle}
+                    target='_blank'>
+                    View Results
+                </a>
+            );
+        } else if (task.name === 'api.tasks.generate_contacts_task') {
+            return (
+                <a
+                    href={'/coevolving-pairs-results?structure_id=' + task.id}
+                    style={linkStyle}
+                    target='_blank'>
+                    View Results
                 </a>
             );
         }

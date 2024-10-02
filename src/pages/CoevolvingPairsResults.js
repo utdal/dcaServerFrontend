@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HomeButton from '../components/HomeButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
 import ContactMap from '../components/ContactMap';
 import DiTable from '../components/DiTable';
@@ -14,6 +14,12 @@ const CoevolvingPairsResults = () => {
     const [error, setError] = useState(null);
     const [dca, setDca] = useState(null);
     const [selectedDi, setSelectedDi] = useState(null);
+    const [collapsedSections, setCollapsedSections] = useState({
+        contactMap: false,
+        diPairs: false,
+        pdbViewer: false,
+        circlePlot: false,
+    });
 
     const query = new URLSearchParams(useLocation().search);
     const task_id = query.get('task_id');
@@ -31,6 +37,30 @@ const CoevolvingPairsResults = () => {
         }
         fetchDCA();
     }, [task_id]);
+
+    const handleDownload = () => {
+        if (dca) {
+            const dataStr = JSON.stringify(dca, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dca_results_${task_id}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            URL.revokeObjectURL(url);
+        }
+    };
+
+    const toggleSection = (section) => {
+        setCollapsedSections(prevState => ({
+            ...prevState,
+            [section]: !prevState[section],
+        }));
+    };
 
     const styles = {
         container: {
@@ -90,10 +120,23 @@ const CoevolvingPairsResults = () => {
             color: '#0D47A1',
             borderBottom: '2px solid #0D47A1',
             paddingBottom: '5px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
         },
         content: {
             fontSize: '16px',
             color: '#333',
+            transition: 'max-height 0.3s ease-out',
+            overflow: 'hidden',
+        },
+        contentExpanded: {
+            maxHeight: '1000px', 
+        },
+        contentCollapsed: {
+            maxHeight: '0',
+            padding: '0',
         },
         downloadButton: {
             position: 'fixed',
@@ -117,12 +160,22 @@ const CoevolvingPairsResults = () => {
         icon: {
             marginRight: '10px',
         },
+        arrowIcon: {
+            transition: 'transform 0.3s ease',
+        },
+        arrowUp: {
+            transform: 'rotate(180deg)',
+        },
+        arrowDown: {
+            transform: 'rotate(0deg)',
+        },
     };
 
     return (
         <div style={styles.container}>
             <button
                 style={styles.downloadButton}
+                onClick={handleDownload}
                 onMouseOver={(e) => {
                     e.currentTarget.style.backgroundColor = styles.downloadButtonHover.backgroundColor;
                     e.currentTarget.style.boxShadow = styles.downloadButtonHover.boxShadow;
@@ -137,7 +190,7 @@ const CoevolvingPairsResults = () => {
             </button>
             <div style={styles.header}>
                 <HomeButton />
-                <span style={{ flex: 1, textAlign: 'center' }}>EVCouplings Results</span>
+                <span style={{ flex: 1, textAlign: 'center' }}>DCA Results</span>
             </div>
             <div style={styles.topBar}>
                 Task ({task_id || ''}) results
@@ -149,28 +202,96 @@ const CoevolvingPairsResults = () => {
                     <p style={{ color: '#B71C1C', fontWeight: 'bold' }}>{error}</p>
                 ) : (
                     <>
-                        <div style={{ ...styles.section, ':hover': { transform: 'scale(1.05)' } }}>
-                            <h2 style={styles.heading}>Contact Map</h2>
-                            <div style={styles.content}>
+                        <div style={styles.section}>
+                            <h2
+                                style={styles.heading}
+                                onClick={() => toggleSection('contactMap')}
+                            >
+                                Contact Map
+                                <FontAwesomeIcon
+                                    icon={faArrowDown}
+                                    style={{
+                                        ...styles.arrowIcon,
+                                        ...(collapsedSections.contactMap ? styles.arrowUp : styles.arrowDown),
+                                    }}
+                                />
+                            </h2>
+                            <div
+                                style={{
+                                    ...styles.content,
+                                    ...(collapsedSections.contactMap ? styles.contentCollapsed : styles.contentExpanded),
+                                }}
+                            >
                                 <ContactMap dca={dca} highlightPoint={selectedDi} onPointClick={setSelectedDi} />
                             </div>
                         </div>
-                        <div style={{ ...styles.section, ':hover': { transform: 'scale(1.05)' } }}>
-                            <h2 style={styles.heading}>DI Pairs</h2>
-                            <div style={styles.content}>
+                        <div style={styles.section}>
+                            <h2
+                                style={styles.heading}
+                                onClick={() => toggleSection('diPairs')}
+                            >
+                                DI Pairs
+                                <FontAwesomeIcon
+                                    icon={faArrowDown}
+                                    style={{
+                                        ...styles.arrowIcon,
+                                        ...(collapsedSections.diPairs ? styles.arrowUp : styles.arrowDown),
+                                    }}
+                                />
+                            </h2>
+                            <div
+                                style={{
+                                    ...styles.content,
+                                    ...(collapsedSections.diPairs ? styles.contentCollapsed : styles.contentExpanded),
+                                }}
+                            >
                                 <DiTable dca={dca} highlightRow={selectedDi} onRowClick={setSelectedDi} />
                             </div>
                         </div>
-                        <div style={{ ...styles.section, ':hover': { transform: 'scale(1.05)' } }}>
-                            <h2 style={styles.heading}>3D View</h2>
-                            <div style={styles.content}>
+                        <div style={styles.section}>
+                            <h2
+                                style={styles.heading}
+                                onClick={() => toggleSection('pdbViewer')}
+                            >
+                                3D View
+                                <FontAwesomeIcon
+                                    icon={faArrowDown}
+                                    style={{
+                                        ...styles.arrowIcon,
+                                        ...(collapsedSections.pdbViewer ? styles.arrowUp : styles.arrowDown),
+                                    }}
+                                />
+                            </h2>
+                            <div
+                                style={{
+                                    ...styles.content,
+                                    ...(collapsedSections.pdbViewer ? styles.contentCollapsed : styles.contentExpanded),
+                                }}
+                            >
                                 <PdbViewer pdb={'1gfl'} />
                             </div>
                         </div>
-                        <div style={{ ...styles.section, ':hover': { transform: 'scale(1.05)' } }}>
-                            <h2 style={styles.heading}>Circle Plot</h2>
-                            <div style={styles.content}>
-                                <CirclePlot />
+                        <div style={styles.section}>
+                            <h2
+                                style={styles.heading}
+                                onClick={() => toggleSection('circlePlot')}
+                            >
+                                Circle Plot
+                                <FontAwesomeIcon
+                                    icon={faArrowDown}
+                                    style={{
+                                        ...styles.arrowIcon,
+                                        ...(collapsedSections.circlePlot ? styles.arrowUp : styles.arrowDown),
+                                    }}
+                                />
+                            </h2>
+                            <div
+                                style={{
+                                    ...styles.content,
+                                    ...(collapsedSections.circlePlot ? styles.contentCollapsed : styles.contentExpanded),
+                                }}
+                            >
+                                <CirclePlot dca={dca}/>
                             </div>
                         </div>
                     </>

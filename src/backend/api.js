@@ -1,8 +1,44 @@
-const apiBaseUrl = '/api/';
+// const apiBaseUrl = 'http://localhost:8000/api/';
+const apiBaseUrl = 'http://18.213.103.176/api/';
 
 
-export class Task {
+class APIObject {
+    objectName = null;
+
+    static async fetch(id, type) {
+        const response = await fetch(apiBaseUrl + type.objectName + 's/' + id + '/');
+
+        if (!response.ok) {
+            if (response.status === 403) throw new Error(type.objectName + ' "' + id + '" not found');
+            throw new Error('Bad network response');
+        }
+
+        const result = await response.json();
+
+        return new type(result);
+    }
+
+    static async fetchAll(type) {
+        const response = await fetch(apiBaseUrl + type.objectName + 's/');
+
+        if (!response.ok) {
+            if (response.status === 403) throw new Error('You must be logged in to view your ' + type.objectName + 's');
+            throw new Error('Bad network response');
+        }
+
+        const result = await response.json();
+
+        return result.map(t => new Task(t));
+    }
+
+}
+
+
+export class Task extends APIObject {
+    static objectName = 'task';
+
     constructor({ id, user, state, name, time_started, time_ended, expires, message, percent, successful }) {
+        super();
         this.id = id;
         this.user_id = user;
         this.state = state;
@@ -16,29 +52,11 @@ export class Task {
     }
 
     static async fetch(id) {
-        const response = await fetch(apiBaseUrl + 'tasks/' + id + '/');
-
-        if (!response.ok) {
-            if (response.status === 403) throw new Error('Task "' + id + '" not found');
-            throw new Error('Bad network response');
-        }
-
-        const result = await response.json();
-
-        return new Task(result);
+        return APIObject.fetch(id, Task);
     }
 
-    static async fetchAll(id) {
-        const response = await fetch(apiBaseUrl + 'tasks/');
-
-        if (!response.ok) {
-            if (response.status === 403) throw new Error('You must be logged in to view your tasks');
-            throw new Error('Bad network response');
-        }
-
-        const result = await response.json();
-
-        return result.map(t => new Task(t));
+    static async fetchAll() {
+        return APIObject.fetchAll(Task);
     }
 
     async update() {
@@ -58,18 +76,31 @@ export class Task {
         const nameMap = {
             'api.tasks.compute_dca_task': 'Compute DCA Task',
             'api.tasks.generate_msa_task': 'Generate MSA Task',
+            'api.tasks.map_residues_task': 'Map Residues Task',
+            'api.tasks.generate_contacts_task': 'Generate Contacts Task',
         }
         return nameMap[this.name] || this.name;
     }
 }
 
 
-export class MSA {
-    constructor({ id, user, created, expires, fasta, depth, cols, quality }) {
+class APIDataObject extends APIObject {
+    constructor({ id, user, created, expires }) {
+        super();
         this.id = id;
         this.user_id = user;
         this.created = new Date(created);
         this.expires = new Date(expires);
+    }
+}
+
+
+export class MSA extends APIDataObject {
+    static objectName = 'msa';
+
+    constructor({ id, user, created, expires, seed, fasta, depth, cols, quality }) {
+        super({id, user, created, expires});
+        this.seed = seed;
         this.fasta = fasta;
         this.depth = depth;
         this.cols = cols;
@@ -77,26 +108,20 @@ export class MSA {
     }
 
     static async fetch(id) {
-        const response = await fetch(apiBaseUrl + 'msas/' + id + '/');
+        return APIObject.fetch(id, MSA);
+    }
 
-        if (!response.ok) {
-            if (response.status === 404) throw new Error('MSA "' + id + '" not found');
-            throw new Error('Bad network response');
-        }
-
-        const result = await response.json();
-
-        return new MSA(result);
+    static async fetchAll() {
+        return APIObject.fetchAll(MSA);
     }
 }
 
 
-export class DCA {
+export class DCA extends APIDataObject {
+    static objectName = 'dca';
+
     constructor({ id, user, created, expires, m_eff, ranked_di }) {
-        this.id = id;
-        this.user_id = user;
-        this.created = new Date(created);
-        this.expires = new Date(expires);
+        super({id, user, created, expires});
         this.m_eff = m_eff;
         this.ranked_di = ranked_di;
 
@@ -112,16 +137,11 @@ export class DCA {
     }
 
     static async fetch(id) {
-        const response = await fetch(apiBaseUrl + 'dcas/' + id + '/');
+        return APIObject.fetch(id, DCA);
+    }
 
-        if (!response.ok) {
-            if (response.status === 404) throw new Error('DCA "' + id + '" not found');
-            throw new Error('Bad network response');
-        }
-
-        const result = await response.json();
-
-        return new DCA(result);
+    static async fetchAll() {
+        return APIObject.fetchAll(DCA);
     }
 
     topDiPairs(n) {
@@ -132,13 +152,51 @@ export class DCA {
 }
 
 
-export async function generateMsa(seed, msaName) {
-    let data = {
-        seed: seed
-    };
-    if (msaName) data.msa_name = msaName;
+export class MappedDi extends APIDataObject {
+    static objectName = 'mapped-di';
 
-    const response = await fetch(apiBaseUrl + 'generate-msa/', {
+    constructor({ id, user, created, expires, protein_name, seed, dca, mapped_di }) {
+        super({id, user, created, expires});
+        this.expires = new Date(expires);
+        this.protein_name = protein_name;
+        this.seed = seed;
+        this.dca = dca;
+        this.mapped_di = mapped_di;
+    }
+
+    static async fetch(id) {
+        return APIObject.fetch(id, MappedDi);
+    }
+
+    static async fetchAll() {
+        return APIObject.fetchAll(MappedDi);
+    }
+}
+
+
+export class StructureContacts extends APIDataObject {
+    static objectName = 'structure-contact';
+
+    constructor({ id, user, created, expires, pdb_id, ca_only, threshold, contacts }) {
+        super({id, user, created, expires});
+        this.pdb_id = pdb_id;
+        this.ca_only = ca_only;
+        this.threshold = threshold;
+        this.contacts = contacts;
+    }
+
+    static async fetch(id) {
+        return APIObject.fetch(id, StructureContacts);
+    }
+
+    static async fetchAll() {
+        return APIObject.fetchAll(StructureContacts);
+    }
+}
+
+
+async function startTask(endpoint, data) {
+    const response = await fetch(apiBaseUrl + endpoint + '/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -154,22 +212,37 @@ export async function generateMsa(seed, msaName) {
 }
 
 
-export async function computeDca(msaId) {
-    const data = {
-        msa_id: msaId
+export async function generateMsa(seed, msaName) {
+    let data = {
+        seed: seed
     };
+    if (msaName) data.msa_name = msaName;
 
-    const response = await fetch(apiBaseUrl + 'compute-dca/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+    return await startTask('generate-msa', data);
+}
+
+
+export async function computeDca(msaId) {
+    return await startTask('compute-dca', {
+        msa_id: msaId
     });
+}
 
-    if (!response.ok) {
-        throw new Error('Bad network response');
-    }
 
-    const result = await response.json();
+export async function mapResidues(dcaId, pdbId, chain1, chain2) {
+    return await startTask('map-residues', {
+        dca_id: dcaId,
+        pdb_id: pdbId,
+        chain1: chain1,
+        chain2: chain2
+    });
+}
 
-    return new Task(result);
+
+export async function generateContacts(pdbId, caOnly, threshold) {
+    return await startTask('generate-contacts', {
+        pdb_id: pdbId,
+        ca_only: caOnly,
+        threshold: threshold
+    });
 }
