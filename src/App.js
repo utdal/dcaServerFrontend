@@ -5,7 +5,8 @@ import LDL from './pages/LDL';
 import Introvid from './pages/Introvid';
 import Bioguide from './pages/Bioguide';
 import CoevolvingPairsResults from './pages/CoevolvingPairsResults';
-import CoevolvingPairsThumbnail from './pages/CoevolvingPairsThumbnail.png'; 
+import CoevolvingPairsThumbnail from './pages/TransparentCoevolvingPairsThumbnail.png';
+import LGLThumbnail from './pages/LGLThumbnail.png';
 import DCATaskList from './pages/DCATaskList';
 import LoadingPage from './pages/LoadingPage';
 import Tile from './components/Tile';
@@ -68,7 +69,7 @@ function App() {
 />
                       <Tile
                         link="/LDL"
-                        image="path/to/your/image3.jpg"
+                        image={LGLThumbnail}
                         title="Latent Generative Landscape"
                         description="Models complex dependencies in an MSA by mapping high-dimensional structures to interpretable forms"
                       />
