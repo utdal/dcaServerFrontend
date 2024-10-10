@@ -1,5 +1,5 @@
-// const apiBaseUrl = 'http://localhost:8000/api/';
-const apiBaseUrl = 'http://18.213.103.176/api/';
+const apiBaseUrl = 'http://localhost:8000/api/';
+// const apiBaseUrl = 'http://18.213.103.176/api/';
 
 
 class APIObject {
@@ -114,6 +114,18 @@ export class MSA extends APIDataObject {
     static async fetchAll() {
         return APIObject.fetchAll(MSA);
     }
+
+    static testObj = new MSA({
+        id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        user: 0,
+        created: "2024-10-09T04:52:46.794Z",
+        expires: "2024-10-09T04:52:46.794Z",
+        seed: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        fasta: "url://my_beautiful_msa.fasta",
+        depth: 1234,
+        cols: 200,
+        quality: 4
+    })
 }
 
 
@@ -146,9 +158,22 @@ export class DCA extends APIDataObject {
 
     topDiPairs(n) {
         return this.ranked_di.slice(0, n).map((row) => {
-            return [row[0], row[1]];
+            return [row[0], row[1], row[2]];
         });
     }
+
+    static testObj = new DCA({
+        id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        user: 0,
+        created: "2024-10-09T04:54:55.148Z",
+        expires: "2024-10-09T04:54:55.148Z",
+        m_eff: 100,
+        ranked_di: [
+            [0, 1, 1.23],
+            [0, 2, 1.11],
+            [1, 2, 0.98]
+        ]
+      })
 }
 
 
@@ -171,6 +196,34 @@ export class MappedDi extends APIDataObject {
     static async fetchAll() {
         return APIObject.fetchAll(MappedDi);
     }
+
+    topDiPairs(n) {
+        return this.mapped_di.slice(0, n).map((row) => {
+            return [row[0], row[1], row[2]];
+        });
+    }
+
+    getRange() {
+        return [
+            Math.min(...this.mapped_di.map(r => r[0])),
+            Math.max(...this.mapped_di.map(r => r[0]))
+        ];
+    }
+
+    static testObj = new MappedDi({
+        id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        user: 0,
+        created: "2024-10-09T04:54:55.148Z",
+        expires: "2024-10-09T04:54:55.148Z",
+        protein_name: "3rfu",
+        seed: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        dca: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        mapped_di: [
+            [0, 1, 1.23],
+            [0, 2, 1.11],
+            [1, 2, 0.98]
+        ]
+      })
 }
 
 
@@ -192,6 +245,21 @@ export class StructureContacts extends APIDataObject {
     static async fetchAll() {
         return APIObject.fetchAll(StructureContacts);
     }
+
+    static testObj = new StructureContacts({
+        id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        user: 0,
+        created: "2024-10-09T04:54:55.148Z",
+        expires: "2024-10-09T04:54:55.148Z",
+        pdb_id: "6avj",
+        ca_only: true,
+        threshold: 8,
+        contacts: {
+            A: [
+                [55, 57],
+                [67, 68],
+            ]
+        }})
 }
 
 

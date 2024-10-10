@@ -5,15 +5,18 @@ import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
 import ContactMap from '../components/ContactMap';
 import DiTable from '../components/DiTable';
-import { Task, DCA } from '../backend/api';
-import PdbViewer from '../components/MolViewer';
+import { Task, DCA, MappedDi, StructureContacts } from '../backend/api';
+import MolViewer from '../components/MolViewer';
 import { CirclePlot } from '../components/CirclePlot';
+import SequenceViewer from '../components/SequenceViewer';
 
 const CoevolvingPairsResults = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [dca, setDca] = useState(null);
-    const [selectedDi, setSelectedDi] = useState(null);
+    const [dca, setDca] = useState(DCA.testObj);
+    const [mappedDi, setMappedDi] = useState(MappedDi.testObj);
+    const [structueContacts, setStructueContacts] = useState(StructureContacts.testObj);
+    const [chain, setChain] = useState('AA');
     const [collapsedSections, setCollapsedSections] = useState({
         contactMap: false,
         diPairs: false,
@@ -22,38 +25,25 @@ const CoevolvingPairsResults = () => {
     });
 
     const query = new URLSearchParams(useLocation().search);
-    const task_id = query.get('task_id');
+    const dcaId = query.get('dca');
+    const mappedDiId = query.get('mapped_di');
+    const structueContactsId = query.get('structure_contacts');
 
     useEffect(() => {
-        async function fetchDCA() {
+        async function fetchData() {
             setLoading(true);
             try {
-                setDca(await DCA.fetch(task_id));
+                if (dcaId) setDca(await DCA.fetch(dcaId));
+                if (mappedDiId) setMappedDi(await MappedDi.fetch(mappedDiId));
+                if (structueContactsId) setStructueContacts(await StructureContacts.fetch(structueContactsId));
             } catch (error) {
                 setError('Error: ' + error.message);
             } finally {
                 setLoading(false);
             }
         }
-        fetchDCA();
-    }, [task_id]);
-
-    const handleDownload = () => {
-        if (dca) {
-            const dataStr = JSON.stringify(dca, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `dca_results_${task_id}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-
-            URL.revokeObjectURL(url);
-        }
-    };
+        fetchData();
+    }, [dcaId, mappedDiId, structueContactsId]);
 
     const toggleSection = (section) => {
         setCollapsedSections(prevState => ({
@@ -67,7 +57,7 @@ const CoevolvingPairsResults = () => {
             backgroundColor: '#f4f4f4',
             minHeight: '100vh',
             padding: '20px',
-            paddingTop: '160px',
+            paddingTop: '120px',
             fontFamily: '"Roboto", sans-serif',
         },
         header: {
@@ -106,13 +96,13 @@ const CoevolvingPairsResults = () => {
             margin: '0 auto',
         },
         section: {
-            backgroundColor: '#FFFFFF',
-            padding: '20px',
-            borderRadius: '10px',
-            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
-            flex: '1 1 calc(48% - 20px)',
-            minWidth: '320px',
-            transition: 'transform 0.3s ease',
+            backgroundColor: '#fff',
+            padding: '15px',
+            borderRadius: '8px',
+            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
+            flex: '1 1 calc(50% - 40px)',
+            minWidth: '300px',
+            maxWidth: '500px',
         },
         heading: {
             fontSize: '24px',
@@ -132,7 +122,7 @@ const CoevolvingPairsResults = () => {
             overflow: 'hidden',
         },
         contentExpanded: {
-            maxHeight: '1000px', 
+            maxHeight: '1000px',
         },
         contentCollapsed: {
             maxHeight: '0',
@@ -169,32 +159,21 @@ const CoevolvingPairsResults = () => {
         arrowDown: {
             transform: 'rotate(0deg)',
         },
+        dropdown: {
+            fontSize: '16px',
+            margin: '0px auto',
+        }
     };
+
+    const availableChains = Object.keys(structueContacts.contacts).map(c => c.substring(0, 2));
 
     return (
         <div style={styles.container}>
-            <button
-                style={styles.downloadButton}
-                onClick={handleDownload}
-                onMouseOver={(e) => {
-                    e.currentTarget.style.backgroundColor = styles.downloadButtonHover.backgroundColor;
-                    e.currentTarget.style.boxShadow = styles.downloadButtonHover.boxShadow;
-                }}
-                onMouseOut={(e) => {
-                    e.currentTarget.style.backgroundColor = styles.downloadButton.backgroundColor;
-                    e.currentTarget.style.boxShadow = styles.downloadButton.boxShadow;
-                }}
-            >
-                <FontAwesomeIcon icon={faArrowDown} style={styles.icon} />
-                Download Results
-            </button>
             <div style={styles.header}>
                 <HomeButton />
-                <span style={{ flex: 1, textAlign: 'center' }}>DCA Results</span>
+                <span style={{ flex: 1, textAlign: 'center' }}>Direct Coupling Analysis Results</span>
             </div>
-            <div style={styles.topBar}>
-                Task ({task_id || ''}) results
-            </div>
+
             <div style={styles.resultsSection}>
                 {loading ? (
                     <p style={{ fontStyle: 'italic', color: '#333' }}>Loading...</p>
@@ -202,6 +181,13 @@ const CoevolvingPairsResults = () => {
                     <p style={{ color: '#B71C1C', fontWeight: 'bold' }}>{error}</p>
                 ) : (
                     <>
+                        <select value={chain} onChange={e => setChain(e.target.value)} style={styles.dropdown}>
+                            {availableChains.map(c => (
+                                <option value={c} key={c}>Chain {c}</option>
+                            ))}
+                        </select>
+                        <SequenceViewer sequence={"MRGAGAILRPAARGARDLNPRRDISSWLAQWFPRTPARSVVALKTPIKVELVAGKTYRWCVCGRSKKQPFCDGSHFFQRTGLSPLKFKAQETRMVALCTCKATQRPPYCDGTHRSERVQKAEVGSPL"} />
+
                         <div style={styles.section}>
                             <h2
                                 style={styles.heading}
@@ -222,32 +208,10 @@ const CoevolvingPairsResults = () => {
                                     ...(collapsedSections.contactMap ? styles.contentCollapsed : styles.contentExpanded),
                                 }}
                             >
-                                <ContactMap dca={dca} highlightPoint={selectedDi} onPointClick={setSelectedDi} />
+                                <ContactMap mappedDi={mappedDi} structureContacts={structueContacts} chain={chain} />
                             </div>
                         </div>
-                        <div style={styles.section}>
-                            <h2
-                                style={styles.heading}
-                                onClick={() => toggleSection('diPairs')}
-                            >
-                                DI Pairs
-                                <FontAwesomeIcon
-                                    icon={faArrowDown}
-                                    style={{
-                                        ...styles.arrowIcon,
-                                        ...(collapsedSections.diPairs ? styles.arrowUp : styles.arrowDown),
-                                    }}
-                                />
-                            </h2>
-                            <div
-                                style={{
-                                    ...styles.content,
-                                    ...(collapsedSections.diPairs ? styles.contentCollapsed : styles.contentExpanded),
-                                }}
-                            >
-                                <DiTable dca={dca} highlightRow={selectedDi} onRowClick={setSelectedDi} />
-                            </div>
-                        </div>
+
                         <div style={styles.section}>
                             <h2
                                 style={styles.heading}
@@ -268,9 +232,10 @@ const CoevolvingPairsResults = () => {
                                     ...(collapsedSections.pdbViewer ? styles.contentCollapsed : styles.contentExpanded),
                                 }}
                             >
-                                <PdbViewer pdb={'1gfl'} />
+                                <MolViewer structureContacts={structueContacts} mappedDi={mappedDi} chain={chain} />
                             </div>
                         </div>
+
                         <div style={styles.section}>
                             <h2
                                 style={styles.heading}
@@ -291,7 +256,30 @@ const CoevolvingPairsResults = () => {
                                     ...(collapsedSections.circlePlot ? styles.contentCollapsed : styles.contentExpanded),
                                 }}
                             >
-                                <CirclePlot dca={dca}/>
+                                <CirclePlot mappedDi={mappedDi} chain={chain} />
+                            </div>
+                        </div>
+                        <div style={styles.section}>
+                            <h2
+                                style={styles.heading}
+                                onClick={() => toggleSection('diPairs')}
+                            >
+                                DI Table
+                                <FontAwesomeIcon
+                                    icon={faArrowDown}
+                                    style={{
+                                        ...styles.arrowIcon,
+                                        ...(collapsedSections.diPairs ? styles.arrowUp : styles.arrowDown),
+                                    }}
+                                />
+                            </h2>
+                            <div
+                                style={{
+                                    ...styles.content,
+                                    ...(collapsedSections.diPairs ? styles.contentCollapsed : styles.contentExpanded),
+                                }}
+                            >
+                                <DiTable mappedDi={mappedDi} />
                             </div>
                         </div>
                     </>
