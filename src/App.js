@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import CoevolvingPairs from './pages/CoevolvingPairs';
+import CoevolvingPairs from './pages/CoevolvingPairs copy';
 import LDL from './pages/LDL';
 import Introvid from './pages/Introvid';
 import Bioguide from './pages/Bioguide';
 import CoevolvingPairsResults from './pages/CoevolvingPairsResults';
-import CoevolvingPairsThumbnail from './pages/TransparentCoevolvingPairsThumbnail.png';
+import CoevolvingPairsThumbnail from './pages/CoevolvingPairsThumbnailV2.png';
 import LGLThumbnail from './pages/LGLThumbnail.png';
 import DCATaskList from './pages/DCATaskList';
 import LoadingPage from './pages/LoadingPage';
