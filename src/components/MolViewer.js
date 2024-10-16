@@ -45,17 +45,16 @@ const MolViewer = ({ mappedDi, structureContacts, chain }) => {
         if (structureContacts) getPdb();
     }, [structureContacts, viewerRef]);
 
-    const viewerContainerStyle = {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        height: '300px', // Adjust height as needed
-        position: 'relative',
+    const styles = {
+        viewerContainer: {
+            width: '100%',
+            height: '100%', // Adjust height as needed
+            position: 'relative',
+        },
     };
 
     return (
-        <div style={viewerContainerStyle}>
+        <div style={styles.viewerContainer}>
             <div ref={viewerRef} style={{ width: '100%', height: '100%' }}></div>
         </div>
     );

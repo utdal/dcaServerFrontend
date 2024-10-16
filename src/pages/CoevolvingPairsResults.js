@@ -85,6 +85,7 @@ const CoevolvingPairsResults = () => {
         resultsSection: {
             display: 'flex',
             justifyContent: 'space-around',
+            alignItems: 'flex-start',
             flexWrap: 'wrap',
             gap: '20px',
         },
@@ -96,6 +97,8 @@ const CoevolvingPairsResults = () => {
             flex: '1 1 calc(50% - 40px)',
             minWidth: '300px',
             maxWidth: '520px',
+            display: 'flex',
+            flexDirection: 'column',
         },
         heading: {
             fontSize: '24px',
@@ -113,6 +116,7 @@ const CoevolvingPairsResults = () => {
             color: '#333',
             transition: 'max-height 0.3s ease-out',
             overflow: 'hidden',
+            flex: '1',
         },
         contentExpanded: {
             maxHeight: '1000px',
@@ -203,6 +207,7 @@ const CoevolvingPairsResults = () => {
                                 style={{
                                     ...styles.content,
                                     ...(collapsedSections.pdbViewer ? styles.contentCollapsed : styles.contentExpanded),
+                                    aspectRatio: 1,
                                 }}
                             >
                                 <MolViewer structureContacts={structueContacts} mappedDi={mappedDi} chain={chain} />
