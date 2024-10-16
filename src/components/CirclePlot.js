@@ -1,22 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
 
-export const CirclePlot = ({dca}) => {
-    const [diCount, setDiCount] = useState(dca ? dca.ranked_di.length : 50);
-    const nodes = diCount;
+export const CirclePlot = ({ mappedDi, chain }) => {
+    const [diCount, setDiCount] = useState(500);
+    const nodes = 100;
 
     let edges = [];
-    useEffect(() => {
-        if (dca !== null) {
-            const pairs = dca.topDiPairs(diCount);
-            for (let i = 0; i < nodes; i++) {
-                edges.push(pairs[i][0], pairs[i][1])
-            }
+
+    if (mappedDi !== null) {
+        const pairs = mappedDi.topDiPairs(diCount);
+        for (let i = 0; i < pairs.length; i++) {
+            edges.push(pairs[i])
         }
-    }, [dca, diCount]);
+    }
 
     return (
-        <div style={{ }}>
+        <div style={{}}>
+            <div style={{
+                fontWeight: 'bold'
+            }}>DI Count:</div>
+            <input
+                type="range"
+                min="1"
+                max={mappedDi.mapped_di.length}
+                value={diCount}
+                onChange={e => setDiCount(e.target.value)}
+                style={{
+                    width: "80%",
+                    height: "8px",
+                    borderRadius: "5px",
+                    background: "linear-gradient(90deg, rgb(187, 222, 251) 0%, rgb(13, 71, 161) 100%)",
+                    appearance: "none",
+                    outline: "none",
+                    transition: "background 0.3s",
+                }}
+            />
             <ChordDiagram nodes={nodes} edges={edges} />
         </div>
     );
@@ -45,14 +63,14 @@ export const ChordDiagram = ({ nodes, edges }) => {
             hoverinfo: 'text'
         };
 
-        const curves = edges.map(([i, j]) => {
+        const curves = edges.map(([i, j, w]) => {
             const arcPoints = generateArcPoints(x[i], y[i], x[j], y[j], 8);
             return {
                 type: 'scatter',
                 mode: 'lines',
                 x: arcPoints.x,
                 y: arcPoints.y,
-                line: { color: '#3B75AF', width: 2, shape: 'spline' },
+                line: { color: '#3B75AF', width: w*w * 30, shape: 'spline' },
                 showlegend: false,
                 hoverinfo: 'none'
             };

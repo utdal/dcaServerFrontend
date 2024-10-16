@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as $3Dmol from '3dmol/build/3Dmol.js';
 
-const PdbViewer = ({ pdb }) => {
+const MolViewer = ({ mappedDi, structureContacts, chain }) => {
     const viewerRef = useRef(null);
 
     useEffect(() => {
@@ -13,7 +13,7 @@ const PdbViewer = ({ pdb }) => {
                 let viewer = $3Dmol.createViewer(element, config);
 
                 try {
-                    const response = await fetch('https://files.rcsb.org/view/' + pdb + '.pdb');
+                    const response = await fetch('https://files.rcsb.org/view/' + structureContacts.pdb_id + '.pdb');
 
                     if (!response.ok) {
                         throw new Error('Bad network response');
@@ -21,7 +21,17 @@ const PdbViewer = ({ pdb }) => {
 
                     const result = await response.text();
 
-                    viewer.addModel(result, "pdb");
+                    const model = viewer.addModel(result, "pdb");
+
+                    mappedDi.topDiPairs(20).map(c => {
+                        viewer.addLine({
+                            dashed: false,
+                            start: { resi: c[0], chain: 'A' },
+                            end: { resi: c[1], chain: 'A' },
+                            color: 'red'
+                        });
+                    });
+
                     viewer.setStyle({}, { cartoon: { color: 'spectrum' } });
                     viewer.zoomTo(); // Center the model within the viewer
                     viewer.render();
@@ -31,23 +41,23 @@ const PdbViewer = ({ pdb }) => {
                 }
             }
         }
-        getPdb();
-    }, [pdb, viewerRef]);
 
-    const viewerContainerStyle = {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        height: '300px', // Adjust height as needed
-        position: 'relative',
+        if (structureContacts) getPdb();
+    }, [structureContacts, viewerRef]);
+
+    const styles = {
+        viewerContainer: {
+            width: '100%',
+            height: '100%', // Adjust height as needed
+            position: 'relative',
+        },
     };
 
     return (
-        <div style={viewerContainerStyle}>
+        <div style={styles.viewerContainer}>
             <div ref={viewerRef} style={{ width: '100%', height: '100%' }}></div>
         </div>
     );
 };
 
-export default PdbViewer;
+export default MolViewer;

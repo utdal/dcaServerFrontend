@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const DiTable = ({ dca, highlightRow = null, onRowClick = null }) => {
+const DiTable = ({ mappedDi, highlightRow = null, onRowClick = null }) => {
     const rowStyle = {
         border: '1px solid #ddd',
         padding: '8px',
@@ -25,7 +25,7 @@ const DiTable = ({ dca, highlightRow = null, onRowClick = null }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {dca.ranked_di.map((row, index) => (
+                    {mappedDi.mapped_di.map((row, index) => (
                         <tr
                             key={index}
                             onClick={() => {
