@@ -255,7 +255,7 @@ export class StructureContacts extends APIDataObject {
         ca_only: true,
         threshold: 8,
         contacts: {
-            A: [
+            AA_contacts: [
                 [55, 57],
                 [67, 68],
             ]
