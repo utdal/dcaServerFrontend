@@ -8,18 +8,23 @@ import Button from '@mui/material/Button'
 import MSAInput from '../components/MSAInput';
 import PDBInput from '../components/PDBInput';
 import { TextField } from '@mui/material';
-
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Slider from '@mui/material/Slider';
 
 
 const CoevolvingPairs = () => {
-  
+  const defaultTheta = 0.3
   const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: true }); // Use object to track file types
   const [selectedPDBTypes, setSelectedPDBTypes] = useState({ PDB: false, CIF: true });
   const [inputMSA, setInputMSA] = useState('');
   const [inputPDBID, setInputPDBID] = useState('');
   const [maxContGaps, setMaxContGaps] = useState('');
   const [ECutoff, setECutoff] = useState('');
-  
+  const [distThresh, setDistThresh] = useState('')
+  const [caOnly, setCaOnly] = useState(false)
+  const [theta, setTheta] = useState(defaultTheta);
 
   const handleFileTypeChange = (type) => {
     setSelectedFileTypes((prev) => ({
@@ -51,6 +56,10 @@ const CoevolvingPairs = () => {
     }
   };
 
+  const handleThetaChange = (event) => {
+    setTheta(event.target.value);
+  }
+
   const handleMaxContGapsChange = (event) => {
     if (((!isNaN(event.target.value)) || event.target.value === '') && !event.target.value.includes("."))
     {
@@ -58,12 +67,28 @@ const CoevolvingPairs = () => {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleDistThreshChange = (event) => {
+    if (!isNaN(event.target.value) || event.target.value === '' || event.target.value === '-')
+    {
+      setDistThresh(event.target.value);
+    }
+  };
+
+  const handleCaOnlyChange = (event) => {
+    setCaOnly(event.target.checked);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // Here you can handle the submission logic, such as sending data to an API
     console.log("Submitted data:", { inputMSA, selectedFileTypes });
     console.log("Submitted data:", { inputPDBID, selectedPDBTypes });
+    console.log("CA ONLY: " + caOnly);
+    console.log("THETA: " + theta);
+    console.log("THRESHOLD: " + distThresh);
     // Reset fields or provide feedback as needed
+    //const msaTask = await generateMsa(inputValue);
+    //const dcaTask = await computeDca(msaTask.id);
   };
 
   return (
@@ -73,7 +98,7 @@ const CoevolvingPairs = () => {
         <HomeButton />
       </Box>
       <Container maxWidth="xl">
-        <Box sx={{ bgcolor: '#d0d8e8', height: '100vh'}}>
+        <Box sx={{ bgcolor: '#d0d8e8'}}>
           <form onSubmit={handleSubmit}>
             <MSAInput 
               inputMSA={inputMSA} 
@@ -91,11 +116,36 @@ const CoevolvingPairs = () => {
                   value={ECutoff}
                   onChange={handleECutoffChange}>
                 </TextField>
+                <Box sx={{ width: "20%" }}>
+                  <h4> Theta / DCA Reweighting Parameter </h4>
+                  <Slider
+                    aria-label="Theta / DCA Reweighting Parameter"
+                    defaultValue={defaultTheta}
+                    value={theta}
+                    onChange={handleThetaChange}
+                    valueLabelDisplay="auto"
+                    step={0.1}
+                    marks
+                    min={0}
+                    max={0.5}
+                  />
+                </Box>
+                
+
                 <TextField
                   label = "Max Number of Continuous Gaps"
                   value={maxContGaps}
                   onChange={handleMaxContGapsChange}>
                 </TextField>
+                <h3>PDB Setting</h3>
+                <TextField
+                  label = "Structural Contact Distance Threshold"
+                  value={distThresh}
+                  onChange={handleDistThreshChange}>
+                </TextField>
+                <FormGroup>
+                  <FormControlLabel control={<Checkbox checked={caOnly} onChange={handleCaOnlyChange}/>} label="Alpha-carbon contacts only" />
+                </FormGroup>
             </Box>
 
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
