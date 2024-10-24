@@ -7,11 +7,17 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button'
 import MSAInput from '../components/MSAInput';
 import PDBInput from '../components/PDBInput';
+import MFDCASettings from '../components/MFDCASettings';
 import { TextField } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
 import Slider from '@mui/material/Slider';
+import PDBSettings from '../components/PDBSettings';
 
 
 const CoevolvingPairs = () => {
@@ -25,6 +31,7 @@ const CoevolvingPairs = () => {
   const [distThresh, setDistThresh] = useState('')
   const [caOnly, setCaOnly] = useState(false)
   const [theta, setTheta] = useState(defaultTheta);
+  const [analysisMethod, setAnalysisMethod] = useState('');
 
   const handleFileTypeChange = (type) => {
     setSelectedFileTypes((prev) => ({
@@ -78,6 +85,10 @@ const CoevolvingPairs = () => {
     setCaOnly(event.target.checked);
   };
 
+  const handleAnalysisMethodChange = (event) => {
+    setAnalysisMethod(event.target.value);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Here you can handle the submission logic, such as sending data to an API
@@ -86,6 +97,8 @@ const CoevolvingPairs = () => {
     console.log("CA ONLY: " + caOnly);
     console.log("THETA: " + theta);
     console.log("THRESHOLD: " + distThresh);
+    console.log("E: " + ECutoff)
+    console.log("Max Gaps: "+ maxContGaps)
     // Reset fields or provide feedback as needed
     //const msaTask = await generateMsa(inputValue);
     //const dcaTask = await computeDca(msaTask.id);
@@ -111,41 +124,38 @@ const CoevolvingPairs = () => {
               handlePDBChange={handlePDBChange}
             />
             <Box sx={{ width: '100%', p: 2}}>
-                <h3>Settings</h3>
-                <TextField label="E-Value Cutoff"
-                  value={ECutoff}
-                  onChange={handleECutoffChange}>
-                </TextField>
-                <Box sx={{ width: "20%" }}>
-                  <h4> Theta / DCA Reweighting Parameter </h4>
-                  <Slider
-                    aria-label="Theta / DCA Reweighting Parameter"
-                    defaultValue={defaultTheta}
-                    value={theta}
-                    onChange={handleThetaChange}
-                    valueLabelDisplay="auto"
-                    step={0.1}
-                    marks
-                    min={0}
-                    max={0.5}
-                  />
-                </Box>
+                <h3>Coevolutionary Analysis Settings</h3>
+                <FormControl  sx={{ width: '25%' }}>
+                  <InputLabel id="coevolutionary-analysis-method">Coevolutionary Analysis Method</InputLabel>
+                  <Select
+                    labelId="coevolutionary-analysis-method"
+                    id="analysis-method-select"
+                    value={analysisMethod}
+                    label="Coevolutionary Analysis Method"
+                    onChange={handleAnalysisMethodChange}
+                  >
+                    <MenuItem value={'mfDCA'}>mean-field DCA</MenuItem>
+                    <MenuItem value={''}>More to Come!</MenuItem>
+                  </Select>
+                </FormControl>
                 
+                {analysisMethod === 'mfDCA' ? 
+                  <MFDCASettings ECutoff={ECutoff} handleECutoffChange={handleECutoffChange} defaultTheta={defaultTheta} theta={theta} handleThetaChange={handleThetaChange}/>
+                  :
+                  <></>
+                }
 
+
+                <h3> MSA Settings </h3>
                 <TextField
                   label = "Max Number of Continuous Gaps"
                   value={maxContGaps}
                   onChange={handleMaxContGapsChange}>
                 </TextField>
+
+
                 <h3>PDB Setting</h3>
-                <TextField
-                  label = "Structural Contact Distance Threshold"
-                  value={distThresh}
-                  onChange={handleDistThreshChange}>
-                </TextField>
-                <FormGroup>
-                  <FormControlLabel control={<Checkbox checked={caOnly} onChange={handleCaOnlyChange}/>} label="Alpha-carbon contacts only" />
-                </FormGroup>
+                <PDBSettings distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange}/>
             </Box>
 
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
