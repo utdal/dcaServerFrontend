@@ -25,6 +25,7 @@ const CoevolvingPairs = () => {
   const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: true }); // Use object to track file types
   const [selectedPDBTypes, setSelectedPDBTypes] = useState({ PDB: false, CIF: true });
   const [inputMSA, setInputMSA] = useState('');
+  const [inputFile, setInputFile] = useState(null);
   const [inputPDBID, setInputPDBID] = useState('');
   const [maxContGaps, setMaxContGaps] = useState('');
   const [ECutoff, setECutoff] = useState('');
@@ -49,7 +50,8 @@ const CoevolvingPairs = () => {
   };
 
   const handleInputMSAChange = (event) => {
-    setInputMSA(event.target.value);
+    if (selectedFileTypes.Seed) setInputMSA(event.target.value);
+    else setInputFile(event.target.files[0]);
   };
 
   const handleInputPDBChange = (event) => {
@@ -113,8 +115,9 @@ const CoevolvingPairs = () => {
       <Container maxWidth="xl">
         <Box sx={{ bgcolor: '#d0d8e8'}}>
           <form onSubmit={handleSubmit}>
-            <MSAInput 
-              inputMSA={inputMSA} 
+            <MSAInput
+              inputType={selectedFileTypes.Seed ? 'Seed' : 'MSA'}
+              inputMSA={selectedFileTypes.Seed? inputMSA : inputFile} 
               handleInputMSAChange={handleInputMSAChange} 
               handleFileTypeChange={handleFileTypeChange}
             />
