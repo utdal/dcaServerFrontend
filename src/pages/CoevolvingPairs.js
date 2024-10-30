@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import HomeButton from '../components/HomeButton';
-import { generateMsa, computeDca, MSA } from '../backend/api';
+import { generateMsa, computeDca, MSA, mapResidues, generateContacts } from '../backend/api';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -29,7 +29,7 @@ const CoevolvingPairs = () => {
   const [inputPDBID, setInputPDBID] = useState('');
   const [maxContGaps, setMaxContGaps] = useState('');
   const [ECutoff, setECutoff] = useState('');
-  const [distThresh, setDistThresh] = useState('')
+  const [distThresh, setDistThresh] = useState(8)
   const [caOnly, setCaOnly] = useState(false)
   const [theta, setTheta] = useState(defaultTheta);
   const [analysisMethod, setAnalysisMethod] = useState('');
@@ -99,8 +99,40 @@ const CoevolvingPairs = () => {
     console.log("E: " + ECutoff)
     console.log("Max Gaps: " + maxContGaps)
     // Reset fields or provide feedback as needed
-    //const msaTask = await generateMsa(inputValue);
-    //const dcaTask = await computeDca(msaTask.id);
+    
+    let msaId = null;
+    if (selectedFileTypes.Seed) {
+      const msaTask = await generateMsa({
+        seed: inputMSA,
+        ECutoff: ECutoff || undefined,
+        maxGaps: maxContGaps || undefined
+      });
+      msaId = msaTask.id;
+    } else {
+      //File upload
+      // msaId = ...
+    }
+
+    const dcaTask = await computeDca({
+      msaId: msaId,
+      theta: theta
+    });
+
+    const residuesTask = await mapResidues({
+      dcaId: dcaTask.id,
+      pdbId: inputPDBID,
+      chain1: 'A', //Need to figure out what to do for this
+      chain2: 'A'
+    });
+
+    const contactsTask = await generateContacts({
+      pdbId: inputPDBID,
+      caOnly: caOnly,
+      distThresh: distThresh
+    });
+
+    const url = '/coevolving-pairs-results/?structure_contacts=' + contactsTask.id + '&mapped_di=' + residuesTask.id;
+    window.open(url, '_blank');
   };
 
   return (

@@ -99,7 +99,7 @@ export class MSA extends APIDataObject {
     static objectName = 'msa';
 
     constructor({ id, user, created, expires, seed, fasta, depth, cols, quality }) {
-        super({id, user, created, expires});
+        super({ id, user, created, expires });
         this.seed = seed;
         this.fasta = fasta;
         this.depth = depth;
@@ -133,7 +133,7 @@ export class DCA extends APIDataObject {
     static objectName = 'dca';
 
     constructor({ id, user, created, expires, m_eff, ranked_di }) {
-        super({id, user, created, expires});
+        super({ id, user, created, expires });
         this.m_eff = m_eff;
         this.ranked_di = ranked_di;
 
@@ -173,7 +173,7 @@ export class DCA extends APIDataObject {
             [0, 2, 1.11],
             [1, 2, 0.98]
         ]
-      })
+    })
 }
 
 
@@ -181,7 +181,7 @@ export class MappedDi extends APIDataObject {
     static objectName = 'mapped-di';
 
     constructor({ id, user, created, expires, protein_name, seed, dca, mapped_di }) {
-        super({id, user, created, expires});
+        super({ id, user, created, expires });
         this.expires = new Date(expires);
         this.protein_name = protein_name;
         this.seed = seed;
@@ -223,7 +223,7 @@ export class MappedDi extends APIDataObject {
             [0, 2, 1.11],
             [1, 2, 0.98]
         ]
-      })
+    })
 }
 
 
@@ -231,7 +231,7 @@ export class StructureContacts extends APIDataObject {
     static objectName = 'structure-contact';
 
     constructor({ id, user, created, expires, pdb_id, ca_only, threshold, contacts }) {
-        super({id, user, created, expires});
+        super({ id, user, created, expires });
         this.pdb_id = pdb_id;
         this.ca_only = ca_only;
         this.threshold = threshold;
@@ -259,11 +259,14 @@ export class StructureContacts extends APIDataObject {
                 [55, 57],
                 [67, 68],
             ]
-        }})
+        }
+    })
 }
 
 
 async function startTask(endpoint, data) {
+    console.log(endpoint, data);
+    
     const response = await fetch(apiBaseUrl + endpoint + '/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -280,19 +283,19 @@ async function startTask(endpoint, data) {
 }
 
 
-export async function generateMsa(seed, msaName, ECutoff, maxGaps) {
+export async function generateMsa({ seed, msaName, ECutoff, maxGaps }) {
     let data = {
         seed: seed,
+        msa_name: msaName,
         E: ECutoff,
         max_gaps: maxGaps
     };
-    if (msaName) data.msa_name = msaName;
 
     return await startTask('generate-msa', data);
 }
 
 
-export async function computeDca(msaId, theta) {
+export async function computeDca({ msaId, theta }) {
     return await startTask('compute-dca', {
         msa_id: msaId,
         theta: theta
@@ -300,7 +303,7 @@ export async function computeDca(msaId, theta) {
 }
 
 
-export async function mapResidues(dcaId, pdbId, chain1, chain2) {
+export async function mapResidues({ dcaId, pdbId, chain1, chain2 }) {
     return await startTask('map-residues', {
         dca_id: dcaId,
         pdb_id: pdbId,
@@ -310,7 +313,7 @@ export async function mapResidues(dcaId, pdbId, chain1, chain2) {
 }
 
 
-export async function generateContacts(pdbId, caOnly, distThresh) {
+export async function generateContacts({ pdbId, caOnly, distThresh }) {
     return await startTask('generate-contacts', {
         pdb_id: pdbId,
         ca_only: caOnly,
