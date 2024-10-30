@@ -280,9 +280,11 @@ async function startTask(endpoint, data) {
 }
 
 
-export async function generateMsa(seed, msaName) {
+export async function generateMsa(seed, msaName, ECutoff, maxGaps) {
     let data = {
-        seed: seed
+        seed: seed,
+        E: ECutoff,
+        max_gaps: maxGaps
     };
     if (msaName) data.msa_name = msaName;
 
@@ -290,9 +292,10 @@ export async function generateMsa(seed, msaName) {
 }
 
 
-export async function computeDca(msaId) {
+export async function computeDca(msaId, theta) {
     return await startTask('compute-dca', {
-        msa_id: msaId
+        msa_id: msaId,
+        theta: theta
     });
 }
 
@@ -307,10 +310,10 @@ export async function mapResidues(dcaId, pdbId, chain1, chain2) {
 }
 
 
-export async function generateContacts(pdbId, caOnly, threshold) {
+export async function generateContacts(pdbId, caOnly, distThresh) {
     return await startTask('generate-contacts', {
         pdb_id: pdbId,
         ca_only: caOnly,
-        threshold: threshold
+        threshold: distThresh
     });
 }
