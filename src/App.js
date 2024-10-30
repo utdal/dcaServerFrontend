@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import CoevolvingPairs from './pages/CoevolvingPairs copy';
+import CoevolvingPairs from './pages/CoevolvingPairs';
 import LDL from './pages/LDL';
 import Introvid from './pages/Introvid';
 import Bioguide from './pages/Bioguide';
