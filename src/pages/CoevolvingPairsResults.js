@@ -12,6 +12,7 @@ import ChainSelector from '../components/ChainSelector';
 
 const CoevolvingPairsResults = () => {
     const [loading, setLoading] = useState(true);
+    const [loadingMessage, setLoadingMessage] = useState('');
     const [error, setError] = useState(null);
     const [dca, setDca] = useState(DCA.testObj);
     const [mappedDi, setMappedDi] = useState(MappedDi.testObj);
@@ -34,14 +35,33 @@ const CoevolvingPairsResults = () => {
     useEffect(() => {
         async function fetchData() {
             setLoading(true);
+            setLoadingMessage('Loading...');
+
             try {
-                if (dcaId) setDca(await DCA.fetch(dcaId));
-                if (mappedDiId) setMappedDi(await MappedDi.fetch(mappedDiId));
-                if (structueContactsId) setStructueContacts(await StructureContacts.fetch(structueContactsId));
+                if (dcaId) {
+                    const task = await Task.fetch(dcaId);
+                    setLoadingMessage('Running DCA...');
+                    await task.waitForCompletion();
+                    setDca(await DCA.fetch(dcaId));
+                }
+                if (mappedDiId) {
+                    const task = await Task.fetch(mappedDiId);
+                    setLoadingMessage('Mapping DI...');
+                    await task.waitForCompletion();
+                    setMappedDi(await MappedDi.fetch(mappedDiId));
+                }
+                if (structueContactsId) {
+                    const task = await Task.fetch(structueContactsId);
+                    setLoadingMessage('Generating contacts...');
+                    await task.waitForCompletion();
+                    setStructueContacts(await StructureContacts.fetch(structueContactsId));
+                }
             } catch (error) {
+
                 setError('Error: ' + error.message);
             } finally {
                 setLoading(false);
+                setLoadingMessage('');
             }
         }
         fetchData();
@@ -152,7 +172,7 @@ const CoevolvingPairsResults = () => {
 
             <div style={styles.resultsSection}>
                 {loading ? (
-                    <p style={{ fontStyle: 'italic', color: '#333' }}>Loading...</p>
+                    <p style={{ fontStyle: 'italic', color: '#333' }}>{loadingMessage}</p>
                 ) : error ? (
                     <p style={{ color: '#B71C1C', fontWeight: 'bold' }}>{error}</p>
                 ) : (

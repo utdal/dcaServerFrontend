@@ -72,6 +72,17 @@ export class Task extends APIObject {
         this.successful = updated.successful;
     }
 
+    async waitForCompletion(interval) {
+        return new Promise((resolve, reject) => {
+            const check = async () => {
+                await this.update();
+                if (this.state === 'SUCCESS' || this.state === 'FAILURE') resolve();
+                else setTimeout(check, interval || 5000);
+            };
+            check();
+        });
+    }
+
     getNiceName() {
         const nameMap = {
             'api.tasks.compute_dca_task': 'Compute DCA Task',
@@ -266,7 +277,7 @@ export class StructureContacts extends APIDataObject {
 
 async function startTask(endpoint, data) {
     console.log(endpoint, data);
-    
+
     const response = await fetch(apiBaseUrl + endpoint + '/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
