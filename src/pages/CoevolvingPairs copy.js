@@ -59,8 +59,7 @@ const CoevolvingPairs = () => {
   };
 
   const handleECutoffChange = (event) => {
-    if (!isNaN(event.target.value) || event.target.value === '' || event.target.value === '-')
-    {
+    if (!isNaN(event.target.value) || event.target.value === '' || event.target.value === '-') {
       setECutoff(event.target.value);
     }
   };
@@ -70,15 +69,13 @@ const CoevolvingPairs = () => {
   }
 
   const handleMaxContGapsChange = (event) => {
-    if (((!isNaN(event.target.value)) || event.target.value === '') && !event.target.value.includes("."))
-    {
+    if (((!isNaN(event.target.value)) || event.target.value === '') && !event.target.value.includes(".")) {
       setMaxContGaps(event.target.value);
     }
   };
 
   const handleDistThreshChange = (event) => {
-    if (!isNaN(event.target.value) || event.target.value === '' || event.target.value === '-')
-    {
+    if (!isNaN(event.target.value) || event.target.value === '' || event.target.value === '-') {
       setDistThresh(event.target.value);
     }
   };
@@ -100,7 +97,7 @@ const CoevolvingPairs = () => {
     console.log("THETA: " + theta);
     console.log("THRESHOLD: " + distThresh);
     console.log("E: " + ECutoff)
-    console.log("Max Gaps: "+ maxContGaps)
+    console.log("Max Gaps: " + maxContGaps)
     // Reset fields or provide feedback as needed
     //const msaTask = await generateMsa(inputValue);
     //const dcaTask = await computeDca(msaTask.id);
@@ -109,65 +106,67 @@ const CoevolvingPairs = () => {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#282c34', p: '20px', color: 'white', width: '100%'}}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#282c34', p: '20px', color: 'white', width: '100%' }}>
         <HomeButton />
       </Box>
       <Container maxWidth="xl">
-        <Box sx={{ bgcolor: '#d0d8e8'}}>
+        <Box sx={{ bgcolor: '#d0d8e8' }}>
           <form onSubmit={handleSubmit}>
             <MSAInput
               inputType={selectedFileTypes.Seed ? 'Seed' : 'MSA'}
-              inputMSA={selectedFileTypes.Seed? inputMSA : inputFile} 
-              handleInputMSAChange={handleInputMSAChange} 
+              inputMSA={selectedFileTypes.Seed ? inputMSA : inputFile}
+              handleInputMSAChange={handleInputMSAChange}
               handleFileTypeChange={handleFileTypeChange}
             />
-            <PDBInput 
-              inputPDBID={inputPDBID} 
-              handleInputPDBChange={handleInputPDBChange} 
+            <PDBInput
+              inputPDBID={inputPDBID}
+              handleInputPDBChange={handleInputPDBChange}
               handlePDBChange={handlePDBChange}
             />
-            <Box sx={{ width: '100%', p: 2}}>
-                <h3>Coevolutionary Analysis Settings</h3>
-                <FormControl  sx={{ width: '25%' }}>
-                  <InputLabel id="coevolutionary-analysis-method">Coevolutionary Analysis Method</InputLabel>
-                  <Select
-                    labelId="coevolutionary-analysis-method"
-                    id="analysis-method-select"
-                    value={analysisMethod}
-                    label="Coevolutionary Analysis Method"
-                    onChange={handleAnalysisMethodChange}
-                  >
-                    <MenuItem value={'mfDCA'}>mean-field DCA</MenuItem>
-                    <MenuItem value={''}>More to Come!</MenuItem>
-                  </Select>
-                </FormControl>
-                
-                {analysisMethod === 'mfDCA' ? 
-                  <MFDCASettings ECutoff={ECutoff} handleECutoffChange={handleECutoffChange} defaultTheta={defaultTheta} theta={theta} handleThetaChange={handleThetaChange}/>
-                  :
-                  <></>
-                }
+            <Box sx={{ width: '100%', p: 2 }}>
+              <h3>Coevolutionary Analysis Settings</h3>
+              <FormControl sx={{ width: '25%' }}>
+                <InputLabel id="coevolutionary-analysis-method">Coevolutionary Analysis Method</InputLabel>
+                <Select
+                  labelId="coevolutionary-analysis-method"
+                  id="analysis-method-select"
+                  value={analysisMethod}
+                  label="Coevolutionary Analysis Method"
+                  onChange={handleAnalysisMethodChange}
+                >
+                  <MenuItem value={'mfDCA'}>mean-field DCA</MenuItem>
+                  <MenuItem value={''}>More to Come!</MenuItem>
+                </Select>
+              </FormControl>
 
+              {analysisMethod === 'mfDCA' ?
+                <MFDCASettings ECutoff={ECutoff} handleECutoffChange={handleECutoffChange} defaultTheta={defaultTheta} theta={theta} handleThetaChange={handleThetaChange} />
+                :
+                <></>
+              }
 
-                <h3> MSA Settings </h3>
+              {selectedFileTypes.Seed ? <>
+                <h3> MSA Generation Settings </h3>
+                <p>Max Number of Continuous Gaps:</p>
                 <TextField
-                  label = "Max Number of Continuous Gaps"
+                  label="Max Gaps"
                   value={maxContGaps}
                   onChange={handleMaxContGapsChange}>
                 </TextField>
+              </> : undefined}
 
 
-                <h3>PDB Setting</h3>
-                <PDBSettings distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange}/>
+              <h3>PDB Setting</h3>
+              <PDBSettings distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange} />
             </Box>
 
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-                Submit
+              Submit
             </Button>
           </form>
           {/* I'll add in a settings pane. Filtering the MSA, MSAutils whatever settings are needed., Bit Score */}
         </Box>
-          
+
       </Container>
     </React.Fragment>
   );

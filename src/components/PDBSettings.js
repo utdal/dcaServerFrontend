@@ -6,13 +6,14 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyChange }) => {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+    <Box sx={{}}>
+      <p>Structural Contact Distance Threshold:</p>
         <TextField
-            label = "Structural Contact Distance Threshold"
+            label = "Threshold (Å)"
             value={distThresh}
             onChange={handleDistThreshChange}>
         </TextField>
-        <FormGroup>
+        <FormGroup sx={{ alignItems: 'center' }}>
             <FormControlLabel control={<Checkbox checked={caOnly} onChange={handleCaOnlyChange}/>} label="Alpha-carbon contacts only" />
         </FormGroup>
     </Box>

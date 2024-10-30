@@ -3,7 +3,7 @@ import { Box, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, R
 
 const PDBInput = ({ inputPDBID, handleInputPDBChange, handlePDBChange }) => {
   return (
-    <Box display="flex" justifyContent="flex-start" flexWrap="wrap" sx={{ width: '100%', p: 2, border: '1px dashed grey' }}>
+    <Box sx={{ width: '100%', p: 2, border: '1px dashed grey' }}>
       <h3 style={{ textAlign: 'left', width: '100%' }}>
         Enter the PDB ID that corresponds to the RCSB entry of your protein of interest.
       </h3>
