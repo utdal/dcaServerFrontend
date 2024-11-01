@@ -232,14 +232,13 @@ export async function computeDca(msaId, theta) {
 }
 
 
-export async function mapResidues(dcaId, pdbId, chain1, chain2, chain1IsAuth, chain2IsAuth) {
+export async function mapResidues(dcaId, pdbId, chain1, chain2, authChainIdSupplied) {
     return await startTask('map-residues', {
         dca_id: dcaId,
         pdb_id: pdbId,
         chain1: chain1,
         chain2: chain2,
-        chain1_is_auth: chain1IsAuth,
-        chain2_is_auth: chain2IsAuth
+        auth_chain_id_supplied: authChainIdSupplied
     });
 }
 
