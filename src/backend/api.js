@@ -232,20 +232,23 @@ export async function computeDca(msaId, theta) {
 }
 
 
-export async function mapResidues(dcaId, pdbId, chain1, chain2) {
+export async function mapResidues(dcaId, pdbId, chain1, chain2, chain1IsAuth, chain2IsAuth) {
     return await startTask('map-residues', {
         dca_id: dcaId,
         pdb_id: pdbId,
         chain1: chain1,
-        chain2: chain2
+        chain2: chain2,
+        chain1_is_auth: chain1IsAuth,
+        chain2_is_auth: chain2IsAuth
     });
 }
 
 
-export async function generateContacts(pdbId, caOnly, distThresh) {
+export async function generateContacts(pdbId, caOnly, distThresh, isCIF) {
     return await startTask('generate-contacts', {
         pdb_id: pdbId,
         ca_only: caOnly,
-        threshold: distThresh
+        threshold: distThresh,
+        is_cif: isCIF
     });
 }
