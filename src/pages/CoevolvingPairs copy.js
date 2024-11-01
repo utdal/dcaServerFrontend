@@ -27,6 +27,8 @@ const CoevolvingPairs = () => {
   const [inputMSA, setInputMSA] = useState('');
   const [inputFile, setInputFile] = useState(null);
   const [inputPDBID, setInputPDBID] = useState('');
+  const [chain1, setChain1] = useState({ chainId: '', isAuth: false});
+  const [chain2, setChain2] = useState({ chainId: '', isAuth: false});
   const [maxContGaps, setMaxContGaps] = useState('');
   const [ECutoff, setECutoff] = useState('');
   const [distThresh, setDistThresh] = useState('')
@@ -56,6 +58,22 @@ const CoevolvingPairs = () => {
 
   const handleInputPDBChange = (event) => {
     setInputPDBID(event.target.value);
+  };
+
+  const handleChain1Change = (e) => {
+    const { name, value, type, checked } = e.target;
+    setChain1((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleChain2Change = (e) => {
+    const { name, value, type, checked } = e.target;
+    setChain2((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
   };
 
   const handleECutoffChange = (event) => {
@@ -157,7 +175,10 @@ const CoevolvingPairs = () => {
 
 
               <h3>PDB Setting</h3>
-              <PDBSettings distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange} />
+              <PDBSettings 
+                distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange} 
+                chain1={chain1} handleChain1Change={handleChain1Change} chain2={chain2}  handleChain2Change={handleChain2Change}
+                selectedPDBTypes={selectedPDBTypes}/>
             </Box>
 
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
