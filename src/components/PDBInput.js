@@ -9,6 +9,7 @@ const PDBInput = ({ inputPDBID, handleInputPDBChange, handlePDBChange }) => {
       </h3>
       <TextField
         label="PDB ID"
+        variant='filled'
         inputProps={{ maxLength: 8 }}
         value={inputPDBID}
         onChange={handleInputPDBChange}

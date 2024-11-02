@@ -13,6 +13,7 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
             <p>Structural Contact Distance Threshold:</p>
             <TextField
                 label = "Threshold (Å)"
+                variant='filled'
                 value={distThresh}
                 onChange={handleDistThreshChange}>
             </TextField>
@@ -22,12 +23,14 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
           <Box sx={{ display: 'flex', justifyContent: 'center', gap: 5, flexDirection: 'row'}}>
             <TextField
               label="Chain 1 ID"
+              variant='filled'
               name="chainId"
               value={chain1}
               onChange={handleChain1Change}
             />
             <TextField
               label="Chain 2 ID"
+              variant='filled'
               name="chainId"
               value={chain2}
               onChange={handleChain2Change}

@@ -30,7 +30,7 @@ const CoevolvingPairs = () => {
   const [chain1, setChain1] = useState('');
   const [chain2, setChain2] = useState('');
   const [isAuth, setIsAuth] = useState(true);
-  const [maxContGaps, setMaxContGaps] = useState('');
+  const [maxContGaps, setMaxContGaps] = useState('20');
   const [ECutoff, setECutoff] = useState('');
   const [distThresh, setDistThresh] = useState('8')
   const [caOnly, setCaOnly] = useState(false)
@@ -185,6 +185,8 @@ const CoevolvingPairs = () => {
                   id="analysis-method-select"
                   value={analysisMethod}
                   label="Coevolutionary Analysis Method"
+                  variant='filled'
+                  margin='200'
                   onChange={handleAnalysisMethodChange}
                 >
                   <MenuItem value={'mfDCA'}>mean-field DCA</MenuItem>
@@ -203,6 +205,7 @@ const CoevolvingPairs = () => {
                 <p>Max Number of Continuous Gaps (as percentage of MSA length):</p>
                 <TextField
                   label="Max Gaps"
+                  variant='filled'
                   value={maxContGaps}
                   onChange={handleMaxContGapsChange}>
                 </TextField>

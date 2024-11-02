@@ -16,7 +16,7 @@ const MSAInput = ({ inputType, inputMSA, handleInputMSAChange, handleFileTypeCha
           <TextField
             id="InputSequence"
             fullWidth
-            variant="outlined"
+            variant="filled"
             multiline
             minRows={5}
             value={inputMSA}
