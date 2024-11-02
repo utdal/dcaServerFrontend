@@ -27,9 +27,12 @@ const CoevolvingPairs = () => {
   const [inputMSA, setInputMSA] = useState('');
   const [inputFile, setInputFile] = useState(null);
   const [inputPDBID, setInputPDBID] = useState('');
+  const [chain1, setChain1] = useState('');
+  const [chain2, setChain2] = useState('');
+  const [isAuth, setIsAuth] = useState(true);
   const [maxContGaps, setMaxContGaps] = useState('');
   const [ECutoff, setECutoff] = useState('');
-  const [distThresh, setDistThresh] = useState(8)
+  const [distThresh, setDistThresh] = useState('8')
   const [caOnly, setCaOnly] = useState(false)
   const [theta, setTheta] = useState(defaultTheta);
   const [analysisMethod, setAnalysisMethod] = useState('');
@@ -58,6 +61,18 @@ const CoevolvingPairs = () => {
     setInputPDBID(event.target.value);
   };
 
+  const handleChain1Change = (event) => {
+    setChain1(event.target.value);
+  };
+
+  const handleChain2Change = (event) => {
+    setChain2(event.target.value);
+  };
+
+  const handleIsAuthChange = (event) => {
+    setIsAuth(event.target.checked);
+  };
+
   const handleECutoffChange = (event) => {
     if (!isNaN(event.target.value) || event.target.value === '' || event.target.value === '-') {
       setECutoff(event.target.value);
@@ -69,7 +84,7 @@ const CoevolvingPairs = () => {
   }
 
   const handleMaxContGapsChange = (event) => {
-    if (((!isNaN(event.target.value)) || event.target.value === '') && !event.target.value.includes(".")) {
+    if (((!isNaN(event.target.value)) || event.target.value === '')) {
       setMaxContGaps(event.target.value);
     }
   };
@@ -91,15 +106,21 @@ const CoevolvingPairs = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Here you can handle the submission logic, such as sending data to an API
-    console.log("Submitted data:", { inputMSA, selectedFileTypes });
-    console.log("Submitted data:", { inputPDBID, selectedPDBTypes });
-    console.log("CA ONLY: " + caOnly);
-    console.log("THETA: " + theta);
-    console.log("THRESHOLD: " + distThresh);
-    console.log("E: " + ECutoff)
-    console.log("Max Gaps: " + maxContGaps)
+    // console.log("Submitted data:", { inputMSA, selectedFileTypes });
+    // console.log("Submitted data:", { inputPDBID, selectedPDBTypes });
+    // console.log("CA ONLY: " + caOnly);
+    // console.log("THETA: " + theta);
+    // console.log("THRESHOLD: " + distThresh);
+    // console.log("E: " + ECutoff)
+    // console.log("Max Gaps: " + maxContGaps)
+
+    console.log(chain1);
+    console.log(chain2);
+    console.log(isAuth);
     // Reset fields or provide feedback as needed
-    
+    //const msaTask = await generateMsa(inputValue);
+    //const dcaTask = await computeDca(msaTask.id);
+
     let msaId = null;
     if (selectedFileTypes.Seed) {
       const msaTask = await generateMsa({
@@ -179,7 +200,7 @@ const CoevolvingPairs = () => {
 
               {selectedFileTypes.Seed ? <>
                 <h3> MSA Generation Settings </h3>
-                <p>Max Number of Continuous Gaps:</p>
+                <p>Max Number of Continuous Gaps (as percentage of MSA length):</p>
                 <TextField
                   label="Max Gaps"
                   value={maxContGaps}
@@ -188,8 +209,11 @@ const CoevolvingPairs = () => {
               </> : undefined}
 
 
-              <h3>PDB Setting</h3>
-              <PDBSettings distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange} />
+              <h3>PDB Settings</h3>
+              <PDBSettings 
+                distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange} 
+                chain1={chain1} handleChain1Change={handleChain1Change} chain2={chain2}  handleChain2Change={handleChain2Change} 
+                isAuth={isAuth} handleIsAuthChange={handleIsAuthChange} selectedPDBTypes={selectedPDBTypes}/>
             </Box>
 
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>

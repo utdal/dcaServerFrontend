@@ -299,7 +299,7 @@ export async function generateMsa({ seed, msaName, ECutoff, maxGaps }) {
         seed: seed,
         msa_name: msaName,
         E: ECutoff,
-        max_gaps: maxGaps
+        perc_max_gaps: maxGaps
     };
 
     return await startTask('generate-msa', data);
@@ -314,7 +314,7 @@ export async function computeDca({ msaId, theta }) {
 }
 
 
-export async function mapResidues(dcaId, pdbId, chain1, chain2, authChainIdSupplied) {
+export async function mapResidues({ dcaId, pdbId, chain1, chain2, authChainIdSupplied }) {
     return await startTask('map-residues', {
         dca_id: dcaId,
         pdb_id: pdbId,
@@ -325,7 +325,7 @@ export async function mapResidues(dcaId, pdbId, chain1, chain2, authChainIdSuppl
 }
 
 
-export async function generateContacts(pdbId, caOnly, distThresh, isCIF) {
+export async function generateContacts({ pdbId, caOnly, distThresh, isCIF }) {
     return await startTask('generate-contacts', {
         pdb_id: pdbId,
         ca_only: caOnly,
