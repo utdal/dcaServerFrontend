@@ -175,7 +175,7 @@ const CoevolvingPairs = () => {
               </> : undefined}
 
 
-              <h3>PDB Setting</h3>
+              <h3>PDB Settings</h3>
               <PDBSettings 
                 distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange} 
                 chain1={chain1} handleChain1Change={handleChain1Change} chain2={chain2}  handleChain2Change={handleChain2Change} 
