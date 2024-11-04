@@ -6,7 +6,10 @@ class APIObject {
     objectName = null;
 
     static async fetch(id, type) {
-        const response = await fetch(apiBaseUrl + type.objectName + 's/' + id + '/');
+        const response = await fetch(
+            apiBaseUrl + type.objectName + 's/' + id + '/',
+            { credentials: "include" }
+        );
 
         if (!response.ok) {
             if (response.status === 403) throw new Error(type.objectName + ' "' + id + '" not found');
@@ -19,7 +22,10 @@ class APIObject {
     }
 
     static async fetchAll(type) {
-        const response = await fetch(apiBaseUrl + type.objectName + 's/');
+        const response = await fetch(
+            apiBaseUrl + type.objectName + 's/',
+            { credentials: "include" }
+        );
 
         if (!response.ok) {
             if (response.status === 403) throw new Error('You must be logged in to view your ' + type.objectName + 's');
@@ -278,11 +284,15 @@ export class StructureContacts extends APIDataObject {
 async function startTask(endpoint, data) {
     console.log(endpoint, data);
 
-    const response = await fetch(apiBaseUrl + endpoint + '/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    });
+    const response = await fetch(
+        apiBaseUrl + endpoint + '/',
+        {
+            method: 'POST',
+            credentials: "include",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }
+    );
 
     if (!response.ok) {
         throw new Error('Bad network response');
