@@ -5,7 +5,10 @@ class APIObject {
     objectName = null;
 
     static async fetch(id, type) {
-        const response = await fetch(apiBaseUrl + type.objectName + 's/' + id + '/');
+        const response = await fetch(
+            apiBaseUrl + type.objectName + 's/' + id + '/',
+            { credentials: "include" }
+        );
 
         if (!response.ok) {
             if (response.status === 403) throw new Error(type.objectName + ' "' + id + '" not found');
@@ -18,7 +21,10 @@ class APIObject {
     }
 
     static async fetchAll(type) {
-        const response = await fetch(apiBaseUrl + type.objectName + 's/');
+        const response = await fetch(
+            apiBaseUrl + type.objectName + 's/',
+            { credentials: "include" }
+        );
 
         if (!response.ok) {
             if (response.status === 403) throw new Error('You must be logged in to view your ' + type.objectName + 's');
@@ -71,6 +77,17 @@ export class Task extends APIObject {
         this.successful = updated.successful;
     }
 
+    async waitForCompletion(interval) {
+        return new Promise((resolve, reject) => {
+            const check = async () => {
+                await this.update();
+                if (this.state === 'SUCCESS' || this.state === 'FAILURE') resolve();
+                else setTimeout(check, interval || 5000);
+            };
+            check();
+        });
+    }
+
     getNiceName() {
         const nameMap = {
             'api.tasks.compute_dca_task': 'Compute DCA Task',
@@ -98,7 +115,7 @@ export class MSA extends APIDataObject {
     static objectName = 'msa';
 
     constructor({ id, user, created, expires, seed, fasta, depth, cols, quality }) {
-        super({id, user, created, expires});
+        super({ id, user, created, expires });
         this.seed = seed;
         this.fasta = fasta;
         this.depth = depth;
@@ -132,7 +149,7 @@ export class DCA extends APIDataObject {
     static objectName = 'dca';
 
     constructor({ id, user, created, expires, m_eff, ranked_di }) {
-        super({id, user, created, expires});
+        super({ id, user, created, expires });
         this.m_eff = m_eff;
         this.ranked_di = ranked_di;
 
@@ -172,7 +189,7 @@ export class DCA extends APIDataObject {
             [0, 2, 1.11],
             [1, 2, 0.98]
         ]
-      })
+    })
 }
 
 
@@ -180,7 +197,7 @@ export class MappedDi extends APIDataObject {
     static objectName = 'mapped-di';
 
     constructor({ id, user, created, expires, protein_name, seed, dca, mapped_di }) {
-        super({id, user, created, expires});
+        super({ id, user, created, expires });
         this.expires = new Date(expires);
         this.protein_name = protein_name;
         this.seed = seed;
@@ -222,7 +239,7 @@ export class MappedDi extends APIDataObject {
             [0, 2, 1.11],
             [1, 2, 0.98]
         ]
-      })
+    })
 }
 
 
@@ -230,7 +247,7 @@ export class StructureContacts extends APIDataObject {
     static objectName = 'structure-contact';
 
     constructor({ id, user, created, expires, pdb_id, ca_only, threshold, contacts }) {
-        super({id, user, created, expires});
+        super({ id, user, created, expires });
         this.pdb_id = pdb_id;
         this.ca_only = ca_only;
         this.threshold = threshold;
@@ -254,20 +271,27 @@ export class StructureContacts extends APIDataObject {
         ca_only: true,
         threshold: 8,
         contacts: {
-            AA_contacts: [
+            'A, A': [
                 [55, 57],
                 [67, 68],
             ]
-        }})
+        }
+    })
 }
 
 
 async function startTask(endpoint, data) {
-    const response = await fetch(apiBaseUrl + endpoint + '/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    });
+    console.log(endpoint, data);
+
+    const response = await fetch(
+        apiBaseUrl + endpoint + '/',
+        {
+            method: 'POST',
+            credentials: "include",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }
+    );
 
     if (!response.ok) {
         throw new Error('Bad network response');
@@ -279,37 +303,62 @@ async function startTask(endpoint, data) {
 }
 
 
-export async function generateMsa(seed, msaName) {
+export async function generateMsa({ seed, msaName, ECutoff, maxGaps }) {
     let data = {
-        seed: seed
+        seed: seed,
+        msa_name: msaName,
+        E: ECutoff,
+        perc_max_gaps: maxGaps
     };
-    if (msaName) data.msa_name = msaName;
 
     return await startTask('generate-msa', data);
 }
 
 
-export async function computeDca(msaId) {
+export async function uploadMsa({ msa }) {
+    const formData = new FormData();
+    formData.append('fasta', msa);
+
+    const response = await fetch(apiBaseUrl + 'msas/', {
+        method: 'POST',
+        body: formData,
+        credentials: "include",
+    });
+
+    if (!response.ok) {
+        throw new Error('Bad network response');
+    }
+
+    const result = await response.json();
+
+    return new MSA(result);
+}
+
+
+export async function computeDca({ msaId, theta }) {
     return await startTask('compute-dca', {
-        msa_id: msaId
+        msa_id: msaId,
+        theta: theta
     });
 }
 
 
-export async function mapResidues(dcaId, pdbId, chain1, chain2) {
+export async function mapResidues({ dcaId, pdbId, chain1, chain2, authChainIdSupplied }) {
     return await startTask('map-residues', {
         dca_id: dcaId,
         pdb_id: pdbId,
         chain1: chain1,
-        chain2: chain2
+        chain2: chain2,
+        auth_chain_id_supplied: authChainIdSupplied
     });
 }
 
 
-export async function generateContacts(pdbId, caOnly, threshold) {
+export async function generateContacts({ pdbId, caOnly, distThresh, isCIF }) {
     return await startTask('generate-contacts', {
         pdb_id: pdbId,
         ca_only: caOnly,
-        threshold: threshold
+        threshold: distThresh,
+        is_cif: isCIF
     });
 }

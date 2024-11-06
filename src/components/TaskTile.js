@@ -119,7 +119,7 @@ const TaskTile = ({ task_id, updateInterval = 5 }) => {
                 {task.time_started ? <div><b>Started:</b> {task.time_started.toISOString()}</div> : undefined}
                 {task.time_ended ? <div><b>Ended:</b> {task.time_ended.toISOString()}</div> : undefined}
                 {task.message ? <div><i>{task.message}</i></div> : undefined}
-                {task.successful ? resultsLink() : undefined}
+                {/* {task.successful ? resultsLink() : undefined} */}
                 {lastUpdated ? <div style={{ fontSize: '10px', fontStyle: 'italic', color: '#003366' }}>
                     Last updated {new Date(lastUpdated).toISOString()}
                 </div> : undefined}

@@ -8,14 +8,17 @@ const ContactMap = ({
 }) => {
     const maxDiCount = mappedDi.mapped_di.length;
     const [diCount, setDiCount] = useState(mappedDi ? Math.floor(Math.sqrt(maxDiCount * 4.5)) : 0);
+    const [showPairs, setShowPairs] = useState(true);
+    const [showContacts, setShowContacts] = useState(true);
+    const [showHits, setShowHits] = useState(true);
     // TODO: Handle duplication of selected contacts better
 
-    const plotData = useMemo(() => {
+    const {plotData, hitCount} = useMemo(() => {
         let res = [];
 
-        if (structureContacts) {
-            const x = structureContacts.contacts[chain + '_contacts'].map(p => p[0]);
-            const y = structureContacts.contacts[chain + '_contacts'].map(p => p[1]);
+        if (structureContacts && showContacts && structureContacts.contacts[chain]) {
+            const x = structureContacts.contacts[chain].map(p => p[0]);
+            const y = structureContacts.contacts[chain].map(p => p[1]);
             const pts = [[...x, ...y], [...y, ...x]]
 
             res.push({
@@ -34,7 +37,7 @@ const ContactMap = ({
             });
         }
 
-        if (mappedDi) {
+        if (mappedDi && showPairs) {
             const topPairs = mappedDi.topDiPairs(diCount);
 
             res.push({
@@ -47,16 +50,37 @@ const ContactMap = ({
                 hoverinfo: 'text',
                 marker: {
                     size: 3,
-                    color: topPairs.map((r, i) => {
-                        return '#3788d5';
-                    })
+                    color: '#3788d5'
                 },
                 selectedpoints: selectedPairs
             });
         }
 
-        return res;
-    }, [chain, mappedDi, structureContacts, diCount, selectedPairs, selectedContacts]);
+        let hitCount = 0;
+        if (mappedDi && structureContacts && showHits && structureContacts.contacts[chain]) {
+            const contactLookup = new Set(structureContacts.contacts[chain].map(c => c.join(',')));
+            const topPairs = mappedDi.topDiPairs(diCount);
+            const hits = topPairs.filter(p => contactLookup.has(p[0] + ',' + p[1]));
+            hitCount = hits.length;
+
+            res.push({
+                x: hits.map(p => p[0]),
+                y: hits.map(p => p[1]),
+                type: 'scatter',
+                mode: 'markers',
+                name: 'DI Hits',
+                text: hits.map(p => p[0] + ',' + p[1] + ': DI=' + p[2].toFixed(3)),
+                hoverinfo: 'text',
+                marker: {
+                    size: 3,
+                    color: 'red'
+                },
+                selectedpoints: selectedPairs
+            });
+        }
+
+        return {plotData: res, hitCount};
+    }, [chain, mappedDi, structureContacts, diCount, selectedPairs, selectedContacts, showContacts, showHits, showPairs]);
 
     const plotLayout = useMemo(() => {
         return {
@@ -74,9 +98,10 @@ const ContactMap = ({
                 scaleanchor: 'x',
                 title: 'Residue Index'
             },
-            legend: {
-                orientation: "h"
-            },
+            showlegend: false,
+            // legend: {
+            //     orientation: "h"
+            // },
             margin: {
                 l: 45,
                 r: 5,
@@ -95,12 +120,12 @@ const ContactMap = ({
 
         const blob = new Blob([csvContent], { type: 'text/csv' });
         return window.URL.createObjectURL(blob);
-    }, [chain, mappedDi, selectedPairs]);
+    }, [mappedDi, selectedPairs]);
 
     const selectedContactsLink = useMemo(() => {
-        if (!selectedContacts) return '#';
+        if (!selectedContacts || !structureContacts || !structureContacts.contacts[chain]) return '#';
 
-        const contacts = structureContacts.contacts[chain + '_contacts'];
+        const contacts = structureContacts.contacts[chain];
         const validIdxs = Array.from(new Set(selectedContacts.map(i => i % contacts.length))); // Remove duplicates
 
         let csvContent = 'Residue 1, Residue 2\n';
@@ -148,7 +173,14 @@ const ContactMap = ({
     return (
         <div>
             <div style={{ fontWeight: 'bold' }}>
-                Top {diCount} DI Pairs:
+                Top <input
+                    type='number'
+                    value={diCount}
+                    style={{width: '50px'}}
+                    min={1}
+                    max={maxDiCount}
+                    onChange={e => setDiCount(e.target.value)} />
+                DI Pairs:
 
                 <input
                     type="range"
@@ -185,7 +217,7 @@ const ContactMap = ({
                     onSelected={(data) => {
                         if (!data) return;
                         const contacts = data.points.filter(p => p.curveNumber === 0).map(p => p.pointNumber);
-                        const pairs = data.points.filter(p => p.curveNumber === 1).map(p => p.pointNumber);
+                        const pairs = data.points.filter(p => p.curveNumber === 1).map(p => p.pointNumber); //TODO: selecting hits
                         if (onContactSelect) onContactSelect(contacts);
                         if (onPairSelect) onPairSelect(pairs);
                     }}
@@ -195,6 +227,29 @@ const ContactMap = ({
                         if (onPairSelect) onPairSelect(null);
                     }}
                 />
+            </div>
+
+            <div>
+                <input type="checkbox" id="pairs" checked={showPairs} onChange={e => setShowPairs(e.target.checked)} />
+                <label htmlFor="pairs" style={{
+                    margin: '5px 10px',
+                    color: '#3788d5'
+                }}>DI Pairs</label>
+                <input type="checkbox" id="contacts" checked={showContacts} onChange={e => setShowContacts(e.target.checked)} />
+                <label htmlFor="contacts" style={{
+                    margin: '5px 10px',
+                    color: '#969696'
+                }}>Contacts</label>
+                <br />
+                <input type="checkbox" id="hits" checked={showHits} onChange={e => setShowHits(e.target.checked)} />
+                <label htmlFor="hits" style={{
+                    margin: '5px 10px',
+                    color: 'red'
+                }}>DI Hits ({hitCount}, {(hitCount / diCount * 100).toFixed(2)}%)</label>
+            </div>
+            
+            <div>
+
             </div>
 
             <div style={styles.helpText}>

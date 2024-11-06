@@ -1,537 +1,237 @@
 import React, { useState, useRef } from 'react';
 import HomeButton from '../components/HomeButton';
-import { generateMsa, computeDca } from '../backend/api';
+import { generateMsa, computeDca, MSA, mapResidues, generateContacts, uploadMsa } from '../backend/api';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button'
+import MSAInput from '../components/MSAInput';
+import PDBInput from '../components/PDBInput';
+import MFDCASettings from '../components/MFDCASettings';
+import { TextField } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
+import Slider from '@mui/material/Slider';
+import PDBSettings from '../components/PDBSettings';
+
 
 const CoevolvingPairs = () => {
-  const [inputValue, setInputValue] = useState('');
-  const [isValid, setIsValid] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
-  const [activeTab, setActiveTab] = useState('Tab1');
-  const [showError, setShowError] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showExamplesMenu, setShowExamplesMenu] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: false }); // Use object to track file types
-  const [saveMsaId, setSaveMsaId] = useState(false);
-  const existingTab = useRef(null);
-  const [pdbId, setPdbId] = useState('');
+  const defaultTheta = '0.3'; //Cast to numbers ar submit
+  const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: true }); // Use object to track file types
+  const [selectedPDBTypes, setSelectedPDBTypes] = useState({ PDB: false, CIF: true });
+  const [inputMSA, setInputMSA] = useState('');
+  const [inputFile, setInputFile] = useState(null);
+  const [inputPDBID, setInputPDBID] = useState('');
+  const [chain1, setChain1] = useState('');
+  const [chain2, setChain2] = useState('');
+  const [isAuth, setIsAuth] = useState(true);
+  const [maxContGaps, setMaxContGaps] = useState('20');
+  const [ECutoff, setECutoff] = useState('');
+  const [distThresh, setDistThresh] = useState('8')
+  const [caOnly, setCaOnly] = useState(false)
+  const [theta, setTheta] = useState(defaultTheta);
+  const [analysisMethod, setAnalysisMethod] = useState('mfDCA');
 
-
-  const validateInput = (value) => value.length >= 3;
-
-  const handleInputChange = (event) => {
-    const value = event.target.value;
-    if (value.length <= 700) {
-      setInputValue(value);
-      setIsValid(validateInput(value));
-      setShowError(false);
-    }
+  const handleFileTypeChange = (type) => {
+    setSelectedFileTypes((prev) => ({
+      ...prev,
+      MSA: type === 'MSA' ? true : false,
+      Seed: type === 'Seed' ? true : false,
+    }));
   };
-const handlePdbIdChange = (event) => {
-  setPdbId(event.target.value);
-};
-
-  const handleBlur = () => {
-    setIsValid(validateInput(inputValue));
-    setShowError(true);
+  const handlePDBChange = (type) => {
+    setSelectedPDBTypes((prev) => ({
+      ...prev,
+      PDB: type === 'PDB' ? true : false,
+      CIF: type === 'CIF' ? true : false,
+    }));
   };
 
-  const handleExampleClick = (example) => {
-    if (example.length <= 700) {
-      setInputValue(example);
-      setIsValid(true);
-      setShowError(false);
-      setShowExamplesMenu(false);
-    }
+  const handleInputMSAChange = (event) => {
+    if (selectedFileTypes.Seed) setInputMSA(event.target.value);
+    else setInputFile(event.target.files[0]);
   };
 
-  const handleTabClick = (tab) => setActiveTab(tab);
-
-  const handleSubmitClick = () => {
-    if (isValid) {
-      setShowModal(true);
-    }
+  const handleInputPDBChange = (event) => {
+    setInputPDBID(event.target.value);
   };
 
-  const handleSubmit = async () => {
-    setShowModal(false);
-    setIsSubmitting(true);
-    console.log('Submitted:', inputValue);
-    try {
-      const msaTask = await generateMsa(inputValue);
-      if (saveMsaId) {
-        const blob = new Blob([msaTask.id], { type: 'text/plain' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'msa_id.txt';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
-      if (!selectedFileTypes.MSA && !selectedFileTypes.Seed) {
-        const dcaTask = await computeDca(msaTask.id);
-        const lastTaskIds = JSON.parse(localStorage.getItem('lastTaskIds')) || [];
-        const newLastTaskId = { id: dcaTask.id, time: new Date().getTime() };
-        lastTaskIds.push(newLastTaskId);
-        localStorage.setItem('lastTaskIds', JSON.stringify(lastTaskIds));
-        console.log('Updated lastTaskIds in localStorage:', lastTaskIds);
-        const url = '/tasks?ids=' + msaTask.id + ',' + dcaTask.id;
-        window.open(url, '_blank');
-      } else if (selectedFileTypes.MSA) {
-        const url = '/tasks?ids=' + msaTask.id;
-        window.open(url, '_blank');
-      } else if (selectedFileTypes.Seed) {
-        const url = '/tasks?ids=' + msaTask.id;
-        window.open(url, '_blank');
-      }
-    } catch (error) {
-      console.error('Error submitting task:', error);
-    } finally {
-      setIsSubmitting(false);
+  const handleChain1Change = (event) => {
+    setChain1(event.target.value);
+  };
+
+  const handleChain2Change = (event) => {
+    setChain2(event.target.value);
+  };
+
+  const handleIsAuthChange = (event) => {
+    setIsAuth(event.target.checked);
+  };
+
+  const handleECutoffChange = (event) => {
+    if (!isNaN(event.target.value) || event.target.value === '' || event.target.value === '-') {
+      setECutoff(event.target.value);
     }
   };
 
-  const handleCancel = () => {
-    setShowModal(false);
-  };
+  const handleThetaChange = (event) => {
+    setTheta(event.target.value);
+  }
 
-  const toggleMenu = () => setShowMenu((prev) => !prev);
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const text = e.target.result;
-        if (text.length <= 700) {
-          setInputValue(text);
-          setIsValid(validateInput(text));
-          setShowError(false);
-        } else {
-          alert("File content exceeds the 700 character limit.");
-        }
-      };
-
-      // Determine which file type is allowed based on selection
-      if (selectedFileTypes.MSA && file.name.endsWith('.msa')) {
-        reader.readAsText(file);
-      } else if (selectedFileTypes.Seed && file.name.endsWith('.seed')) {
-        reader.readAsText(file);
-      } else {
-        alert("Please upload a valid file based on the selected type.");
-      }
+  const handleMaxContGapsChange = (event) => {
+    if (((!isNaN(event.target.value)) || event.target.value === '')) {
+      setMaxContGaps(event.target.value);
     }
   };
 
-const handleFileTypeChange = (type) => {
-  setSelectedFileTypes((prev) => ({
-    MSA: type === 'MSA' ? !prev.MSA : false,
-    Seed: type === 'Seed' ? !prev.Seed : false,
-  }));
-};
-
-
-  const handleSaveMsaIdChange = () => setSaveMsaId((prev) => !prev);
-
-  const handleDcaTaskListClick = () => {
-    window.open('/dca-task-list', '_blank');
+  const handleDistThreshChange = (event) => {
+    if (!isNaN(event.target.value) || event.target.value === '' || event.target.value === '-') {
+      setDistThresh(event.target.value);
+    }
   };
 
-  const styles = {
-    app: {
-      textAlign: 'center',
-      backgroundColor: '#d0d8e8',
-      height: '100vh',
-      width: '100vw',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      overflow: 'auto',
-    },
-    header: {
-      backgroundColor: '#282c34',
-      padding: '20px',
-      fontSize: '28px',
-      fontWeight: 'bold',
-      color: 'white',
-      width: '100%',
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      zIndex: 10,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
-    headerText: {
-      textAlign: 'center',
-      flex: 1,
-      marginRight: '-100px',
-    },
-    contentContainer: {
-      flex: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      overflowY: 'auto',
-      padding: '20px',
-    },
-    container: {
-      backgroundColor: '#f8f8f8',
-      padding: '20px',
-      width: '90%',
-      maxWidth: '1200px',
-      border: '1px solid #ccc',
-      borderRadius: '10px',
-      boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-      marginTop: '100px',
-      textAlign: 'center',
-      flexGrow: 1,
-      position: 'relative',
-      height: 'auto',
-      minHeight: 'calc(100vh - 100px)',
-    },
-    tabs: {
-      display: 'flex',
-      borderBottom: '1px solid #ccc',
-      marginBottom: '20px',
-      justifyContent: 'center',
-    },
-    tab: {
-      padding: '15px 25px',
-      cursor: 'pointer',
-      flex: 1,
-      textAlign: 'center',
-      border: '2px solid #ccc',
-      borderRadius: '5px',
-      backgroundColor: '#e0e0e0',
-      margin: '0 5px',
-      transition: 'background-color 0.3s ease, transform 0.3s ease',
-    },
-    activeTab: {
-      transform: 'translateY(-10px)',
-      zIndex: 1,
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-      backgroundColor: '#d0d0d0',
-    },
-    inputContainer: {
-      marginBottom: '20px',
-    },
-    inputTextBox: {
-      width: '100%',
-      height: '100px',
-      padding: '10px',
-      border: '1px solid black',
-      borderRadius: '4px',
-      borderColor: showError && !isValid ? 'red' : 'black',
-      boxSizing: 'border-box',
-    },
-    invalidSequence: {
-      color: 'red',
-      fontWeight: 'bold',
-      marginTop: '10px',
-      display: showError && !isValid ? 'block' : 'none',
-    },
-    submitButton: {
-      backgroundColor: '#87CEEB',
-      color: 'white',
-      cursor: isValid ? 'pointer' : 'not-allowed',
-      opacity: isValid ? 1 : 0.5,
-      marginTop: '20px',
-      padding: '10px 20px',
-      border: 'none',
-      borderRadius: '8px',
-      boxShadow: isSubmitting ? '0 2px 4px rgba(0, 0, 0, 0.5)' : '0 4px 8px rgba(0, 0, 0, 0.2)',
-      transform: isSubmitting ? 'scale(0.98)' : 'scale(1)',      
-transition: 'transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ease',
-    },
-    button: {
-      padding: '10px 20px',
-      marginRight: '10px',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      backgroundColor: '#e0e0e0', // Updated to light grey    
-      color: '#000', // Updated text color for contrast
-      marginTop: '10px',
-      transition: 'background-color 0.3s ease',
-    },
-    examplesMenu: {
-      marginTop: '10px',
-      position: 'absolute',
-      backgroundColor: '#ffffff',
-      border: '1px solid #ddd',
-      borderRadius: '5px',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      padding: '10px',
-      textAlign: 'left',
-      zIndex: 1000,
-      minWidth: '200px',
-      display: 'inline-block',
-    },
-    examplesOption: {
-      padding: '10px',
-      cursor: 'pointer',
-      borderBottom: '1px solid #ddd',
-      transition: 'background-color 0.3s ease',
-      whiteSpace: 'nowrap',
-    },
-    examplesOptionLast: {
-      padding: '10px',
-      cursor: 'pointer',
-    },
-    fileInput: {
-      marginTop: '10px',
-    },
-    fileTypeSelection: {
-      marginTop: '10px',
-      textAlign: 'center',
-    },
-    fileTypeCheckbox: {
-      marginRight: '10px',
-    },
-    settingsMenu: {
-      marginTop: '20px',
-      marginRight: '200px',
-      textAlign: 'left',
-      padding: '5px',
-      border: '1px solid #ccc',
-      borderRadius: '5px',
-      backgroundColor: '#e0e0e0',
-      width: '100%',
-      boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-      maxHeight: '300px',
-      overflowY: 'auto',
-    },
-    settingsOption: {
-      padding: '10px',
-      cursor: 'pointer',
-      borderBottom: '1px solid #ccc',
-    },
-    settingsOptionLast: {
-      padding: '10px',
-      cursor: 'pointer',
-    },
-    modal: {
-      position: 'fixed',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      backgroundColor: 'white',
-      padding: '20px',
-      borderRadius: '8px',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-      zIndex: 1000,
-    },
-    modalOverlay: {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      zIndex: 999,
-    },
-    modalButtons: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      marginTop: '20px',
-    },
-    modalButton: {
-      padding: '10px 20px',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-    },
-    modalSubmitButton: {
-      backgroundColor: '#87CEEB',
-      color: 'white',
-    },
-    modalCancelButton: {
-      backgroundColor: '#e0e0e0',
-    },
+  const handleCaOnlyChange = (event) => {
+    setCaOnly(event.target.checked);
   };
+
+  const handleAnalysisMethodChange = (event) => {
+    setAnalysisMethod(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    // Here you can handle the submission logic, such as sending data to an API
+    // console.log("Submitted data:", { inputMSA, selectedFileTypes });
+    // console.log("Submitted data:", { inputPDBID, selectedPDBTypes });
+    // console.log("CA ONLY: " + caOnly);
+    // console.log("THETA: " + theta);
+    // console.log("THRESHOLD: " + distThresh);
+    // console.log("E: " + ECutoff)
+    // console.log("Max Gaps: " + maxContGaps)
+
+    // console.log(chain1);
+    // console.log(chain2);
+    // console.log(isAuth);
+    // Reset fields or provide feedback as needed
+    //const msaTask = await generateMsa(inputValue);
+    //const dcaTask = await computeDca(msaTask.id);
+
+    //No error checking yet...
+
+    let msaId = null;
+    if (selectedFileTypes.Seed) {
+      const msaTask = await generateMsa({
+        seed: inputMSA,
+        ECutoff: Number(ECutoff) || undefined,
+        maxGaps: Number(maxContGaps) || undefined
+      });
+      msaId = msaTask.id;
+    } else {
+      const msa = await uploadMsa({ msa: inputFile });
+      msaId = msa.id;
+    }
+
+    const dcaTask = await computeDca({
+      msaId: msaId,
+      theta: Number(theta)
+    });
+
+    const residuesTask = await mapResidues({
+      dcaId: dcaTask.id,
+      pdbId: inputPDBID,
+      chain1: chain1,
+      chain2: chain2 || chain1,
+      authChainIdSupplied: isAuth
+    });
+
+    const contactsTask = await generateContacts({
+      pdbId: inputPDBID,
+      caOnly: caOnly,
+      distThresh: Number(distThresh),
+      isCIF: selectedPDBTypes.CIF
+    });
+
+    const url = '/coevolving-pairs-results/?structure_contacts=' + contactsTask.id + '&mapped_di=' + residuesTask.id;
+    window.open(url, '_blank');
+  };
+
   return (
-    <div style={styles.app}>
-      <div style={styles.header}>
+    <React.Fragment>
+      <CssBaseline />
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#282c34', p: '20px', color: 'white', width: '100%' }}>
         <HomeButton />
-        <span style={styles.headerText}>Coevolving Pairs</span>
-        <button
-          style={{
-            backgroundColor: '#e0e0e0',
-            color: '#333',
-            border: '1px solid #ccc',
-            borderRadius: '5px',
-            padding: '10px 20px',
-            cursor: 'pointer',
-            marginRight: '100px',
-            fontSize: '16px',
-          }}
-          onClick={handleDcaTaskListClick}
-        >
-          DCA Task List
-        </button>
-      </div>
-      <div style={styles.container}>
-        <div style={styles.tabs}>
-          <div
-            style={activeTab === 'Tab1' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
-            onClick={() => handleTabClick('Tab1')}
-          >
-            Input
-          </div>
-          <div
-            style={activeTab === 'Tab2' ? { ...styles.tab, ...styles.activeTab } : styles.tab}
-            onClick={() => handleTabClick('Tab2')}
-          >
-            Settings
-          </div>
-        </div>
-        {activeTab === 'Tab1' && (
-          <>
-            <div style={styles.inputContainer}>
-              <textarea
-                style={styles.inputTextBox}
-                value={inputValue}
-                onChange={handleInputChange}
-                onBlur={handleBlur}
-                placeholder="Enter sequence"
-              />
-              {showError && !isValid && (
-                <div style={styles.invalidSequence}>
-                  Please enter a valid sequence (at least 3 characters)
-                </div>
-              )}
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+      </Box>
+      <Container maxWidth="xl">
+        <Box sx={{ bgcolor: '#d0d8e8' }}>
+          <form onSubmit={handleSubmit}>
+            <MSAInput
+              inputType={selectedFileTypes.Seed ? 'Seed' : 'MSA'}
+              inputMSA={selectedFileTypes.Seed ? inputMSA : inputFile}
+              handleInputMSAChange={handleInputMSAChange}
+              handleFileTypeChange={handleFileTypeChange}
+            />
+            <PDBInput
+              inputPDBID={inputPDBID}
+              handleInputPDBChange={handleInputPDBChange}
+              handlePDBChange={handlePDBChange}
+            />
+            <Box sx={{ width: '100%', p: 2 }}>
+              <h3>Coevolutionary Analysis Settings</h3>
+              <FormControl sx={{ width: '25%' }}>
+                <InputLabel id="coevolutionary-analysis-method">Coevolutionary Analysis Method</InputLabel>
+                <Select
+                  labelId="coevolutionary-analysis-method"
+                  id="analysis-method-select"
+                  value={analysisMethod}
+                  label="Coevolutionary Analysis Method"
+                  variant='filled'
+                  margin='200'
+                  onChange={handleAnalysisMethodChange}
+                >
+                  <MenuItem value={'mfDCA'}>mean-field DCA</MenuItem>
+                  <MenuItem value={''}>More to Come!</MenuItem>
+                </Select>
+              </FormControl>
 
-              <input
-                type="file"
-                accept=".FASTA"
-                onChange={handleFileChange}
-                style={styles.fileInput}
-              />
-            </div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-		<input
- 		 type="text"
- 		 value={pdbId}
- 		onChange={handlePdbIdChange}
-  		maxLength="4"
-  		placeholder="Enter PDB ID"
-  		style={{ width: '80px', marginRight: '10px' }}
-		/>
+              {analysisMethod === 'mfDCA' ?
+                <MFDCASettings ECutoff={ECutoff} handleECutoffChange={handleECutoffChange} defaultTheta={defaultTheta} theta={theta} handleThetaChange={handleThetaChange} />
+                :
+                <></>
+              }
 
-              <input
-                type="file"
-                accept=".FASTA"
-                onChange={handleFileChange}
-                style={styles.fileInput}
-              />
-            </div>
-            <button
-              style={styles.button}
-              onClick={() => setShowExamplesMenu((prev) => !prev)}
-            >
-              Examples
-            </button>
-            {showExamplesMenu && (
-              <div style={styles.examplesMenu}>
-                <div
-                  style={styles.examplesOption}
-                  onClick={() => handleExampleClick('Example 1')}
-                >
-                  Example 1
-                </div>
-                <div
-                  style={styles.examplesOption}
-                  onClick={() => handleExampleClick('Example 2')}
-                >
-                  Example 2
-                </div>
-                <div
-                  style={styles.examplesOption}
-                  onClick={() => handleExampleClick('ATGCGTACGTAGCTAGCTAG')}
-                >
-                  ATGCGTACGTAGCTAGCTAG
-                </div>
-              </div>
-            )}
-            <button
-              style={styles.submitButton}
-              onClick={handleSubmitClick}
-              disabled={!isValid}
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit'}
-            </button>
-          </>
-        )}
-        {activeTab === 'Tab2' && (
-          <div style={styles.settingsMenu}>
-            <div
-              style={styles.settingsOption}
-              onClick={handleSaveMsaIdChange}
-            >
-              <input
-                type="checkbox"
-                id="saveMsaId"
-                name="saveMsaId"
-                checked={saveMsaId}
-                readOnly
-                style={styles.checkbox}
-              />
-              <label htmlFor="saveMsaId" style={styles.checkboxLabel}>Save MSA ID</label>
-            </div>
-            <div style={{ marginTop: '0px', padding: '10px', borderTop: '2px solid #ddd' }}>
-              <span style={{ fontWeight: 'bold', marginRight: '10px' }}>Currently Accepted Files:</span>
-              <label style={{ marginRight: '20px', display: 'flex', alignItems: 'center' }}>
-                <input
-                  type="radio"
-                  name="fileType"
-                  value="MSA"
-                  checked={selectedFileTypes.MSA}
-                  onChange={() => handleFileTypeChange('MSA')}
-                  style={{ marginRight: '5px' }}
-                />
-                MSA File
-              </label>
-              <label style={{ display: 'flex', alignItems: 'center' }}>
-                <input
-                  type="radio"
-                  name="fileType"
-                  value="Seed"
-                  checked={selectedFileTypes.Seed}
-                  onChange={() => handleFileTypeChange('Seed')}
-                  style={{ marginRight: '5px' }}
-                />
-                Seed File
-              </label>
-            </div>
-          </div>
-        )}
-      </div>
-      {showModal && (
-        <>
-          <div style={styles.modalOverlay} onClick={handleCancel}></div>
-          <div style={styles.modal}>
-            <div>Are you sure you want to submit?</div>
-            <div style={styles.modalButtons}>
-              <button
-                style={{ ...styles.modalButton, ...styles.modalSubmitButton }}
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
-              <button
-                style={{ ...styles.modalButton, ...styles.modalCancelButton }}
-                onClick={handleCancel}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+              {selectedFileTypes.Seed ? <>
+                <h3> MSA Generation Settings </h3>
+                <p>Max Number of Continuous Gaps (as percentage of MSA length):</p>
+                <TextField
+                  label="Max Gaps (%)"
+                  variant='filled'
+                  value={maxContGaps}
+                  onChange={handleMaxContGapsChange}>
+                </TextField>
+              </> : undefined}
+
+
+              <h3>PDB Settings</h3>
+              <PDBSettings
+                distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange}
+                chain1={chain1} handleChain1Change={handleChain1Change} chain2={chain2} handleChain2Change={handleChain2Change}
+                isAuth={isAuth} handleIsAuthChange={handleIsAuthChange} selectedPDBTypes={selectedPDBTypes} />
+            </Box>
+
+            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+              Submit
+            </Button>
+          </form>
+          {/* I'll add in a settings pane. Filtering the MSA, MSAutils whatever settings are needed., Bit Score */}
+        </Box>
+
+      </Container>
+    </React.Fragment>
   );
 }
 
