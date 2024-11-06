@@ -16,8 +16,8 @@ const CoevolvingPairsResults = () => {
     const [error, setError] = useState(null);
     const [dca, setDca] = useState(DCA.testObj);
     const [mappedDi, setMappedDi] = useState(MappedDi.testObj);
-    const [structueContacts, setStructueContacts] = useState(StructureContacts.testObj);
-    const [chain, setChain] = useState('AA');
+    const [structureContacts, setStructueContacts] = useState(StructureContacts.testObj);
+    const [chain, setChain] = useState('A'); //How to set default value?
     const [selectedPairs, setSelectedPairs] = useState(null);
     const [selectedContacts, setSelectedContacts] = useState(null);
     const [collapsedSections, setCollapsedSections] = useState({
@@ -54,7 +54,17 @@ const CoevolvingPairsResults = () => {
                     const task = await Task.fetch(structueContactsId);
                     setLoadingMessage('Generating contacts...');
                     await task.waitForCompletion();
-                    setStructueContacts(await StructureContacts.fetch(structueContactsId));
+                    const structureContacts = await StructureContacts.fetch(structueContactsId);
+                    setStructueContacts(structureContacts);
+
+                    //Better place for this?
+                    const availableChains = Object.keys(structureContacts.contacts).map((c) => {
+                        const [c1, c2] = c.split(',').map(s => s.trim());
+                        if (c1 === c2) return [c, c1];
+                        return [c, c1 + ', ' + c2];
+                    }).sort((a, b) => a[1].split(',').length - b[1].split(',').length); //Sort singles first
+
+                    setChain(availableChains[0][0])
                 }
             } catch (error) {
 
@@ -165,9 +175,9 @@ const CoevolvingPairsResults = () => {
 
             <ChainSelector
                 style={styles.chainSelect}
-                structureContacts={structueContacts}
+                structureContacts={structureContacts}
                 chain={chain}
-                onChainChange={setChain}
+                setChain={setChain}
             />
 
             <div style={styles.resultsSection}>
@@ -199,7 +209,7 @@ const CoevolvingPairsResults = () => {
                             >
                                 <ContactMap
                                     mappedDi={mappedDi}
-                                    structureContacts={structueContacts}
+                                    structureContacts={structureContacts}
                                     chain={chain}
                                     selectedPairs={selectedPairs}
                                     selectedContacts={selectedContacts}
@@ -214,7 +224,7 @@ const CoevolvingPairsResults = () => {
                                 style={styles.heading}
                                 onClick={() => toggleSection('pdbViewer')}
                             >
-                                3D View
+                                3D View ({structureContacts.pdb_id})
                                 <FontAwesomeIcon
                                     icon={faChevronDown}
                                     style={{
@@ -230,7 +240,7 @@ const CoevolvingPairsResults = () => {
                                     aspectRatio: 1,
                                 }}
                             >
-                                <MolViewer structureContacts={structueContacts} mappedDi={mappedDi} chain={chain} />
+                                <MolViewer structureContacts={structureContacts} mappedDi={mappedDi} chain={chain} />
                             </div>
                         </div>
 

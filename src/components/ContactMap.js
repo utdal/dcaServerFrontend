@@ -16,9 +16,9 @@ const ContactMap = ({
     const {plotData, hitCount} = useMemo(() => {
         let res = [];
 
-        if (structureContacts && showContacts) {
-            const x = structureContacts.contacts[chain + '_contacts'].map(p => p[0]);
-            const y = structureContacts.contacts[chain + '_contacts'].map(p => p[1]);
+        if (structureContacts && showContacts && structureContacts.contacts[chain]) {
+            const x = structureContacts.contacts[chain].map(p => p[0]);
+            const y = structureContacts.contacts[chain].map(p => p[1]);
             const pts = [[...x, ...y], [...y, ...x]]
 
             res.push({
@@ -57,8 +57,8 @@ const ContactMap = ({
         }
 
         let hitCount = 0;
-        if (mappedDi && structureContacts && showHits) {
-            const contactLookup = new Set(structureContacts.contacts[chain + '_contacts'].map(c => c.join(',')));
+        if (mappedDi && structureContacts && showHits && structureContacts.contacts[chain]) {
+            const contactLookup = new Set(structureContacts.contacts[chain].map(c => c.join(',')));
             const topPairs = mappedDi.topDiPairs(diCount);
             const hits = topPairs.filter(p => contactLookup.has(p[0] + ',' + p[1]));
             hitCount = hits.length;
@@ -120,12 +120,12 @@ const ContactMap = ({
 
         const blob = new Blob([csvContent], { type: 'text/csv' });
         return window.URL.createObjectURL(blob);
-    }, [chain, mappedDi, selectedPairs]);
+    }, [mappedDi, selectedPairs]);
 
     const selectedContactsLink = useMemo(() => {
-        if (!selectedContacts) return '#';
+        if (!selectedContacts || !structureContacts || !structureContacts.contacts[chain]) return '#';
 
-        const contacts = structureContacts.contacts[chain + '_contacts'];
+        const contacts = structureContacts.contacts[chain];
         const validIdxs = Array.from(new Set(selectedContacts.map(i => i % contacts.length))); // Remove duplicates
 
         let csvContent = 'Residue 1, Residue 2\n';

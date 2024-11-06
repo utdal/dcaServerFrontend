@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SequenceViewer from '../components/SequenceViewer';
 
-const ChainSelector = ({ structureContacts, chain, onChainChange = null }) => {
+const ChainSelector = ({ structureContacts, chain, setChain }) => {
+
+    const availableChains = Object.keys(structureContacts.contacts).map((c) => {
+        const [c1, c2] = c.split(',').map(s => s.trim());
+        if (c1 === c2) return [c, c1];
+        return [c, c1 + ', ' + c2];
+    }).sort((a, b) => a[1].split(',').length - b[1].split(',').length); //Sort singles first
+
+    // useState(() => {
+    //     if (structureContacts) {
+    //         setChain(availableChains[0])
+    //     }
+    // }, [structureContacts])
 
     const styles = {
         wrapper: {
@@ -14,19 +26,18 @@ const ChainSelector = ({ structureContacts, chain, onChainChange = null }) => {
     };
 
     const setChainCallback = (e) => {
-        if (onChainChange) onChainChange(e.target.value);
+        setChain(e.target.value);
     };
-
-    const availableChains = Object.keys(structureContacts.contacts).map(c => c.substring(0, 2));
 
     return (
         <div style={styles.wrapper}>
             <select value={chain} onChange={setChainCallback} style={styles.dropdown}>
                 {availableChains.map(c => (
-                    <option value={c} key={c}>Chain {c}</option>
+                    <option value={c[0]} key={c[0]}>Chain {c[1]}</option>
                 ))}
             </select>
-            <SequenceViewer sequence={"MRGAGAILRPAARGARDLNPRRDISSWLAQWFPRTPARSVVALKTPIKVELVAGKTYRWCVCGRSKKQPFCDGSHFFQRTGLSPLKFKAQETRMVALCTCKATQRPPYCDGTHRSERVQKAEVGSPL"} />
+            {/* Need to save sequence in a model somewhere */}
+            {/* <SequenceViewer sequence={"MRGAGAILRPAARGARDLNPRRDISSWLAQWFPRTPARSVVALKTPIKVELVAGKTYRWCVCGRSKKQPFCDGSHFFQRTGLSPLKFKAQETRMVALCTCKATQRPPYCDGTHRSERVQKAEVGSPL"} /> */}
         </div>
     );
 };
