@@ -22,6 +22,7 @@ import PDBSettings from '../components/PDBSettings';
 
 const CoevolvingPairs = () => {
   const defaultTheta = '0.3'; //Cast to numbers ar submit
+  const defaultMaxGaps = 20;
   const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: true }); // Use object to track file types
   const [selectedPDBTypes, setSelectedPDBTypes] = useState({ PDB: false, CIF: true });
   const [inputMSA, setInputMSA] = useState('');
@@ -30,7 +31,7 @@ const CoevolvingPairs = () => {
   const [chain1, setChain1] = useState('');
   const [chain2, setChain2] = useState('');
   const [isAuth, setIsAuth] = useState(true);
-  const [maxContGaps, setMaxContGaps] = useState('20');
+  const [maxContGaps, setMaxContGaps] = useState(defaultMaxGaps);
   const [ECutoff, setECutoff] = useState('');
   const [distThresh, setDistThresh] = useState('8')
   const [caOnly, setCaOnly] = useState(false)
@@ -207,12 +208,17 @@ const CoevolvingPairs = () => {
               {selectedFileTypes.Seed ? <>
                 <h3> MSA Generation Settings </h3>
                 <p>Max Number of Continuous Gaps (as percentage of MSA length):</p>
-                <TextField
-                  label="Max Gaps (%)"
-                  variant='filled'
-                  value={maxContGaps}
-                  onChange={handleMaxContGapsChange}>
-                </TextField>
+                <Box sx={{ width: "20%", margin: 'auto' }}>
+                  <Slider
+                    defaultValue={defaultMaxGaps}
+                    value={maxContGaps}
+                    onChange={handleMaxContGapsChange}
+                    valueLabelDisplay="auto"
+                    step={1}
+                    min={0}
+                    max={100}
+                  />
+                </Box>
               </> : undefined}
 
 

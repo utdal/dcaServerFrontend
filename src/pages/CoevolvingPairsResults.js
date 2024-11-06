@@ -46,7 +46,7 @@ const CoevolvingPairsResults = () => {
                 }
                 if (mappedDiId) {
                     const task = await Task.fetch(mappedDiId);
-                    setLoadingMessage('Mapping DI...');
+                    setLoadingMessage('Running DCA & Mapping DI...');
                     await task.waitForCompletion();
                     setMappedDi(await MappedDi.fetch(mappedDiId));
                 }

@@ -52,8 +52,8 @@ function App() {
                   <a href="/guide-for-biologists" className="header-button" style={{ marginLeft: '10px' }}>
                     Guide
                   </a>
-                  <a href="/introductory-video" className="header-button" style={{ marginLeft: '10px' }}>
-                    Intro Video
+                  <a href="/tasks" className="header-button" style={{ marginLeft: '10px' }}>
+                    Recent Jobs
                   </a>
                 </header>
                 <main style={{ paddingBottom: '100px' }}>
