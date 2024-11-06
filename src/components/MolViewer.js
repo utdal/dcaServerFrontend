@@ -1,7 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import * as $3Dmol from '3dmol/build/3Dmol.js';
 
-const MolViewer = ({ mappedDi, structureContacts, chain }) => {
+const MolViewer = ({
+    chain, mappedDi, structureContacts,
+    selectedPairs = null,
+    onPairSelect = null
+}) => {
     const viewerRef = useRef(null);
 
     useEffect(() => {
@@ -12,38 +16,78 @@ const MolViewer = ({ mappedDi, structureContacts, chain }) => {
             if (element) {
                 let viewer = $3Dmol.createViewer(element, config);
 
-                try {
-                    const response = await fetch('https://files.rcsb.org/view/' + structureContacts.pdb_id + '.pdb');
+                $3Dmol.download('pdb:' + structureContacts.pdb_id, viewer, { doAssembly: false }, (model) => {
 
-                    if (!response.ok) {
-                        throw new Error('Bad network response');
-                    }
+                    chain = chain.substr(0, 1); //Need to fix chain labeling
+                    model.removeAtoms(model.selectedAtoms({ chain: chain, invert: true }));
 
-                    const result = await response.text();
+                    model.setStyle({}, { cartoon: { color: 'spectrum' } });
 
-                    const model = viewer.addModel(result, "pdb");
-
-                    mappedDi.topDiPairs(20).map(c => {
-                        viewer.addLine({
-                            dashed: false,
-                            start: { resi: c[0], chain: 'A' },
-                            end: { resi: c[1], chain: 'A' },
-                            color: 'red'
+                    //Should probably store L somewhere in contacts model
+                    const diCount = Math.round(mappedDi.mapped_di.length * 0.1);
+                    mappedDi.topDiPairs(diCount).map(c => {
+                        viewer.addCylinder({
+                            start: { resi: c[0], atom: 'CA' },
+                            end: { resi: c[1], atom: 'CA' },
+                            radius: 0.2,
+                            fromCap: 2, //2=Round
+                            toCap: 2,
+                            color: '#efbf04',
+                            clickable: true,
+                            hoverable: true,
+                            callback: () => {
+                                this.color.setHex(0x00FFFF00);
+                                viewer.render();
+                                //Run onPairSelect
+                            },
+                            hover_callback: (shape, viewer, event, container) => {
+                                if (!shape.label) {
+                                    shape.label = viewer.addLabel(
+                                        c[0] + ',' + c[1] + ': DI=' + c[2].toFixed(3),
+                                        { position: shape, backgroundColor: 'white', fontColor: 'black', fontSize: 15 }
+                                    );
+                                }
+                            },
+                            unhover_callback: (shape) => {
+                                if (shape.label) {
+                                    viewer.removeLabel(shape.label);
+                                    delete shape.label;
+                                }
+                            }
                         });
+
+                        model.setStyle(
+                            { resi: [c[0], c[1]] },
+                            { cartoon: { color: 'spectrum' }, stick: { radius: 0.2 } }
+                        );
                     });
 
-                    viewer.setStyle({}, { cartoon: { color: 'spectrum' } });
-                    viewer.zoomTo(); // Center the model within the viewer
+                    viewer.setHoverable(
+                        {}, true, (atom, viewer, event, container) => {
+                            if (!atom.label) {
+                                atom.label = viewer.addLabel(
+                                    atom.resn + ' (' + atom.resi + ')',
+                                    { position: atom, backgroundColor: 'white', fontColor: 'black', fontSize: 15 }
+                                );
+                            }
+                        }, (atom) => {
+                            if (atom.label) {
+                                viewer.removeLabel(atom.label);
+                                delete atom.label;
+                            }
+                        }
+                    );
+                    viewer.setHoverDuration(100);
+
+                    viewer.zoomTo();
                     viewer.render();
-                    viewer.zoom(1.2, 1000);
-                } catch (error) {
-                    console.log(error);
-                }
+                });
             }
         }
 
         if (structureContacts) getPdb();
-    }, [structureContacts, viewerRef]);
+    }, [viewerRef, chain, mappedDi, structureContacts,
+        selectedPairs, onPairSelect]);
 
     const styles = {
         viewerContainer: {
