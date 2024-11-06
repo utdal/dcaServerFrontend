@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import HomeButton from '../components/HomeButton';
-import { generateMsa, computeDca, MSA, mapResidues, generateContacts } from '../backend/api';
+import { generateMsa, computeDca, MSA, mapResidues, generateContacts, uploadMsa } from '../backend/api';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -132,8 +132,8 @@ const CoevolvingPairs = () => {
       });
       msaId = msaTask.id;
     } else {
-      //File upload
-      // msaId = ...
+      const msa = await uploadMsa({ msa: inputFile });
+      msaId = msa.id;
     }
 
     const dcaTask = await computeDca({
@@ -217,10 +217,10 @@ const CoevolvingPairs = () => {
 
 
               <h3>PDB Settings</h3>
-              <PDBSettings 
-                distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange} 
-                chain1={chain1} handleChain1Change={handleChain1Change} chain2={chain2}  handleChain2Change={handleChain2Change} 
-                isAuth={isAuth} handleIsAuthChange={handleIsAuthChange} selectedPDBTypes={selectedPDBTypes}/>
+              <PDBSettings
+                distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange}
+                chain1={chain1} handleChain1Change={handleChain1Change} chain2={chain2} handleChain2Change={handleChain2Change}
+                isAuth={isAuth} handleIsAuthChange={handleIsAuthChange} selectedPDBTypes={selectedPDBTypes} />
             </Box>
 
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>

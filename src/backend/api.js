@@ -316,6 +316,26 @@ export async function generateMsa({ seed, msaName, ECutoff, maxGaps }) {
 }
 
 
+export async function uploadMsa({ msa }) {
+    const formData = new FormData();
+    formData.append('fasta', msa);
+
+    const response = await fetch(apiBaseUrl + 'msas/', {
+        method: 'POST',
+        body: formData,
+        credentials: "include",
+    });
+
+    if (!response.ok) {
+        throw new Error('Bad network response');
+    }
+
+    const result = await response.json();
+
+    return new MSA(result);
+}
+
+
 export async function computeDca({ msaId, theta }) {
     return await startTask('compute-dca', {
         msa_id: msaId,
