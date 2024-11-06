@@ -29,7 +29,7 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
               onChange={handleChain1Change}
             />
             <TextField
-              label="Chain 2 ID"
+              label="2 (optional)"
               variant='filled'
               name="chainId"
               value={chain2}

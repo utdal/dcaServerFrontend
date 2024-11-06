@@ -21,7 +21,7 @@ import PDBSettings from '../components/PDBSettings';
 
 
 const CoevolvingPairs = () => {
-  const defaultTheta = 0.3
+  const defaultTheta = '0.3'; //Cast to numbers ar submit
   const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: true }); // Use object to track file types
   const [selectedPDBTypes, setSelectedPDBTypes] = useState({ PDB: false, CIF: true });
   const [inputMSA, setInputMSA] = useState('');
@@ -35,7 +35,7 @@ const CoevolvingPairs = () => {
   const [distThresh, setDistThresh] = useState('8')
   const [caOnly, setCaOnly] = useState(false)
   const [theta, setTheta] = useState(defaultTheta);
-  const [analysisMethod, setAnalysisMethod] = useState('');
+  const [analysisMethod, setAnalysisMethod] = useState('mfDCA');
 
   const handleFileTypeChange = (type) => {
     setSelectedFileTypes((prev) => ({
@@ -114,19 +114,21 @@ const CoevolvingPairs = () => {
     // console.log("E: " + ECutoff)
     // console.log("Max Gaps: " + maxContGaps)
 
-    console.log(chain1);
-    console.log(chain2);
-    console.log(isAuth);
+    // console.log(chain1);
+    // console.log(chain2);
+    // console.log(isAuth);
     // Reset fields or provide feedback as needed
     //const msaTask = await generateMsa(inputValue);
     //const dcaTask = await computeDca(msaTask.id);
+
+    //No error checking yet...
 
     let msaId = null;
     if (selectedFileTypes.Seed) {
       const msaTask = await generateMsa({
         seed: inputMSA,
-        ECutoff: ECutoff || undefined,
-        maxGaps: maxContGaps || undefined
+        ECutoff: Number(ECutoff) || undefined,
+        maxGaps: Number(maxContGaps) || undefined
       });
       msaId = msaTask.id;
     } else {
@@ -136,20 +138,22 @@ const CoevolvingPairs = () => {
 
     const dcaTask = await computeDca({
       msaId: msaId,
-      theta: theta
+      theta: Number(theta)
     });
 
     const residuesTask = await mapResidues({
       dcaId: dcaTask.id,
       pdbId: inputPDBID,
-      chain1: 'A', //Need to figure out what to do for this
-      chain2: 'A'
+      chain1: chain1,
+      chain2: chain2 || chain1,
+      authChainIdSupplied: isAuth
     });
 
     const contactsTask = await generateContacts({
       pdbId: inputPDBID,
       caOnly: caOnly,
-      distThresh: distThresh
+      distThresh: Number(distThresh),
+      isCIF: selectedPDBTypes.CIF
     });
 
     const url = '/coevolving-pairs-results/?structure_contacts=' + contactsTask.id + '&mapped_di=' + residuesTask.id;
@@ -204,7 +208,7 @@ const CoevolvingPairs = () => {
                 <h3> MSA Generation Settings </h3>
                 <p>Max Number of Continuous Gaps (as percentage of MSA length):</p>
                 <TextField
-                  label="Max Gaps"
+                  label="Max Gaps (%)"
                   variant='filled'
                   value={maxContGaps}
                   onChange={handleMaxContGapsChange}>
