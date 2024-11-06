@@ -24,7 +24,8 @@ const MolViewer = ({
                     model.setStyle({}, { cartoon: { color: 'spectrum' } });
 
                     //Should probably store L somewhere in contacts model
-                    const diCount = Math.round(mappedDi.mapped_di.length * 0.1);
+                    // const diCount = Math.round(Math.sqrtmappedDi.mapped_di.length * 0.1);
+                    const diCount = 50;
                     mappedDi.topDiPairs(diCount).map(c => {
                         viewer.addCylinder({
                             start: { resi: c[0], atom: 'CA' },
