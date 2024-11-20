@@ -1,7 +1,7 @@
 .home-button {
     color: white;
     font-size: 24px;
-    margin-right: 20px;
+    margin-right: 10px;
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -12,7 +12,7 @@
   }
 
   .home-logo {
-    width: 50px;
+    width: 80px;
     height: auto;
     margin: 0 8px; 
   }
