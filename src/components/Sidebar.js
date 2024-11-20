@@ -32,8 +32,8 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/LDL">
-              <FontAwesomeIcon icon={faFlask} /> {isOpen && <span>LDL</span>}
+            <Link to="/LGL">
+              <FontAwesomeIcon icon={faFlask} /> {isOpen && <span>LGL</span>}
             </Link>
           </li>
           <li>
