@@ -28,6 +28,7 @@ const CoevolvingPairs = () => {
   const [inputMSA, setInputMSA] = useState('');
   const [inputFile, setInputFile] = useState(null);
   const [inputPDBID, setInputPDBID] = useState('');
+  const [inputPDBFile, setInputPDBFile] = useState(null);
   const [chain1, setChain1] = useState('');
   const [chain2, setChain2] = useState('');
   const [isAuth, setIsAuth] = useState(true);
@@ -59,7 +60,15 @@ const CoevolvingPairs = () => {
   };
 
   const handleInputPDBChange = (event) => {
-    setInputPDBID(event.target.value);
+    const pdbFile = event.target.files ? event.target.files[0] : null;
+    if (pdbFile) {
+      setInputPDBFile(event.target.files[0]);
+      setInputPDBID('');
+    }
+    else{
+      setInputPDBID(event.target.value);
+      setInputPDBFile(null);
+    }
   };
 
   const handleChain1Change = (event) => {
@@ -137,6 +146,13 @@ const CoevolvingPairs = () => {
       msaId = msa.id;
     }
 
+    if (inputPDBFile) {
+      
+    }
+    else {
+
+    }
+
     const dcaTask = await computeDca({
       msaId: msaId,
       theta: Number(theta)
@@ -178,6 +194,7 @@ const CoevolvingPairs = () => {
             />
             <PDBInput
               inputPDBID={inputPDBID}
+              inputPDBFile={inputPDBFile}
               handleInputPDBChange={handleInputPDBChange}
               handlePDBChange={handlePDBChange}
             />

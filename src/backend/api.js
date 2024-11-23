@@ -193,6 +193,37 @@ export class DCA extends APIDataObject {
     })
 }
 
+export class PDB extends APIDataObject {
+    static objectName = 'pdb';
+
+    constructor({ id, user, created, expires, name, pdb_id, pdb_file, file_type }) {
+        super({ id, user, created, expires });
+        this.name = name;
+        this.pdb_id = pdb_id;
+        this.pdb_file = pdb_file;
+        this.file_type = file_type;
+    }
+
+    static async fetch(id) {
+        return APIObject.fetch(id, PDB);
+    }
+
+    static async fetchAll() {
+        return APIObject.fetchAll(PDB);
+    }
+
+    // static testObj = new PDB({
+    //     id: "94ced759-206c-4cfc-84db-b06f92870370",
+    //     user: 0,
+    //     created: "2024-10-09T04:52:46.794Z",
+    //     expires: "2024-10-09T04:52:46.794Z",
+    //     name: "",
+    //     pdb_id: "",
+    //     pdb_file: ,
+    //     file_type: ,
+    // })
+}
+
 
 export class MappedDi extends APIDataObject {
     static objectName = 'mapped-di';
@@ -335,6 +366,24 @@ export async function uploadMsa({ msa }) {
     return new MSA(result);
 }
 
+export async function uploadPDB({ pdb }) {
+    const formData = new FormData();
+    formData.append('pdb_file', pdb);
+
+    const response = await fetch(apiBaseUrl + 'pdbs/', {
+        method: 'POST',
+        body: formData,
+        credentials: "include",
+    });
+
+    if (!response.ok) {
+        throw new Error('Bad network response');
+    }
+
+    const result = await response.json();
+
+    return new PDB(result);
+}
 
 export async function computeDca({ msaId, theta }) {
     return await startTask('compute-dca', {
