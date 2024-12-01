@@ -366,9 +366,12 @@ export async function uploadMsa({ msa }) {
     return new MSA(result);
 }
 
-export async function uploadPDB({ pdb }) {
+export async function uploadPDB({ pdbFile, pdbFileType }) {
     const formData = new FormData();
-    formData.append('pdb_file', pdb);
+
+    formData.append('pdb_file', pdbFile);
+    formData.append('name', pdbFile.name)
+    formData.append('file_type', pdbFileType)
 
     const response = await fetch(apiBaseUrl + 'pdbs/', {
         method: 'POST',

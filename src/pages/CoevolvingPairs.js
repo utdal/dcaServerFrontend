@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import HomeButton from '../components/HomeButton';
-import { generateMsa, computeDca, MSA, mapResidues, generateContacts, uploadMsa } from '../backend/api';
+import { generateMsa, computeDca, MSA, mapResidues, generateContacts, uploadMsa, uploadPDB } from '../backend/api';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -146,11 +146,19 @@ const CoevolvingPairs = () => {
       msaId = msa.id;
     }
 
+    let pdbId = null;
     if (inputPDBFile) {
-      
+      if (selectedPDBTypes.CIF === true) {
+        const pdb = await uploadPDB({ pdbFile: inputPDBFile, pdbFileType: "cif"});
+        pdbId = pdb.id;
+      }
+      else {
+        const pdb = await uploadPDB({ pdbFile: inputPDBFile, pdbFileType: "pdb"});
+        pdbId = pdb.id;
+      }
     }
     else {
-
+      pdbId = inputPDBID;
     }
 
     const dcaTask = await computeDca({
@@ -160,14 +168,14 @@ const CoevolvingPairs = () => {
 
     const residuesTask = await mapResidues({
       dcaId: dcaTask.id,
-      pdbId: inputPDBID,
+      pdbId: pdbId,
       chain1: chain1,
       chain2: chain2 || chain1,
       authChainIdSupplied: isAuth
     });
 
     const contactsTask = await generateContacts({
-      pdbId: inputPDBID,
+      pdbId: pdbId,
       caOnly: caOnly,
       distThresh: Number(distThresh),
       isCIF: selectedPDBTypes.CIF
