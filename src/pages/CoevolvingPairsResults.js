@@ -89,7 +89,7 @@ const CoevolvingPairsResults = () => {
             backgroundColor: '#f4f4f4',
             // minHeight: '100vh',
             padding: '20px',
-            paddingTop: '80px',
+            paddingTop: '100px',
             fontFamily: '"Roboto", sans-serif',
         },
         header: {
