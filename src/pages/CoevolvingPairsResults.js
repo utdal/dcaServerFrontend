@@ -18,13 +18,13 @@ const CoevolvingPairsResults = () => {
     const [mappedDi, setMappedDi] = useState(MappedDi.testObj);
     const [structureContacts, setStructueContacts] = useState(StructureContacts.testObj);
     const [chain, setChain] = useState('A'); //How to set default value?
-    const [selectedPairs, setSelectedPairs] = useState(null);
+    const [selectedDI, setSelectedDI] = useState(null);
     const [selectedContacts, setSelectedContacts] = useState(null);
     const [collapsedSections, setCollapsedSections] = useState({
         contactMap: false,
         diPairs: false,
         pdbViewer: false,
-        circlePlot: false,
+        circlePlot: true,
     });
 
     const query = new URLSearchParams(useLocation().search);
@@ -89,7 +89,7 @@ const CoevolvingPairsResults = () => {
             backgroundColor: '#f4f4f4',
             // minHeight: '100vh',
             padding: '20px',
-            paddingTop: '80px',
+            paddingTop: '100px',
             fontFamily: '"Roboto", sans-serif',
         },
         header: {
@@ -211,9 +211,9 @@ const CoevolvingPairsResults = () => {
                                     mappedDi={mappedDi}
                                     structureContacts={structureContacts}
                                     chain={chain}
-                                    selectedPairs={selectedPairs}
+                                    selectedPairs={selectedDI}
                                     selectedContacts={selectedContacts}
-                                    onPairSelect={setSelectedPairs}
+                                    onPairSelect={setSelectedDI}
                                     onContactSelect={setSelectedContacts}
                                 />
                             </div>
@@ -240,7 +240,12 @@ const CoevolvingPairsResults = () => {
                                     aspectRatio: 1,
                                 }}
                             >
-                                <MolViewer structureContacts={structureContacts} mappedDi={mappedDi} chain={chain} />
+                                <MolViewer
+                                    structureContacts={structureContacts}
+                                    mappedDi={mappedDi}
+                                    chain={chain}
+                                    selectedDi={selectedDI}
+                                />
                             </div>
                         </div>
 
@@ -249,7 +254,7 @@ const CoevolvingPairsResults = () => {
                                 style={styles.heading}
                                 onClick={() => toggleSection('circlePlot')}
                             >
-                                Circle Plot
+                                Circle Plot (Work in Progress)
                                 <FontAwesomeIcon
                                     icon={faChevronDown}
                                     style={{
@@ -287,7 +292,7 @@ const CoevolvingPairsResults = () => {
                                     ...(collapsedSections.diPairs ? styles.contentCollapsed : styles.contentExpanded),
                                 }}
                             >
-                                <DiTable mappedDi={mappedDi} />
+                                <DiTable mappedDi={mappedDi} selectedDi={selectedDI}/>
                             </div>
                         </div>
                     </>

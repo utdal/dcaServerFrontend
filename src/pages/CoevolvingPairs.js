@@ -21,7 +21,7 @@ import PDBSettings from '../components/PDBSettings';
 
 
 const CoevolvingPairs = () => {
-  const defaultTheta = '0.3'; //Cast to numbers ar submit
+  const defaultTheta = '0.2'; //Cast to numbers ar submit
   const defaultMaxGaps = 20;
   const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: true }); // Use object to track file types
   const [selectedPDBTypes, setSelectedPDBTypes] = useState({ PDB: false, CIF: true });
