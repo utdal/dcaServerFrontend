@@ -192,6 +192,37 @@ export class DCA extends APIDataObject {
     })
 }
 
+export class PDB extends APIDataObject {
+    static objectName = 'pdb';
+
+    constructor({ id, user, created, expires, name, pdb_id, pdb_file, file_type }) {
+        super({ id, user, created, expires });
+        this.name = name;
+        this.pdb_id = pdb_id;
+        this.pdb_file = pdb_file;
+        this.file_type = file_type;
+    }
+
+    static async fetch(id) {
+        return APIObject.fetch(id, PDB);
+    }
+
+    static async fetchAll() {
+        return APIObject.fetchAll(PDB);
+    }
+
+    // static testObj = new PDB({
+    //     id: "94ced759-206c-4cfc-84db-b06f92870370",
+    //     user: 0,
+    //     created: "2024-10-09T04:52:46.794Z",
+    //     expires: "2024-10-09T04:52:46.794Z",
+    //     name: "",
+    //     pdb_id: "",
+    //     pdb_file: ,
+    //     file_type: ,
+    // })
+}
+
 
 export class MappedDi extends APIDataObject {
     static objectName = 'mapped-di';
@@ -280,6 +311,18 @@ export class StructureContacts extends APIDataObject {
 }
 
 
+function getCSRFToken() {
+    let csrfToken = null;
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'csrftoken') {
+            csrfToken = value;
+        }
+    }
+    return csrfToken;
+}
+
 async function startTask(endpoint, data) {
     console.log(endpoint, data);
 
@@ -288,7 +331,10 @@ async function startTask(endpoint, data) {
         {
             method: 'POST',
             credentials: "include",
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
             body: JSON.stringify(data)
         }
     );
@@ -334,6 +380,27 @@ export async function uploadMsa({ msa }) {
     return new MSA(result);
 }
 
+export async function uploadPDB({ pdbFile, pdbFileType }) {
+    const formData = new FormData();
+
+    formData.append('pdb_file', pdbFile);
+    formData.append('name', pdbFile.name)
+    formData.append('file_type', pdbFileType)
+
+    const response = await fetch(apiBaseUrl + 'pdbs/', {
+        method: 'POST',
+        body: formData,
+        credentials: "include",
+    });
+
+    if (!response.ok) {
+        throw new Error('Bad network response');
+    }
+
+    const result = await response.json();
+
+    return new PDB(result);
+}
 
 export async function computeDca({ msaId, theta }) {
     return await startTask('compute-dca', {

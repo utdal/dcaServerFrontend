@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import HomeButton from '../components/HomeButton';
-import { generateMsa, computeDca, MSA, mapResidues, generateContacts, uploadMsa } from '../backend/api';
+import { generateMsa, computeDca, MSA, mapResidues, generateContacts, uploadMsa, uploadPDB } from '../backend/api';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -28,6 +28,7 @@ const CoevolvingPairs = () => {
   const [inputMSA, setInputMSA] = useState('');
   const [inputFile, setInputFile] = useState(null);
   const [inputPDBID, setInputPDBID] = useState('');
+  const [inputPDBFile, setInputPDBFile] = useState(null);
   const [chain1, setChain1] = useState('');
   const [chain2, setChain2] = useState('');
   const [isAuth, setIsAuth] = useState(true);
@@ -59,7 +60,15 @@ const CoevolvingPairs = () => {
   };
 
   const handleInputPDBChange = (event) => {
-    setInputPDBID(event.target.value);
+    const pdbFile = event.target.files ? event.target.files[0] : null;
+    if (pdbFile) {
+      setInputPDBFile(event.target.files[0]);
+      setInputPDBID('');
+    }
+    else{
+      setInputPDBID(event.target.value);
+      setInputPDBFile(null);
+    }
   };
 
   const handleChain1Change = (event) => {
@@ -137,6 +146,21 @@ const CoevolvingPairs = () => {
       msaId = msa.id;
     }
 
+    let pdbId = null;
+    if (inputPDBFile) {
+      if (selectedPDBTypes.CIF === true) {
+        const pdb = await uploadPDB({ pdbFile: inputPDBFile, pdbFileType: "cif"});
+        pdbId = pdb.id;
+      }
+      else {
+        const pdb = await uploadPDB({ pdbFile: inputPDBFile, pdbFileType: "pdb"});
+        pdbId = pdb.id;
+      }
+    }
+    else {
+      pdbId = inputPDBID;
+    }
+
     const dcaTask = await computeDca({
       msaId: msaId,
       theta: Number(theta)
@@ -144,14 +168,14 @@ const CoevolvingPairs = () => {
 
     const residuesTask = await mapResidues({
       dcaId: dcaTask.id,
-      pdbId: inputPDBID,
+      pdbId: pdbId,
       chain1: chain1,
       chain2: chain2 || chain1,
       authChainIdSupplied: isAuth
     });
 
     const contactsTask = await generateContacts({
-      pdbId: inputPDBID,
+      pdbId: pdbId,
       caOnly: caOnly,
       distThresh: Number(distThresh),
       isCIF: selectedPDBTypes.CIF
@@ -178,6 +202,7 @@ const CoevolvingPairs = () => {
             />
             <PDBInput
               inputPDBID={inputPDBID}
+              inputPDBFile={inputPDBFile}
               handleInputPDBChange={handleInputPDBChange}
               handlePDBChange={handlePDBChange}
             />
