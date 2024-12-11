@@ -312,6 +312,18 @@ export class StructureContacts extends APIDataObject {
 }
 
 
+function getCSRFToken() {
+    let csrfToken = null;
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'csrftoken') {
+            csrfToken = value;
+        }
+    }
+    return csrfToken;
+}
+
 async function startTask(endpoint, data) {
     console.log(endpoint, data);
 
@@ -320,7 +332,10 @@ async function startTask(endpoint, data) {
         {
             method: 'POST',
             credentials: "include",
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
             body: JSON.stringify(data)
         }
     );
