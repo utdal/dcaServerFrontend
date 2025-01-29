@@ -41,6 +41,8 @@ function App() {
           <Route path="/dca-task-list" element={<DCATaskList />} />
           <Route path="/tasks" element={<ViewTasks />} />
           <Route path="/test" element={<ApiTest />} />
+          <Route path="/prosspec" element={<ProsspecHome />} />
+          <Route path="/prosspec/results" element={<MyHeatmap />} />
           <Route
             path="/"
             element={
@@ -83,10 +85,10 @@ function App() {
                         description={<>Models complex dependencies in a sequence alignment by mapping high-dimensional structures to interpretable forms<br /><br /><i>Comming Soon!</i></>}
                       />
                       <Tile
-                        link="#"
+                        link="/prosspec"
                         image={prosspecLogo}
                         title="ProSSpeC"
-                        description={<>ProSSpeC: Protease (NIa) Substrate Specificity Calculator<br/><br/><i>Comming Soon!</i></>}
+                        description={<>ProSSpeC: Protease (NIa) Substrate Specificity Calculator<br/><br/><i>Calculates Hamiltonian Specificity function for Nuclear incision a proteases and potential protein substrates</i></>}
                       />
                       <Tile
                         link="#"
