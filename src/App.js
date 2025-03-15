@@ -74,7 +74,7 @@ function App() {
                         link="/coevolving-pairs"
                         image={CoevolvingPairsThumbnail}
                         title="Coevolving Pairs"
-                        description="Estimates possible protein structure using pairs of amino acids that tend to evolve together"
+                        description={<>Estimates possible protein structure using pairs of amino acids that tend to evolve together<br/><br/><i>In Progress!</i></>}
                       />
                       <Tile
                         link="#"
@@ -83,10 +83,10 @@ function App() {
                         description={<>Models complex dependencies in a sequence alignment by mapping high-dimensional structures to interpretable forms<br /><br /><i>Comming Soon!</i></>}
                       />
                       <Tile
-                        link="#"
+                        link="/prosspec"
                         image={prosspecLogo}
                         title="ProSSpeC"
-                        description={<>ProSSpeC: Protease (NIa) Substrate Specificity Calculator<br/><br/><i>Comming Soon!</i></>}
+                        description={<>ProSSpeC: Protease (NIa) Substrate Specificity Calculator</>}
                       />
                       <Tile
                         link="#"
