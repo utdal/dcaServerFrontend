@@ -31,7 +31,8 @@ const CoevolvingPairs = () => {
   const [inputPDBFile, setInputPDBFile] = useState(null);
   const [chain1, setChain1] = useState('');
   const [chain2, setChain2] = useState('');
-  const [isAuth, setIsAuth] = useState(true);
+  const [isAuthChain, setIsAuthChain] = useState(true);
+  const [isOffAuthChain, setIsOffAuthChain] = useState();
   const [maxContGaps, setMaxContGaps] = useState(defaultMaxGaps);
   const [ECutoff, setECutoff] = useState('');
   const [distThresh, setDistThresh] = useState('8')
@@ -79,8 +80,12 @@ const CoevolvingPairs = () => {
     setChain2(event.target.value);
   };
 
-  const handleIsAuthChange = (event) => {
-    setIsAuth(event.target.checked);
+  const handleIsAuthChainChange = (event) => {
+    setIsAuthChain(event.target.checked);
+  };
+
+  const handleIsOffAuthChainChange = (event) => {
+    setIsOffAuthChain(event.target.checked);
   };
 
   const handleECutoffChange = (event) => {
@@ -171,7 +176,7 @@ const CoevolvingPairs = () => {
       pdbId: pdbId,
       chain1: chain1,
       chain2: chain2 || chain1,
-      authChainIdSupplied: isAuth
+      authChainIdSupplied: isAuthChain,
     });
 
     const contactsTask = await generateContacts({
@@ -251,7 +256,7 @@ const CoevolvingPairs = () => {
               <PDBSettings
                 distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange}
                 chain1={chain1} handleChain1Change={handleChain1Change} chain2={chain2} handleChain2Change={handleChain2Change}
-                isAuth={isAuth} handleIsAuthChange={handleIsAuthChange} selectedPDBTypes={selectedPDBTypes} />
+                isAuthChain={isAuthChain} handleIsAuthChainChange={handleIsAuthChainChange} selectedPDBTypes={selectedPDBTypes} />
             </Box>
 
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>

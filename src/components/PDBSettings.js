@@ -39,24 +39,51 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 5, flexDirection: 'row'}}>
-          {selectedPDBTypes.CIF === true ? 
-            <FormControlLabel
-            control={
-              <Checkbox
-                name="isAuth"
-                checked={isAuth}
-                onChange={handleIsAuthChange}
-              />
-            }
-            label="Auth Chains Supplied"
+  {selectedPDBTypes.CIF === true ? 
+    <>
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="isAuthChain"
+            checked={isAuth}
+            onChange={handleIsAuthChange}
           />
-          :
-            <></>
-          }
-          <FormGroup sx={{ alignItems: 'center' }}>
-              <FormControlLabel control={<Checkbox checked={caOnly} onChange={handleCaOnlyChange}/>} label="Alpha-carbon contacts only" />
-          </FormGroup>
-        </Box>
+        }
+        label="Use Auth Chain IDs"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="isOffResidue"
+            checked={isOffResidue}
+            onChange={handleIsOffResidueChange}
+          />
+        }
+        label="Use Auth Residue IDs"
+      />
+    </>
+    :
+    <></>
+  }
+
+  <FormGroup sx={{ alignItems: 'center' }}>
+      <FormControlLabel control={<Checkbox checked={caOnly} onChange={handleCaOnlyChange}/>} label="Alpha-carbon contacts only" />
+  </FormGroup>
+</Box>
+        <FormControlLabel
+  control={
+    <TextField
+      variant="outlined"
+      size="small"
+      value={offResidueIds}
+      onChange={handleOffResidueIdsChange}
+      placeholder="e.g., 12, 34, 56"
+    />
+  }
+  label="Off Residue IDs"
+  labelPlacement="start"
+/>
+
     </Box>
   );
 };
