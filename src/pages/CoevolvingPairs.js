@@ -32,7 +32,7 @@ const CoevolvingPairs = () => {
   const [chain1, setChain1] = useState('');
   const [chain2, setChain2] = useState('');
   const [isAuthChain, setIsAuthChain] = useState(true);
-  const [isOffAuthChain, setIsOffAuthChain] = useState();
+  const [isAuthResidue, setIsAuthResidue] = useState(true);
   const [maxContGaps, setMaxContGaps] = useState(defaultMaxGaps);
   const [ECutoff, setECutoff] = useState('');
   const [distThresh, setDistThresh] = useState('8')
@@ -84,8 +84,8 @@ const CoevolvingPairs = () => {
     setIsAuthChain(event.target.checked);
   };
 
-  const handleIsOffAuthChainChange = (event) => {
-    setIsOffAuthChain(event.target.checked);
+  const handleIsAuthResidueChange = (event) => {
+    setIsAuthResidue(event.target.checked);
   };
 
   const handleECutoffChange = (event) => {
@@ -256,7 +256,8 @@ const CoevolvingPairs = () => {
               <PDBSettings
                 distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange}
                 chain1={chain1} handleChain1Change={handleChain1Change} chain2={chain2} handleChain2Change={handleChain2Change}
-                isAuthChain={isAuthChain} handleIsAuthChainChange={handleIsAuthChainChange} selectedPDBTypes={selectedPDBTypes} />
+                isAuthChain={isAuthChain} handleIsAuthChainChange={handleIsAuthChainChange} isAuthResidue={isAuthResidue} handleIsAuthResidueChange={handleIsAuthResidueChange}
+                selectedPDBTypes={selectedPDBTypes} />
             </Box>
 
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>

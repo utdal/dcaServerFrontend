@@ -4,10 +4,9 @@ import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyChange, chain1, handleChain1Change, chain2, handleChain2Change, isAuth, handleIsAuthChange, selectedPDBTypes }) => {
+const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyChange, chain1, handleChain1Change, chain2, handleChain2Change, isAuthChain, handleIsAuthChainChange, isAuthResidue, handleIsAuthResidueChange, selectedPDBTypes }) => {
   return (
     <Box>
-      
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 25, flexDirection: 'row'}}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 2}}>
             <p>Structural Contact Distance Threshold:</p>
@@ -39,37 +38,37 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 5, flexDirection: 'row'}}>
-  {selectedPDBTypes.CIF === true ? 
-    <>
-      <FormControlLabel
-        control={
-          <Checkbox
-            name="isAuthChain"
-            checked={isAuth}
-            onChange={handleIsAuthChange}
-          />
-        }
-        label="Use Auth Chain IDs"
-      />
-      <FormControlLabel
-        control={
-          <Checkbox
-            name="isOffResidue"
-            checked={isOffResidue}
-            onChange={handleIsOffResidueChange}
-          />
-        }
-        label="Use Auth Residue IDs"
-      />
-    </>
-    :
-    <></>
-  }
-
-  <FormGroup sx={{ alignItems: 'center' }}>
-      <FormControlLabel control={<Checkbox checked={caOnly} onChange={handleCaOnlyChange}/>} label="Alpha-carbon contacts only" />
-  </FormGroup>
-</Box>
+          {selectedPDBTypes.CIF === true ? 
+            <Box>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="isAuthChain"
+                    checked={isAuthChain}
+                    onChange={handleIsAuthChainChange}
+                  />
+                }
+                label="Use Auth Chain IDs"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="isAuthResidue"
+                    checked={isAuthResidue}
+                    onChange={handleIsAuthResidueChange}
+                  />
+                }
+                label="Use Auth Residue IDs"
+              />
+            </Box>
+            :
+            <></>
+          }
+        </Box>
+      <FormGroup sx={{ alignItems: 'center' }}>
+          <FormControlLabel control={<Checkbox checked={caOnly} onChange={handleCaOnlyChange}/>} label="Alpha-carbon contacts only" />
+      </FormGroup>
+{/* </Box>
         <FormControlLabel
   control={
     <TextField
@@ -83,8 +82,8 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
   label="Off Residue IDs"
   labelPlacement="start"
 />
-
-    </Box>
+*/}
+    </Box> 
   );
 };
 
