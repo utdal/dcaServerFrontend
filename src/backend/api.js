@@ -411,13 +411,14 @@ export async function computeDca({ msaId, theta }) {
 }
 
 
-export async function mapResidues({ dcaId, pdbId, chain1, chain2, authChainIdSupplied }) {
+export async function mapResidues({ dcaId, pdbId, chain1, chain2, authChainIdSupplied, authResidueIdSupplied}) {
     return await startTask('map-residues', {
         dca_id: dcaId,
         pdb_id: pdbId,
         chain1: chain1,
         chain2: chain2,
-        auth_chain_id_supplied: authChainIdSupplied
+        auth_chain_id_supplied: authChainIdSupplied,
+        auth_residue_id_supplied: authResidueIdSupplied
     });
 }
 

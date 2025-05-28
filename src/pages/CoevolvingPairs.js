@@ -177,6 +177,7 @@ const CoevolvingPairs = () => {
       chain1: chain1,
       chain2: chain2 || chain1,
       authChainIdSupplied: isAuthChain,
+      authResidueIdSupplied: isAuthResidue
     });
 
     const contactsTask = await generateContacts({
