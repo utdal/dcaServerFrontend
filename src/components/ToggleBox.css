@@ -1,0 +1,42 @@
+
+.hover-menu-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.hamburger-icon {
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px 38.5px;
+  border: 1px solid #e87500;
+  border-radius: 4px;
+  background-color: black;
+  color: white;
+}
+
+.hover-menu-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #de8730;
+  border-radius: 4px;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  z-index: 1000;
+  font-size: 10px;
+}
+
+.hover-menu-link {
+  padding: 10px;
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  transition: background-color 0.2s;
+  border-radius: 4px;
+}
+
+.hover-menu-link:hover {
+  background-color: #c06810;
+  border-radius: 4px;
+}

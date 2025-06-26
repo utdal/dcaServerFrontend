@@ -4,7 +4,7 @@ import Slider from '@mui/material/Slider';
 
 const MFDCASettings = ({ ECutoff, handleECutoffChange, defaultTheta, theta, handleThetaChange }) => {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap:5}}>
         <TextField 
           label="E-Val Cutoff (optional)" 
           margin="normal"
@@ -12,17 +12,14 @@ const MFDCASettings = ({ ECutoff, handleECutoffChange, defaultTheta, theta, hand
           value={ECutoff}
           onChange={handleECutoffChange}>
         </TextField>
-        <Box sx={{ width: "20%" }}>
-            <TextField
-                label="DCA Reweighting (θ)"
-                variant='filled'
-                margin="normal"
-                aria-label="DCA Reweighting (θ)"
-                value={theta}
-                onChange={handleThetaChange}
-                
-            />
-        </Box> 
+        <TextField
+            label="DCA Reweighting (θ)"
+            variant='filled'
+            margin="normal"
+            aria-label="DCA Reweighting (θ)"
+            value={theta}
+            onChange={handleThetaChange}
+        />
     </Box>
   );
 };

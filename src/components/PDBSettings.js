@@ -6,10 +6,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyChange, chain1, handleChain1Change, chain2, handleChain2Change, isAuthChain, handleIsAuthChainChange, isAuthResidue, handleIsAuthResidueChange, selectedPDBTypes }) => {
   return (
-    <Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 25, flexDirection: 'row'}}>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 2}}>
-            <p>Structural Contact Distance Threshold:</p>
+    <Box sx={{marginTop:'15px'}}>
+        <p>Structural Contact Distance Threshold</p>
+        <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', marginTop:'15px'}}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-start'}}>
             <TextField
                 label = "Threshold (Å)"
                 variant='filled'
@@ -17,9 +17,10 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
                 onChange={handleDistThreshChange}>
             </TextField>
           </Box>
-          
+          </Box>
 
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 5, flexDirection: 'row'}}>
+          <p style={{marginTop:'15px'}}>Chain IDs</p>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 5, flexDirection: 'row', marginTop:'15px'}}>
             <TextField
               label="Chain 1 ID"
               variant='filled'
@@ -35,7 +36,6 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
               onChange={handleChain2Change}
             />
           </Box>
-        </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 5, flexDirection: 'row'}}>
           {selectedPDBTypes.CIF === true ? 

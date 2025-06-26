@@ -8,7 +8,7 @@ import Button from '@mui/material/Button'
 import MSAInput from '../components/MSAInput';
 import PDBInput from '../components/PDBInput';
 import MFDCASettings from '../components/MFDCASettings';
-import { TextField } from '@mui/material';
+import { TextField, Tooltip } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -18,6 +18,8 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Slider from '@mui/material/Slider';
 import PDBSettings from '../components/PDBSettings';
+import TopBar from '../components/TopBar';
+import { Link } from 'react-router-dom';
 
 
 const CoevolvingPairs = () => {
@@ -39,6 +41,7 @@ const CoevolvingPairs = () => {
   const [caOnly, setCaOnly] = useState(false)
   const [theta, setTheta] = useState(defaultTheta);
   const [analysisMethod, setAnalysisMethod] = useState('mfDCA');
+  const allowed_letters= new Set(['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']);
 
   const handleFileTypeChange = (type) => {
     setSelectedFileTypes((prev) => ({
@@ -56,8 +59,13 @@ const CoevolvingPairs = () => {
   };
 
   const handleInputMSAChange = (event) => {
-    if (selectedFileTypes.Seed) setInputMSA(event.target.value);
+    if (selectedFileTypes.Seed){
+      if ([...event.target.value.toUpperCase()].every(char => allowed_letters.has(char))) {
+        setInputMSA(event.target.value.toUpperCase());
+      }
+    }
     else setInputFile(event.target.files[0]);
+
   };
 
   const handleInputPDBChange = (event) => {
@@ -167,7 +175,7 @@ const CoevolvingPairs = () => {
     }
 
     const dcaTask = await computeDca({
-      msaId: msaId,
+      msaId,
       theta: Number(theta)
     });
 
@@ -192,30 +200,66 @@ const CoevolvingPairs = () => {
   };
 
   return (
-    <React.Fragment>
-      <CssBaseline />
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#282c34', p: '20px', color: 'white', width: '100%' }}>
-        <HomeButton />
-      </Box>
-      <Container maxWidth="xl">
-        <Box sx={{ bgcolor: '#d0d8e8' }}>
+    <>
+      <TopBar>
+        <li>
+          <a href='https://morcoslaboratory.org/'>
+            Morcos Lab
+          </a>
+        </li>
+        <li>
+          <Link to='/'>
+            Home
+          </Link>
+        </li>
+      </TopBar>
           <form onSubmit={handleSubmit}>
+            <div style={{marginTop:'50px'}}>
+              <Tooltip title='Here, a user may supply a sequence corresponding to a complete protein or a portion of that protein and identify which residue sites may be directly coupled with others.
+        A Multiple Sequence Alignment provided or produced by a seed sequence that has been supplied is used as input for the coevolutionary model chosen.
+        Finally, the pairs are returned, mapped to the protein structure of interest.'>
+                <Button variant='text'
+                sx={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  minWidth: 0,
+                  textTransform: 'none',
+                  color: 'inherit',
+                  boxShadow: 'none',
+                  fontSize: '40px',
+                  fontWeight: 'bold'
+                }}
+                >
+                  Coevolving Pairs
+                </Button>
+              </Tooltip>
+            </div>
+            <div style={{marginTop:"20px"}}>
             <MSAInput
               inputType={selectedFileTypes.Seed ? 'Seed' : 'MSA'}
               inputMSA={selectedFileTypes.Seed ? inputMSA : inputFile}
               handleInputMSAChange={handleInputMSAChange}
               handleFileTypeChange={handleFileTypeChange}
             />
+            </div>
+            <div>
             <PDBInput
               inputPDBID={inputPDBID}
               inputPDBFile={inputPDBFile}
               handleInputPDBChange={handleInputPDBChange}
               handlePDBChange={handlePDBChange}
             />
-            <Box sx={{ width: '100%', p: 2 }}>
+            </div>
+            <div>
+              <Box sx={{alignItems:'center'}}>
               <h3>Coevolutionary Analysis Settings</h3>
-              <FormControl sx={{ width: '25%' }}>
-                <InputLabel id="coevolutionary-analysis-method">Coevolutionary Analysis Method</InputLabel>
+              <FormControl sx={{ width: '25%', marginTop:'20px'}}>
+                <InputLabel id="coevolutionary-analysis-method"
+                sx={{marginTop:'0px'}}
+                >
+                  Coevolutionary Analysis Method
+                </InputLabel>
                 <Select
                   labelId="coevolutionary-analysis-method"
                   id="analysis-method-select"
@@ -224,11 +268,13 @@ const CoevolvingPairs = () => {
                   variant='filled'
                   margin='200'
                   onChange={handleAnalysisMethodChange}
+                  sx={{marginTop:'15px'}}
                 >
                   <MenuItem value={'mfDCA'}>mean-field DCA</MenuItem>
                   <MenuItem value={''}>More to Come!</MenuItem>
                 </Select>
               </FormControl>
+              </Box>
 
               {analysisMethod === 'mfDCA' ?
                 <MFDCASettings ECutoff={ECutoff} handleECutoffChange={handleECutoffChange} defaultTheta={defaultTheta} theta={theta} handleThetaChange={handleThetaChange} />
@@ -237,9 +283,8 @@ const CoevolvingPairs = () => {
               }
 
               {selectedFileTypes.Seed ? <>
-                <h3> MSA Generation Settings </h3>
-                <p>Max Number of Continuous Gaps (as percentage of MSA length):</p>
-                <Box sx={{ width: "20%", margin: 'auto' }}>
+                <h3 style={{marginTop:'20px'}}> MSA Generation Settings </h3>
+                <p style={{marginTop:'20px'}}>Max Number of Continuous Gaps (as percentage of MSA length):</p>
                   <Slider
                     defaultValue={defaultMaxGaps}
                     value={maxContGaps}
@@ -248,28 +293,25 @@ const CoevolvingPairs = () => {
                     step={1}
                     min={0}
                     max={100}
+                    style={{width: '30%', marginTop:'15px'}}
                   />
-                </Box>
               </> : undefined}
 
 
-              <h3>PDB Settings</h3>
+              <h3 style={{marginTop:'20px'}}>PDB Settings</h3>
               <PDBSettings
                 distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange}
                 chain1={chain1} handleChain1Change={handleChain1Change} chain2={chain2} handleChain2Change={handleChain2Change}
                 isAuthChain={isAuthChain} handleIsAuthChainChange={handleIsAuthChainChange} isAuthResidue={isAuthResidue} handleIsAuthResidueChange={handleIsAuthResidueChange}
                 selectedPDBTypes={selectedPDBTypes} />
-            </Box>
 
-            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, margin: '10px 20px' }}>
               Submit
             </Button>
+            </div>
           </form>
           {/* I'll add in a settings pane. Filtering the MSA, MSAutils whatever settings are needed., Bit Score */}
-        </Box>
-
-      </Container>
-    </React.Fragment>
+        </>
   );
 }
 

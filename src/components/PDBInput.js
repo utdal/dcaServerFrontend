@@ -7,8 +7,11 @@ const PDBInput = ({ inputPDBID, inputPDBFile, handleInputPDBChange, handlePDBCha
   const [upload, setUpload] = useState(false);
 
   return (
-    <Box sx={{ width: '100%', p: 2, border: '1px dashed grey' }}>
-      <h3 style={{ textAlign: 'left', width: '100%' }}>
+    <Box sx={{ width: '100%', p: 2}}>
+      <h3 style={{ textAlign: 'center', width: '100%' }}>
+        {/*
+        Enter the PDB ID that corresponds to the RCSB entry of your protein of interest.
+        */}
         Enter the PDB ID that corresponds to the RCSB entry of your protein of interest.
       </h3>
       <Box>

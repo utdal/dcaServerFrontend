@@ -1,0 +1,43 @@
+.seec-layout{
+    margin-top: 40px;
+    display: grid;
+    grid-template-areas: "seec-graph hmm-graph"
+                         "analysis analysis";
+    grid-template-columns: 3fr 1fr;
+}
+
+.seec-graph{
+    grid-area: seec-graph;
+    display: flex;
+    justify-content: flex-end;
+}
+.seec-graph h2{
+
+}
+.hmm-graph{
+    grid-area: hmm-graph;
+
+}
+.seec-analysis{
+    grid-area:seec-analysis;
+}
+.seec-button, .seec-unavailable{
+    background-color: rgb(223, 223, 223);
+    color: rgb(24, 24, 24);
+    border-radius: 8px;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: ease 0.2s;
+    margin: 5px;
+    margin-bottom: 20px;
+}
+.seec-unavailable{
+    background-color: rgba(95, 95, 95, 0.246);
+    color: rgba(97, 97, 97, 0.465);
+    cursor: not-allowed;
+}
+.seec-button:hover{
+    color: white;
+    background-color: black;
+}
