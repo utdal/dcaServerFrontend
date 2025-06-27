@@ -17,6 +17,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Slider from '@mui/material/Slider';
+import AdvancedSettings from '../components/AdvancedSettings';
 import PDBSettings from '../components/PDBSettings';
 import TopBar from '../components/TopBar';
 import { Link } from 'react-router-dom';
@@ -219,7 +220,7 @@ const CoevolvingPairs = () => {
         A Multiple Sequence Alignment provided or produced by a seed sequence that has been supplied is used as input for the coevolutionary model chosen.
         Finally, the pairs are returned, mapped to the protein structure of interest.'>
                 <Button variant='text'
-                sx={{
+                  sx={{
                   background: 'none',
                   border: 'none',
                   padding: 0,
@@ -235,7 +236,7 @@ const CoevolvingPairs = () => {
                 </Button>
               </Tooltip>
             </div>
-            <div style={{marginTop:"20px"}}>
+            <div style={{marginTop:"40px"}}>
             <MSAInput
               inputType={selectedFileTypes.Seed ? 'Seed' : 'MSA'}
               inputMSA={selectedFileTypes.Seed ? inputMSA : inputFile}
@@ -243,7 +244,7 @@ const CoevolvingPairs = () => {
               handleFileTypeChange={handleFileTypeChange}
             />
             </div>
-            <div>
+            <div style={{marginTop:'40px'}}>
             <PDBInput
               inputPDBID={inputPDBID}
               inputPDBFile={inputPDBFile}
@@ -252,38 +253,9 @@ const CoevolvingPairs = () => {
             />
             </div>
             <div>
-              <Box sx={{alignItems:'center'}}>
-              <h3>Coevolutionary Analysis Settings</h3>
-              <FormControl sx={{ width: '25%', marginTop:'20px'}}>
-                <InputLabel id="coevolutionary-analysis-method"
-                sx={{marginTop:'0px'}}
-                >
-                  Coevolutionary Analysis Method
-                </InputLabel>
-                <Select
-                  labelId="coevolutionary-analysis-method"
-                  id="analysis-method-select"
-                  value={analysisMethod}
-                  label="Coevolutionary Analysis Method"
-                  variant='filled'
-                  margin='200'
-                  onChange={handleAnalysisMethodChange}
-                  sx={{marginTop:'15px'}}
-                >
-                  <MenuItem value={'mfDCA'}>mean-field DCA</MenuItem>
-                  <MenuItem value={''}>More to Come!</MenuItem>
-                </Select>
-              </FormControl>
-              </Box>
-
-              {analysisMethod === 'mfDCA' ?
-                <MFDCASettings ECutoff={ECutoff} handleECutoffChange={handleECutoffChange} defaultTheta={defaultTheta} theta={theta} handleThetaChange={handleThetaChange} />
-                :
-                <></>
-              }
 
               {selectedFileTypes.Seed ? <>
-                <h3 style={{marginTop:'20px'}}> MSA Generation Settings </h3>
+                <h3 style={{marginTop:'40px'}}> MSA Generation Settings </h3>
                 <p style={{marginTop:'20px'}}>Max Number of Continuous Gaps (as percentage of MSA length):</p>
                   <Slider
                     defaultValue={defaultMaxGaps}
@@ -298,12 +270,46 @@ const CoevolvingPairs = () => {
               </> : undefined}
 
 
-              <h3 style={{marginTop:'20px'}}>PDB Settings</h3>
+              <h3 style={{marginTop:'40px'}}>PDB Settings</h3>
               <PDBSettings
                 distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange}
                 chain1={chain1} handleChain1Change={handleChain1Change} chain2={chain2} handleChain2Change={handleChain2Change}
                 isAuthChain={isAuthChain} handleIsAuthChainChange={handleIsAuthChainChange} isAuthResidue={isAuthResidue} handleIsAuthResidueChange={handleIsAuthResidueChange}
                 selectedPDBTypes={selectedPDBTypes} />
+              <AdvancedSettings
+                  caSettings={
+                  <>
+                    <p style={{justifyContent:'center', display:'flex'}}>Coevolutionary Analysis Method</p>
+                    <Box sx={{display:'flex', justifyContent:'center'}}>
+                    <Select
+                    labelId="coevolutionary-analysis-method"
+                    id="analysis-method-select"
+                    value={analysisMethod}
+                    label="Coevolutionary Analysis Method"
+                    variant='filled'
+                    margin='200'
+                    onChange={handleAnalysisMethodChange}
+                    inputProps={{
+                      sx: {
+                        padding: '10px 12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent:'center'
+                      }
+                    }}
+                    sx={{minWidth:'100px',maxWidth:'auto',marginTop:'15px', height:'48px', alignItems:'center', display:'flex', border:'1px dotted black', paddingTop:'0px'}}
+                  >
+                    <MenuItem value={'mfDCA'} sx={{alignItems:'center', display:'flex'}}>mean-field DCA</MenuItem>
+                    <MenuItem value={''}>More to Come!</MenuItem>
+                  </Select>
+                  </Box>
+
+                  {analysisMethod === 'mfDCA' &&(
+                    <MFDCASettings ECutoff={ECutoff} handleECutoffChange={handleECutoffChange} defaultTheta={defaultTheta} theta={theta} handleThetaChange={handleThetaChange} />)
+                  }
+                </>
+                }
+              />
 
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, margin: '10px 20px' }}>
               Submit

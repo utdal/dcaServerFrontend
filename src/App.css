@@ -2,11 +2,11 @@
   box-sizing: border-box;
   margin:0px;
 }
-.App { text-align: center; min-height: 100vh; display: flex; flex-direction: column; font-family: Helvetica, Arial, sans-serif;} 
+.App { text-align: center; min-height: 100vh; display: flex; flex-direction: column; font-family: Helvetica, Arial, sans-serif; color: #1f1f1f} 
 .app-header { 
   background-color: #e87500; 
   margin-top: 30px;
-  color: black; 
+  color: #1f1f1f	; 
   position: fixed; 
   width: 100%;  
   height: 80px;
@@ -19,12 +19,12 @@
   grid-template-columns: 1fr 1fr; 
   padding: 10px;
 }
-.container div.grid-title {
+.grid-title {
   grid-area: grid-title; 
   display: flex; 
   align-items: center; 
 }
-.container div.grid-buttons {
+.grid-buttons {
   grid-area: grid-buttons; 
   display: flex;
   align-items: center;
@@ -32,17 +32,17 @@
   margin-right: 20px;
 }
 
-.header-title { margin: 0; font-size: 20px; font-weight: bold; } 
+.header-title {font-size: 20px; font-weight: bold; } 
 nav ul { list-style-type: none; padding: 0; } 
 nav li { display: inline; margin: 0 15px; font-weight: 600; cursor: pointer; } 
 nav li.bold { font-weight: bold; } 
 main { flex: 1; padding: 20px; padding-top: 80px; margin-bottom: 20px; } 
 .web-servers { text-align: left; margin-top: 50px;}   
 .web-servers h2 { margin-top: 0; } 
-.web-servers hr { border: 1px solid #000; } 
+.web-servers hr { border: 1px solid #1f1f1f; } 
 .server-cards { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 30px;} 
 
-footer { background-color:#e87500; padding: 10px 20px; border-top: 1px solid #ccc; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 14px; box-shadow: 0 -2px 5px rgba(0,0,0,0.1); position: relative; } 
+footer { background-color:#e87500; padding: 10px 20px; border-top: 1px solid #ccc; display: flex; flex-direction: column; align-items: center; font-size: 14px; box-shadow: 0 -2px 5px rgba(0,0,0,0.1);} 
 .footer-content { display: flex; flex-direction: column; align-items: center; } 
 .footer-left, .footer-right { display: flex; align-items: center; margin: 5px 0; } 
 .footer-right a { text-decoration: none; color: #333; margin: 0 10px; display: flex; align-items: center; } 
@@ -50,16 +50,7 @@ footer { background-color:#e87500; padding: 10px 20px; border-top: 1px solid #cc
 .footer-right a i { margin-right: 5px; } 
 .footer-logo { margin-top: 10px; } 
 .utd-logo { width: 150px; height: auto; } 
+.nsf-logo{width: 80px; padding-left: 20px;}
 @media (min-width: 600px) { .footer-content { flex-direction: row; justify-content: space-between; width: 100%; } } 
 a { text-decoration: none; color: inherit; } 
 .hide-header-footer { display: none; } 
-.server-image {
-  width: 100%;
-  height: 200px; 
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat; 
-  border-radius: 10px;
-}
-
-.full-page { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }

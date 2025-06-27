@@ -86,7 +86,7 @@ function App() {
               <section className="web-servers">
                 <h2>Tools</h2>
                 <hr />
-                <div className="server-cards" style={{marginTop: '30px'}}>
+                <div className="server-cards">
                   <Tile
                     toolName="Coevolving Pairs"
                     description="Estimates possible protein structure using pairs of amino acids that tend to evolve together"
@@ -165,23 +165,19 @@ function App() {
                   Designed by the Evolutionary Information Lab
                 </a>
               </div>
-              {/* <div className="footer-right">
+
+              <div className="footer-right">
                 <a href="mailto:insert@gmail.com">
                   <i className="fas fa-envelope"></i> insert@gmail.com
                 </a>
-                <a href="https://morcoslaboratory.org/" target="_blank">
-                  <i className="fas fa-info-circle"></i> About the Lab
-                </a>
-                <a href="https://www.moleculego.com/" target="_blank">
-                  MoleculeGo
-                </a>
-              </div> */}
+              </div>
+              
               <div className="footer-logo">
                 <a href="https://www.utdallas.edu/" target="_blank">
                   <img src={UTDLogo} alt="UTD Logo" className="utd-logo" />
                 </a>
                 <a href="https://nsf.gov/" target="_blank">
-                  <img src={nsfLogo} alt="NSF Logo" className="nsf-logo" style={{ width: '80px', paddingLeft: '20px' }} />
+                  <img src={nsfLogo} alt="NSF Logo" className="nsf-logo" />
                 </a>
               </div>
             </footer>

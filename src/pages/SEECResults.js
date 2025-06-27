@@ -27,7 +27,7 @@ const SEECResults = () => {
                     <SEECGraph/>
                 </div>
                 <div className="hmm-graph">
-                    <h2>HMM graph</h2>
+                    <h2>Hamiltonian</h2>
                 </div>
                 <div className="seec-analysis">
                     <h2>
