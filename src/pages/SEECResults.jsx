@@ -16,6 +16,10 @@ const SEECResults = () => {
                 </li>
             </TopBar>
             <div className="seec-layout">
+                <div className="seec-title">
+                    <h1>SEEC Results</h1>
+
+                </div>
                 <div className='seec-graph'>
                     <h2>
                         Evolution of Sequence
@@ -23,12 +27,12 @@ const SEECResults = () => {
                     <SEECGraph/>
                 </div>
                 <div className="hmm-graph">
-                    <h1>HMM graph</h1>
+                    <h2>HMM graph</h2>
                 </div>
                 <div className="seec-analysis">
-                    <h1>
-                        Analaysis
-                    </h1>
+                    <h2>
+                        Analysis
+                    </h2>
                 </div>
             </div>
         </div>

@@ -1,25 +1,33 @@
 .seec-layout{
     margin-top: 40px;
     display: grid;
-    grid-template-areas: "seec-graph hmm-graph"
-                         "analysis analysis";
+    grid-template-areas:"seec-title seec-title"
+                        "seec-graph hmm-graph"
+                        "seec-analysis seec-analysis";
     grid-template-columns: 3fr 1fr;
 }
-
-.seec-graph{
+.seec-title{
+    grid-area: seec-title;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+.seec-graph {
     grid-area: seec-graph;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    padding-right: 20px;
 }
-.seec-graph h2{
 
-}
+
 .hmm-graph{
     grid-area: hmm-graph;
 
 }
 .seec-analysis{
     grid-area:seec-analysis;
+    justify-content: center;
+    border: 1px dashed blue;
+
 }
 .seec-button, .seec-unavailable{
     background-color: rgb(223, 223, 223);

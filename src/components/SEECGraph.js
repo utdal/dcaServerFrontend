@@ -97,9 +97,9 @@ export default function SEECGraph() {
         document.body.removeChild(link);
     }
     return (
-        <div style={{marginTop:'40px', width:'40%', alignItems:'center'}}>
+        <div style={{marginTop:'40px', width:'100%', display: 'flex', flexDirection: 'column'}}>
             <div style={{display:'flex'}}>
-                <div style={{flexWrap:'wrap', marginLeft:'5px'}}>
+                <div style={{flexWrap:'', marginLeft:'5px'}}>
                     <Plot data={plotData} layout={plotLayout} config={{displaylogo: false}}useResizeHandler={true} onClick={handleSelection} onSelected={handleSelection}/> 
                     {selectedMap.length<steps.length?(
                     <button className="seec-button" onClick={selectAll}>Select All</button>
