@@ -1,22 +1,24 @@
 import React, { useState, useRef } from 'react';
 import HomeButton from '../components/HomeButton';
 import { generateMsa, computeDca, MSA, mapResidues, generateContacts, uploadMsa, uploadPDB } from '../backend/api';
-import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button'
 import MSAInput from '../components/MSAInput';
 import PDBInput from '../components/PDBInput';
 import MFDCASettings from '../components/MFDCASettings';
-import { TextField, Tooltip } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
-import Slider from '@mui/material/Slider';
+import{
+  CssBaseline,
+  Box,
+  Button,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+  Select,
+  InputLabel,
+  FormControl,
+  Tooltip,
+  TextField,
+  MenuItem,
+  Slider
+} from '@mui/material';
 import AdvancedSettings from '../components/AdvancedSettings';
 import PDBSettings from '../components/PDBSettings';
 import TopBar from '../components/TopBar';
@@ -297,7 +299,7 @@ const CoevolvingPairs = () => {
                         justifyContent:'center'
                       }
                     }}
-                    sx={{minWidth:'100px',maxWidth:'auto',marginTop:'15px', height:'48px', alignItems:'center', display:'flex', border:'1px dotted black', paddingTop:'0px'}}
+                    sx={{minWidth:'100px',maxWidth:'auto',marginTop:'15px', height:'48px', alignItems:'center', display:'flex', paddingTop:'0px'}}
                   >
                     <MenuItem value={'mfDCA'} sx={{alignItems:'center', display:'flex'}}>mean-field DCA</MenuItem>
                     <MenuItem value={''}>More to Come!</MenuItem>
