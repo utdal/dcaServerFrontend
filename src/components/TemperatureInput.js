@@ -25,8 +25,9 @@ function temperatureToColor(kelvin) {
   const clamped = Math.min(Math.max(kelvin, 250), 350);
   const ratio = (clamped - 250) / (350 - 250);
 
-  const start = { r: 33, g: 150, b: 243 };
-  const end = { r: 244, g: 67, b: 54 };
+  const start = { r: 33, g: 150, b: 243 };{/* blue */}
+  const end = { r: 244, g: 67, b: 54 }; {/* red */}
+  
 
   const r = Math.round(start.r + ratio * (end.r - start.r));
   const g = Math.round(start.g + ratio * (end.g - start.g));
