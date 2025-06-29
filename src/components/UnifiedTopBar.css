@@ -1,0 +1,35 @@
+.unified-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 16px 40px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .site-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #e87500;
+    text-decoration: none;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 24px;
+  }
+  
+  .nav-links a {
+    font-weight: 500;
+    text-decoration: none;
+    color: #333;
+    transition: color 0.2s ease;
+  }
+  
+  .nav-links a:hover {
+    color: #e87500;
+  }
+  

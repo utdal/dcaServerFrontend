@@ -25,7 +25,7 @@ import HomeButton from './components/HomeButton';
 import ViewTasks from './pages/ViewTasks';
 import UTDLogo from './pages/UTDLogo.png';
 import ApiTest from './backend/ApiTest';
-import TopBar from './components/TopBar';
+import UnifiedTopBar from './components/UnifiedTopBar';
 import ToggleBox from './components/ToggleBox';
 import './App.css';
 
@@ -52,35 +52,8 @@ function App() {
           <Route path="/" element={
           <>
             <div>
-            <TopBar>
-              <li><a href="https://morcoslaboratory.org/">Morcos Lab</a></li>
-              <li><a href="https://morcoslaboratory.org/?page_id=38">Research</a></li>
-              <li><a href="https://morcoslaboratory.org/?page_id=53">Publications</a></li>
-              <li><a href="https://morcoslaboratory.org/?page_id=66">People</a></li>
-            </TopBar>
-            <header className='app-header container'>
-              <div className='grid-title'>
-                <Link to='/'>
-                  <h1>Coevolutionary</h1>
-                </Link>
-              </div>
-              <div className='grid-buttons'>
-                <ToggleBox >
-                  <Link to="/guide-for-biologists" className="hover-menu-link">
-                    Guide
-                  </Link>
-                  <Link to="/tasks" className="hover-menu-link">
-                    Recent Jobs
-                  </Link>
-                  <Link to='/results' className="hover-menu-link">
-                    Results
-                  </Link>
-                  <Link href="/supporters" className="hover-menu-link">
-                    Supporters
-                  </Link>
-                </ToggleBox>
-              </div>
-            </header>
+            <UnifiedTopBar />
+
             </div>
             <main>
               <section className="web-servers">
@@ -139,7 +112,7 @@ function App() {
                 </div>
               </section>
 
-              {/* New Source Code Section */}
+             
               <section className="web-servers">
                 <h2>Source Code</h2>
                 <hr />
@@ -159,28 +132,29 @@ function App() {
                 </div>
               </section>
             </main>
-            <footer>
-              <div className="footer-left">
-                <a href="https://morcoslaboratory.org/" target="_blank">
-                  Designed by the Evolutionary Information Lab
-                </a>
-              </div>
+            <footer className="pretty-footer">
+  <div className="footer-content">
+    <div className="footer-left">
+      <a href="https://morcoslaboratory.org/" target="_blank" rel="noopener noreferrer">
+        Designed by the Evolutionary Information Lab
+      </a>
+    </div>
+    <div className="footer-center">
+      <a href="mailto:insert@gmail.com">
+        <i className="fas fa-envelope"></i> faruckm@utdallas.edu
+      </a>
+    </div>
+    <div className="footer-right">
+      <a href="https://www.utdallas.edu/" target="_blank" rel="noopener noreferrer">
+        <img src={UTDLogo} alt="UTD Logo" className="utd-logo" />
+      </a>
+      <a href="https://nsf.gov/" target="_blank" rel="noopener noreferrer">
+        <img src={nsfLogo} alt="NSF Logo" className="nsf-logo" />
+      </a>
+    </div>
+  </div>
+</footer>
 
-              <div className="footer-right">
-                <a href="mailto:insert@gmail.com">
-                  <i className="fas fa-envelope"></i> insert@gmail.com
-                </a>
-              </div>
-              
-              <div className="footer-logo">
-                <a href="https://www.utdallas.edu/" target="_blank">
-                  <img src={UTDLogo} alt="UTD Logo" className="utd-logo" />
-                </a>
-                <a href="https://nsf.gov/" target="_blank">
-                  <img src={nsfLogo} alt="NSF Logo" className="nsf-logo" />
-                </a>
-              </div>
-            </footer>
           </>
           }/>
 

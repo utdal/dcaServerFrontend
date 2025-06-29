@@ -40,14 +40,45 @@ main { flex: 1; padding: 20px; padding-top: 80px; margin-bottom: 20px; }
 .web-servers h2 { margin-top: 0; } 
 .web-servers hr { border: 1px solid #1f1f1f; } 
 .server-cards { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 30px;} 
+.pretty-footer {
+  background-color: #fdf7f3;
+  border-top: 1px solid #e0e0e0;
+  padding: 20px 40px;
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  justify-content: center;
+}
 
-footer { background-color:#e87500; padding: 10px 20px; border-top: 1px solid #ccc; display: flex; flex-direction: column; align-items: center; font-size: 14px; box-shadow: 0 -2px 5px rgba(0,0,0,0.1);} 
-.footer-content { display: flex; flex-direction: column; align-items: center; } 
-.footer-left, .footer-right { display: flex; align-items: center; margin: 5px 0; } 
-.footer-right a { text-decoration: none; color: #333; margin: 0 10px; display: flex; align-items: center; } 
-.footer-right a:hover { color: #007bff; } 
-.footer-right a i { margin-right: 5px; } 
-.footer-logo { margin-top: 10px; } 
+.footer-content {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.footer-left a,
+.footer-center a {
+  text-decoration: none;
+  color: #666;
+}
+
+.footer-center {
+  margin: 10px 0;
+}
+
+.footer-right img {
+  height: 40px;
+  margin-left: 20px;
+  transition: transform 0.2s ease;
+}
+
+.footer-right img:hover {
+  transform: scale(1.1);
+}
+
 .utd-logo { width: 150px; height: auto; } 
 .nsf-logo{width: 80px; padding-left: 20px;}
 @media (min-width: 600px) { .footer-content { flex-direction: row; justify-content: space-between; width: 100%; } } 

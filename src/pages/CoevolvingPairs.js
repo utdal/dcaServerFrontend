@@ -4,6 +4,9 @@ import { generateMsa, computeDca, MSA, mapResidues, generateContacts, uploadMsa,
 import MSAInput from '../components/MSAInput';
 import PDBInput from '../components/PDBInput';
 import MFDCASettings from '../components/MFDCASettings';
+import { ThemeProvider } from '@mui/material/styles';
+import UnifiedTopBar from '../components/UnifiedTopBar';
+import theme from '../theme';
 import{
   CssBaseline,
   Box,
@@ -204,18 +207,8 @@ const CoevolvingPairs = () => {
 
   return (
     <>
-      <TopBar>
-        <li>
-          <a href='https://morcoslaboratory.org/'>
-            Morcos Lab
-          </a>
-        </li>
-        <li>
-          <Link to='/'>
-            Home
-          </Link>
-        </li>
-      </TopBar>
+       <UnifiedTopBar />
+      <ThemeProvider theme={theme}>
           <form onSubmit={handleSubmit}>
             <div style={{marginTop:'50px'}}>
               <Tooltip title='Here, a user may supply a sequence corresponding to a complete protein or a portion of that protein and identify which residue sites may be directly coupled with others.
@@ -318,6 +311,7 @@ const CoevolvingPairs = () => {
             </Button>
             </div>
           </form>
+          </ThemeProvider>
           {/* I'll add in a settings pane. Filtering the MSA, MSAutils whatever settings are needed., Bit Score */}
         </>
   );
