@@ -29,6 +29,9 @@ import UnifiedTopBar from './components/UnifiedTopBar';
 import ToggleBox from './components/ToggleBox';
 import './App.css';
 
+import labHero from './pages/labpic.png'; 
+
+
 import { Link } from 'react-router-dom';
 import { width } from '@fortawesome/free-brands-svg-icons/fa42Group';
 
@@ -52,6 +55,15 @@ function App() {
           <Route path="/" element={
           <>
             <div>
+            <section className="hero-section">
+  <div className="hero-image" style={{ backgroundImage: `url(${labHero})` }}>
+    <div className="hero-overlay">
+      <h1 className="hero-title">Coevolutionary Tools</h1>
+      <p className="hero-subtitle">Morcos Lab at UTD</p>
+    </div>
+  </div>
+</section>
+
             <UnifiedTopBar />
 
             </div>
