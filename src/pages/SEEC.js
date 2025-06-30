@@ -121,12 +121,13 @@ const SEEC = () => {
                     <Input type='number' onChange={handleStepsChange} placeholder='0-10,000' inputProps={{ min: 0, max: 10000 }} value={steps}/>
                   </FormControl>
                 </div>
+                <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, margin: '10px 20px' }}>
+                  Submit
+                </Button>
               </form>
             </Box>
 
-            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, margin: '10px 20px' }}>
-              Submit
-            </Button>
+
         </Box>
     );
 }

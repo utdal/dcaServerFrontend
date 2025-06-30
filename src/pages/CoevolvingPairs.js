@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import HomeButton from '../components/HomeButton';
 import { generateMsa, computeDca, MSA, mapResidues, generateContacts, uploadMsa, uploadPDB } from '../backend/api';
 import MSAInput from '../components/MSAInput';
@@ -204,7 +204,9 @@ const CoevolvingPairs = () => {
     const url = '/coevolving-pairs-results/?structure_contacts=' + contactsTask.id + '&mapped_di=' + residuesTask.id;
     window.open(url, '_blank');
   };
-
+  useEffect(()=>{
+    console.log(selectedFileTypes.Seed)
+  }, [selectedFileTypes])
   return (
     <>
        <UnifiedTopBar />
@@ -248,23 +250,6 @@ const CoevolvingPairs = () => {
             />
             </div>
             <div>
-
-              {selectedFileTypes.Seed ? <>
-                <h3 style={{marginTop:'40px'}}> MSA Generation Settings </h3>
-                <p style={{marginTop:'20px'}}>Max Number of Continuous Gaps (as percentage of MSA length):</p>
-                  <Slider
-                    defaultValue={defaultMaxGaps}
-                    value={maxContGaps}
-                    onChange={handleMaxContGapsChange}
-                    valueLabelDisplay="auto"
-                    step={1}
-                    min={0}
-                    max={100}
-                    style={{width: '30%', marginTop:'15px'}}
-                  />
-              </> : undefined}
-
-
               <h3 style={{marginTop:'40px'}}>PDB Settings</h3>
               <PDBSettings
                 distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange}
@@ -304,7 +289,27 @@ const CoevolvingPairs = () => {
                   }
                 </>
                 }
-              />
+                msaSettings={
+                  <Box>
+                <div style={{display:'flex', justifyContent:'center'}}>
+                  <p style={{width:'40vh', textAlign:'center'}}>Max Number of Continuous Gaps (as percentage of MSA length):</p>
+                </div>
+                <div style={{display:'flex', justifyContent:'center', marginTop:'15px'}}>
+                  <Slider
+                    defaultValue={defaultMaxGaps}
+                    value={maxContGaps}
+                    onChange={handleMaxContGapsChange}
+                    step={1}
+                    min={0}
+                    max={100}
+                    style={{width: '40%'}}
+                  />
+                  <p style={{color:'rgba(50, 50, 50, 0.4)', alignContent:'center', marginLeft:'10px'}}>{maxContGaps}</p>
+                </div>
+                  </Box>
+                }
+                renderMSA={selectedFileTypes.Seed}
+              ></AdvancedSettings>
 
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, margin: '10px 20px' }}>
               Submit

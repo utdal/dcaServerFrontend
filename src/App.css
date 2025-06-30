@@ -6,7 +6,8 @@
 .app-header { 
   background-color: #e87500; 
   margin-top: 30px;
-  color: #1f1f1f	; 
+  color: rgba(50, 50, 50, 0.836);
+  color: #1f1f1f	;
   position: fixed; 
   width: 100%;  
   height: 80px;
@@ -35,8 +36,8 @@
 nav ul { list-style-type: none; padding: 0; } 
 nav li { display: inline; margin: 0 15px; font-weight: 600; cursor: pointer; } 
 nav li.bold { font-weight: bold; } 
-main { flex: 1; padding: 20px; padding-top: 80px; margin-bottom: 20px; } 
-.web-servers { text-align: left; margin-top: 50px;}   
+main { flex: 1; padding: 20px; margin-top: 30px;} 
+.web-servers { text-align: left; margin-top: 0px;}   
 .web-servers h2 { margin-top: 0; } 
 .web-servers hr { border: 1px solid #1f1f1f; } 
 .server-cards { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 30px;} 
@@ -84,3 +85,4 @@ main { flex: 1; padding: 20px; padding-top: 80px; margin-bottom: 20px; }
 @media (min-width: 600px) { .footer-content { flex-direction: row; justify-content: space-between; width: 100%; } } 
 a { text-decoration: none; color: inherit; } 
 .hide-header-footer { display: none; } 
+

@@ -9,6 +9,7 @@ import {
   Tabs,
   Tab,
 } from '@mui/material'; 
+import { render } from '@testing-library/react';
 function TabPanel({ children, value, index }) {
   return (
     <div hidden={value !== index}>
@@ -17,7 +18,7 @@ function TabPanel({ children, value, index }) {
   );
 }
 
-const AdvancedSettings = ({caSettings}) => {
+const AdvancedSettings = ({caSettings, msaSettings, renderMSA}) => {
     const [display, SetDisplay] = useState(false);
     const [tabIndex, SetTabIndex]= useState(0);
     const handleDisplay=(e)=>{
@@ -41,11 +42,19 @@ const AdvancedSettings = ({caSettings}) => {
                             variant="fullWidth"
                         >
                             <Tab label="Coevolutionary Analysis Settings" />
+                            {renderMSA&&(
+                            <Tab label="MSA Generation Settings"></Tab>
+                            )}
                         </Tabs>
 
                         <TabPanel value={tabIndex} index={0}>
                             {caSettings}
                         </TabPanel>
+                        {renderMSA&&(
+                        <TabPanel value={tabIndex} index={1}>
+                            {msaSettings}
+                        </TabPanel>
+                        )}
                     </Paper>
                 </Collapse>          
             </div>

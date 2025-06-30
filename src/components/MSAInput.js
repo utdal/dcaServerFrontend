@@ -70,6 +70,7 @@ const MSAInput = ({ inputType, inputMSA, handleInputMSAChange, handleFileTypeCha
           />
         </RadioGroup>
       </FormControl>
+    
       </div>
       </>
   );

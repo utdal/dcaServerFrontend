@@ -27,6 +27,7 @@ import UTDLogo from './pages/UTDLogo.png';
 import ApiTest from './backend/ApiTest';
 import UnifiedTopBar from './components/UnifiedTopBar';
 import ToggleBox from './components/ToggleBox';
+
 import './App.css';
 
 import { Link } from 'react-router-dom';
