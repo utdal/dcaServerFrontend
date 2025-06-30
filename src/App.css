@@ -32,6 +32,7 @@
   margin-right: 20px;
 }
 
+
 .header-title {font-size: 20px; font-weight: bold; } 
 nav ul { list-style-type: none; padding: 0; } 
 nav li { display: inline; margin: 0 15px; font-weight: 600; cursor: pointer; } 
