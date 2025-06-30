@@ -16,20 +16,25 @@
     color: #e87500;
     text-decoration: none;
   }
-  
-  .nav-links {
-    display: flex;
-    gap: 24px;
-  }
-  
   .nav-links a {
     font-weight: 500;
     text-decoration: none;
-    color: #333;
+    color: #333 !important; 
+    background-color: transparent; 
     transition: color 0.2s ease;
+  }
+  
+  .nav-links a:visited {
+    color: #333; 
+  }
+  
+  .nav-links a:focus {
+    outline: none;
+    color: #e87500;
   }
   
   .nav-links a:hover {
     color: #e87500;
   }
+  
   
