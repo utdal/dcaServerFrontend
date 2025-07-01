@@ -1,74 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import { Form, useNavigate } from 'react-router-dom';
-
+import { uploadMsa } from '../backend/api';
 import{
-  CssBaseline,
   Box,
   Button,
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
-  Select,
-  InputLabel,
-  Input,
-  FormControl,
+  Typography,
   Tooltip,
-  Paper,
-  TextField,
-  MenuItem,
-  Slider
 } from '@mui/material';
-import './SEEC.css';
 import MSAInput from '../components/MSAInput';
 import TopBar from '../components/TopBar';
 import SEECGraph from '../components/SEECGraph';
-import TemperatureInput from '../components/TemperatureInput'
+import SequenceInput from '../components/sequence-input';
 import { Link } from 'react-router-dom';
+import './SEEC.css'
+import TemperatureInput from '../components/TemperatureInput';
+import StepsInput from '../components/StepsInput';
 
 const SEEC = () => {
     const navigate = useNavigate();
-    const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: true });
-    const [inputMSA, setInputMSA] = useState('');
-    const [inputFile, setInputFile] = useState(null);
+    const [msaFile, setMsaFile] = useState(null);
+    const [inputType, setInputType] = useState('AminoAcid');
+    const [sequence, setSequence] = useState('');
     const [temperature, SetTemperature] = useState(0); {/* Temperature in Kelvin */}
     const [steps, SetSteps] = useState(0);
     const allowed_letters= new Set(['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']);
 
-    
-    const handleFileTypeChange = (type) => {
-      setSelectedFileTypes((prev) => ({
-        ...prev,
-        MSA: type === 'MSA' ? true : false,
-        Seed: type === 'Seed' ? true : false,
-      }));
+    const handleFileChange = (event) => {
+      const file = event.target.files[0];
+      setMsaFile(file);
+      console.log("File uploaded:", file);
     };
 
-    const handleSubmit = async(e) =>{
-        e.preventDefault();
-        navigate('/seec-results');
-
-        return{
-
-        }
-    }
-    const handleInputMSAChange = (event) => {
-      if (selectedFileTypes.Seed){
-        if ([...event.target.value.toUpperCase()].every(char => allowed_letters.has(char))) {
-          setInputMSA(event.target.value.toUpperCase());
-        }
-      }
-      else setInputFile(event.target.files[0]);
-
-    };
-    const handleStepsChange=(e)=>{
-      if (e.target.value<=10000 && e.target.value>=0){
-        SetSteps(e.target.value);
-      }
-    }
     useEffect(()=>{
       console.log(steps);
     }, [steps]);
     
+
+    const handleSubmit = async(e) =>{
+        e.preventDefault();
+            {/*
+        const msa = await uploadMsa({ msa: msaFile });
+        let msaId = msa.id;
+
+        if(inputType==='AminoAcid'){
+          const seq_nucleotides=
+        }
+        const url = '/seec-results/?seec=' + contactsTask.id + '&hamiltonians=' + residuesTask.id;
+        window.open(url, '_blank');
+           */}
+    }
+
     return ( 
         <Box>
         <TopBar>
@@ -84,7 +65,7 @@ const SEEC = () => {
             </li>
         </TopBar>
             <div style={{marginTop:'50px'}}>
-              <Tooltip title='Sequence evolution with epistatic contributions'>
+              <Tooltip title='Simulates protein evolution using inferred epistasis from natural protein families.'>
                 <Button variant='text'
                 sx={{
                   background: 'none',
@@ -94,36 +75,73 @@ const SEEC = () => {
                   textTransform: 'none',
                   color: 'inherit',
                   boxShadow: 'none',
-                  fontSize: '40px',
+                  fontSize: '30px',
                   fontWeight: 'bold'
                 }}
                 >
-                  SEEC
+                  Sequence evolution with epistatic contributions
                 </Button>
               </Tooltip>
             </div>
             <Box>
-              <form onSubmit={handleSubmit}>
-                <div style={{marginTop:"40px"}}>
-                  <MSAInput
-                    inputType={selectedFileTypes.Seed ? 'Seed' : 'MSA'}
-                    inputMSA={selectedFileTypes.Seed ? inputMSA : inputFile}
-                    handleInputMSAChange={handleInputMSAChange}
-                    handleFileTypeChange={handleFileTypeChange}
-                  />
-                </div>
-                <div style={{display:'flex', justifyContent:'center', marginTop:'30px'}}>
-                  <TemperatureInput temperature={temperature} SetTemperature={SetTemperature}/>
-                </div>
-                <div style={{display:'flex', justifyContent:'center', marginTop:'30px'}}>
-                  <FormControl style={{width:'100px', marginLeft:'40px'}}>
-                    <InputLabel>Steps</InputLabel>
-                    <Input type='number' onChange={handleStepsChange} placeholder='0-10,000' inputProps={{ min: 0, max: 10000 }} value={steps}/>
-                  </FormControl>
-                </div>
-                <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, margin: '10px 20px' }}>
+              <form onSubmit={handleSubmit} >
+                <Box className="container-seec">
+                  <div className="cs-seq-input">
+                    <Box style={{ width: '40%' }}>
+                      <SequenceInput inputType={inputType} setInputType={setInputType} sequence={sequence} setSequence={setSequence}/>
+                    </Box>
+                  </div>
+                  <div className='msa-description'>
+                    <h5>Upload MSA in FASTA format</h5>
+                  </div>
+                  <div className="cs-msa">
+                    <div>
+                    <Button 
+                      variant="contained" 
+                      component="label" 
+                      onChange={handleFileChange}
+                      sx={{
+                        backgroundColor:'transparent', 
+                        color:'#1f1f1f',
+                        '&:hover': {
+                          backgroundColor: 'transparent', 
+                          boxShadow: '0px 0px 10px rgba(0,0,0,0.3)'}
+                      }}
+                    >
+                      Upload MSA
+                      <input
+                        type="file"
+                        hidden
+                      />
+                    </Button>
+                    </div>
+                    <div>
+                    {msaFile && (
+                      <Typography fontStyle='italic' variant="body2" sx={{ marginTop: 1, color: '#1f1f1f86' }}>
+                        Selected file: {msaFile.name}
+                      </Typography>
+                    )}
+                    </div>
+                  </div>
+                  
+                  <div className='temp-description'>
+                    <h5>Temperature for evolving the sequence</h5>
+                  </div>
+                  <div className="cs-temp-input">
+                    <TemperatureInput temperature={temperature} SetTemperature={SetTemperature}/>
+                  </div>
+                  <div className='steps-description'>
+                    <h5>Number of Evolutionary Steps</h5>
+                  </div>
+                  <div className="cs-steps">
+                    <StepsInput steps={steps} SetSteps={SetSteps}/>
+                  </div>
+                </Box>
+                <Box sx={{display:'flex', justifyContent:'flex-end', m:'50px'}}>
+                <Button type="submit" variant="contained" color="warning">
                   Submit
                 </Button>
+                </Box>
               </form>
             </Box>
 

@@ -2,6 +2,7 @@ import React from 'react';
 import SEECGraph from '../components/SEECGraph';
 import TopBar from '../components/TopBar';
 import { Link } from 'react-router-dom';
+import './SEECResults.css';
 
 
 const SEECResults = () => {

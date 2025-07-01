@@ -37,11 +37,11 @@
 nav ul { list-style-type: none; padding: 0; } 
 nav li { display: inline; margin: 0 15px; font-weight: 600; cursor: pointer; } 
 nav li.bold { font-weight: bold; } 
-main { flex: 1; padding: 20px; margin-top: 30px;} 
-.web-servers { text-align: left; margin-top: 0px;}   
+main { flex: 1; padding: 20px;} 
+.web-servers { text-align: left; margin-bottom: 30px;}   
 .web-servers h2 { margin-top: 0; } 
 .web-servers hr { border: 1px solid #1f1f1f; } 
-.server-cards { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 30px;} 
+.server-cards { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;} 
 .pretty-footer {
   background-color: #fdf7f3;
   border-top: 1px solid #e0e0e0;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
-const MSAInput = ({ inputType, inputMSA, handleInputMSAChange, handleFileTypeChange }) => {
+const MSAInput = ({ inputType, inputMSA, handleInputMSAChange, handleFileTypeChange}) => {
   const handleInputChange = (event) => {
     
   }

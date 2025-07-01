@@ -1,51 +1,49 @@
-.seec-layout{
-    margin-top: 40px;
+.container-seec{
     display: grid;
-    grid-template-areas:"seec-title seec-title"
-                        "seec-graph hmm-graph"
-                        "seec-analysis seec-analysis";
-    grid-template-columns: 3fr 1fr;
+    grid-template-areas: 'cs-seq-input cs-seq-input cs-seq-input'
+                ' temp-description msa-description steps-description'
+               ' cs-temp-input cs-msa cs-steps ';
+    grid-template-columns: 1fr 1fr 1fr;
+    gap:1;
 }
-.seec-title{
-    grid-area: seec-title;
-    justify-content: center;
-    margin-bottom: 30px;
-}
-.seec-graph {
-    grid-area: seec-graph;
+.cs-seq-input, .cs-msa, .cs-temp-input, .cs-steps{
     display: flex;
-    flex-direction: column;
-    padding-right: 20px;
-}
-
-
-.hmm-graph{
-    grid-area: hmm-graph;
-
-}
-.seec-analysis{
-    grid-area:seec-analysis;
     justify-content: center;
-    border: 1px dashed blue;
+    align-items: center;
+}
+.temp-description, .msa-description, .steps-description{
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 10px;
 
 }
-.seec-button, .seec-unavailable{
-    background-color: rgb(223, 223, 223);
-    color: rgb(24, 24, 24);
-    border-radius: 8px;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: ease 0.2s;
-    margin: 5px;
-    margin-bottom: 20px;
+.temp-description{
+    grid-area: temp-description;
+    justify-content: flex-end;
+
 }
-.seec-unavailable{
-    background-color: rgba(95, 95, 95, 0.246);
-    color: rgba(97, 97, 97, 0.465);
-    cursor: not-allowed;
+.msa-description{
+    grid-area: msa-description;
 }
-.seec-button:hover{
-    color: white;
-    background-color: black;
+.steps-description{
+    grid-area: steps-description;
+    justify-content: flex-start;
+}
+.cs-seq-input{
+    margin-top: 10px;
+    grid-area: cs-seq-input;
+}
+.cs-msa{
+    grid-area: cs-msa;
+    flex-direction: column;
+}
+.cs-temp-input{
+    justify-content: flex-end;
+    grid-area: cs-temp-input;
+}
+.cs-steps{
+    justify-content: flex-start;
+    
+    grid-area: cs-steps;
 }

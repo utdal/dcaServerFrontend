@@ -52,11 +52,7 @@ function App() {
           <Route path="/test" element={<ApiTest />} />
           <Route path="/" element={
           <>
-            <div>
-
             <UnifiedTopBar />
-
-            </div>
             <main>
               <section className="web-servers">
                 <h2>Tools</h2>

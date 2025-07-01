@@ -1,6 +1,6 @@
-const apiBaseUrl = 'http://localhost:8000/api/';
+//const apiBaseUrl = 'http://localhost:8000/api/';
 //const apiBaseUrl = 'http://18.213.103.176/api/';
-
+const apiBaseUrl ='http://127.0.0.1:8000/api/';
 
 class APIObject {
     objectName = null;
@@ -339,9 +339,8 @@ async function startTask(endpoint, data) {
             body: JSON.stringify(data)
         }
     );
-
     if (!response.ok) {
-        throw new Error('Bad network response');
+        throw new Error('Bad network response{}');
     }
 
     const result = await response.json();
