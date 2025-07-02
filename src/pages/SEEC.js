@@ -30,14 +30,17 @@ const SEEC = () => {
       setMsaFile(file);
       console.log("File uploaded:", file);
     };
-
+    
     useEffect(()=>{
       console.log(steps);
     }, [steps]);
     
-
+    useEffect(()=>{
+      
+    },[]);
     const handleSubmit = async(e) =>{
         e.preventDefault();
+
             {/*
         const msa = await uploadMsa({ msa: msaFile });
         let msaId = msa.id;
@@ -48,6 +51,7 @@ const SEEC = () => {
         const url = '/seec-results/?seec=' + contactsTask.id + '&hamiltonians=' + residuesTask.id;
         window.open(url, '_blank');
            */}
+        navigate('/seec-results');
     }
 
     return ( 
