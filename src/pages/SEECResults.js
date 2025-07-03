@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import './SEECResults.css';
 import {fileReader} from '../functions/fileReader'
 import SEECTable from "../components/SEECTable";
-
+import D3Graph from '../components/D3Graph';
 
 
 const SEECResults = () => {
@@ -17,7 +17,7 @@ const SEECResults = () => {
     useEffect(() => {
     async function fetchAndParse() {
         try {
-        const response = await fetch('precalculated-outputs.txt');
+        const response = await fetch('precalculated-outputs.json');
         const text = await response.text();
         const parsed = fileReader(text);
         setHamiltonians(parsed[0].hamiltonians);
@@ -54,13 +54,15 @@ const SEECResults = () => {
                     <div>
                         {steps.length > 0 && (
                             <>
-                        <SEECGraph
+                                <D3Graph selectedMap={selectedMap} SetSelectedMap={SetSelectedMap}/>
+
+                        {/*<SEECGraph
                             hamiltonians={hamiltonians}
                             steps={steps}
                             aminoacids={aminoacids}
                             selectedMap={selectedMap}
                             SetSelectedMap={SetSelectedMap}
-                        />
+                        />*/}
                         <div style={{justifyContent:'center', alignItems:'center', margin:'40px'}}>
                                 <SEECTable hamiltonians={hamiltonians} selectedMap={selectedMap} aminoacids={aminoacids}></SEECTable>
                         </div>
@@ -78,6 +80,7 @@ const SEECResults = () => {
                 </div>
             </div>
         </div>
+        
      );
 }
 export default SEECResults;

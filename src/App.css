@@ -45,7 +45,6 @@ main { flex: 1; padding: 20px;}
 .pretty-footer {
   background-color: #fdf7f3;
   border-top: 1px solid #e0e0e0;
-  padding: 20px 40px;
   font-size: 14px;
   color: #333;
   display: flex;
@@ -53,25 +52,39 @@ main { flex: 1; padding: 20px;}
 }
 
 .footer-content {
+  margin: 20px;
   width: 100%;
-  max-width: 1200px;
-  display: flex;
+  display: grid;
+  grid-template-areas: "footer-left footer-center footer-right";
+  grid-template-columns: 1fr 2fr 1fr;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
 }
 
 .footer-left a,
-.footer-center a {
+.footer-right a {
   text-decoration: none;
   color: #666;
 }
-
-.footer-center {
-  margin: 10px 0;
+.footer-left{
+  width:100%;
+  grid-area: footer-left;
+  display: flex;
+  justify-content: center;
+  margin-top:20px;
 }
 
-.footer-right img {
+.footer-right {
+  grid-area: footer-right;
+  display: flex;
+  justify-content: center;
+  margin-top:20px;
+}
+.footer-center{
+  grid-area: footer-center;
+}
+.footer-center img {
   height: 40px;
   margin-left: 20px;
   transition: transform 0.2s ease;
@@ -81,8 +94,9 @@ main { flex: 1; padding: 20px;}
   transform: scale(1.1);
 }
 
-.utd-logo { width: 150px; height: auto; } 
-.nsf-logo{width: 80px; padding-left: 20px;}
+.utd-logo { width: 100px; height: auto; }
+.rice-logo{ width:100px;height:auto} 
+.nsf-logo{width: 50px; height:auto;}
 @media (min-width: 600px) { .footer-content { flex-direction: row; justify-content: space-between; width: 100%; } } 
 a { text-decoration: none; color: inherit; } 
 .hide-header-footer { display: none; } 

@@ -20,7 +20,7 @@ const SEECTable = ({hamiltonians, selectedMap, aminoacids}) => {
     return ( 
         <Box>
             <Paper elevation={5} style={{maxHeight: '300px', overflowY:'auto'}}>            
-                <Table stickyHeader='true' sx={{maxWidth:'100%'}}>
+                <Table stickyHeader={true} sx={{maxWidth:'100%'}}>
                     <TableHead>
                         <TableRow>
                         <TableCell>Hamiltonian</TableCell>
