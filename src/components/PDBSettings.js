@@ -7,7 +7,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyChange, chain1, handleChain1Change, chain2, handleChain2Change, isAuthChain, handleIsAuthChainChange, isAuthResidue, handleIsAuthResidueChange, selectedPDBTypes }) => {
   return (
     <Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 25, flexDirection: 'row'}}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 5, flexDirection: 'row'}}>
+          <Box width={100} />
           <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 2}}>
             <p>Structural Contact Distance Threshold:</p>
             <TextField
@@ -18,6 +19,7 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
             </TextField>
           </Box>
           
+          <Box width={100} />
 
           <Box sx={{ display: 'flex', justifyContent: 'center', gap: 5, flexDirection: 'row'}}>
             <TextField
@@ -27,13 +29,13 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
               value={chain1}
               onChange={handleChain1Change}
             />
-            <TextField
+            {/* <TextField
               label="2 (optional)"
               variant='filled'
               name="chainId"
               value={chain2}
               onChange={handleChain2Change}
-            />
+            /> */}
           </Box>
         </Box>
 
@@ -68,6 +70,15 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
       <FormGroup sx={{ alignItems: 'center' }}>
           <FormControlLabel control={<Checkbox checked={caOnly} onChange={handleCaOnlyChange}/>} label="Alpha-carbon contacts only" />
       </FormGroup>
+    </Box>
+  );
+};
+
+export default PDBSettings;
+
+
+
+
 {/* </Box>
         <FormControlLabel
   control={
@@ -83,15 +94,5 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
   labelPlacement="start"
 />
 */}
-    </Box> 
-  );
-};
-
-export default PDBSettings;
-
-
-
-
-
 
 
