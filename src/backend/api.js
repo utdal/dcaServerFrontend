@@ -423,11 +423,13 @@ export async function mapResidues({ dcaId, pdbId, chain1, chain2, authChainIdSup
 }
 
 
-export async function generateContacts({ pdbId, caOnly, distThresh, isCIF }) {
+export async function generateContacts({ pdbId, caOnly, distThresh, isCIF, authChainIdSupplied, authResidueIdSupplied}) {
     return await startTask('generate-contacts', {
         pdb_id: pdbId,
         ca_only: caOnly,
         threshold: distThresh,
-        is_cif: isCIF
+        is_cif: isCIF,
+        auth_chain_id_supplied: authChainIdSupplied,
+        auth_residue_id_supplied: authResidueIdSupplied
     });
 }

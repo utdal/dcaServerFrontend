@@ -184,7 +184,9 @@ const CoevolvingPairs = () => {
       pdbId: pdbId,
       caOnly: caOnly,
       distThresh: Number(distThresh),
-      isCIF: selectedPDBTypes.CIF
+      isCIF: selectedPDBTypes.CIF,
+      authChainIdSupplied: isAuthChain,
+      authResidueIdSupplied: isAuthResidue
     });
 
     const url = '/coevolving-pairs-results/?structure_contacts=' + contactsTask.id + '&mapped_di=' + residuesTask.id;
