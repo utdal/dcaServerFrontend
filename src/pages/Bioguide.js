@@ -6,12 +6,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import UTDLogo from './UTDLogo.png';
 import UnifiedTopBar from '../components/UnifiedTopBar';
 import { motion } from 'framer-motion';
+import nsfLogo from './nsfLogo.webp';
+import RiceLogo from './rice-logo.png';
 
 const sectionStyle = {
   backgroundColor: '#f4f8fc',
   borderRadius: '16px',
   padding: '30px',
-  margin: '30px auto',
+  margin: '50px auto',
   maxWidth: '900px',
   boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
 };
@@ -41,9 +43,9 @@ const imageStyle = {
 
 function Bioguide() {
   return (
-    <div style={{ backgroundColor: '#eaf1f8', minHeight: '100vh', paddingBottom: '80px' }}>
+    <div style={{ backgroundColor: '#eaf1f8', minHeight: '100vh'}}>
       <UnifiedTopBar />
-      <div style={{ paddingTop: '100px', paddingLeft: '20px', paddingRight: '20px' }}>
+      <main>
 
         <motion.div style={sectionStyle} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <h2 style={{ ...headingStyle, textAlign: 'center' }}>Guide for Biologists</h2>
@@ -71,38 +73,40 @@ function Bioguide() {
           To generate an MSA or DCA based off of a protein sequence, click on the MSA-DCA tile on the front page. You’ll then be directed to enter your protein sequence and generate an MSA and DCA. The default settings are configured to generate both, but you can manually specify which ones to generate and where to store task IDs for these products in the MSA-DCA settings. After clicking submit, you’ll be faced with a task page showing you all of your currently running tasks. When they complete, you can click on them and either download your MSA or open a page displaying your DCA results. To access past DCAs, go to the front page and click on the DCA Results tile. 
           </p>
         </motion.div>
-      </div>
+      </main>
 
       <footer style={{
         backgroundColor: '#C4CEDC',
         color: '#333',
         padding: '20px 40px',
-        display: 'flex',
+        display: 'grid',
+        gridTemplateColumns: '1fr 2fr 1fr',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
         alignItems: 'center',
         fontSize: '16px',
-        borderTop: '3px solid #ff6600'
+        borderTop: '3px solid #ff6600',
       }}>
-        <div style={{ flex: '1' }}>
+        <div style={{ flex: '1', textAlign:'left'}}>
           <p style={{ margin: 0 }}>Designed by Morcos Lab</p>
         </div>
-        <div style={{ flex: '2', textAlign: 'center' }}>
+        <div style={{ flex: '1', textAlign: 'center'}}>
+          <a href="https://www.utdallas.edu/" target="_blank" rel="noopener noreferrer">
+            <img src={UTDLogo} alt="UTD Logo" className="utd-logo" />
+          </a>
+          <a href="https://www.rice.edu/">
+            <img src={RiceLogo} alt="Rice Logo" className='rice-logo'/>
+          </a>
+          <a href="https://nsf.gov/" target="_blank" rel="noopener noreferrer">
+            <img src={nsfLogo} alt="NSF Logo" className="nsf-logo" />
+          </a>
+        </div>
+        <div style={{textAlign: 'right'}}>
           <a href="mailto:insert@gmail.com" style={{ margin: '0 15px', color: '#333', textDecoration: 'none' }}>
             insert@gmail.com
           </a>
-          <a href="https://morcoslaboratory.org/" target="_blank" rel="noreferrer" style={{ margin: '0 15px', color: '#333', textDecoration: 'none' }}>
-            About the Lab
-          </a>
-          <a href="https://www.moleculego.com/" target="_blank" rel="noreferrer" style={{ margin: '0 15px', color: '#333', textDecoration: 'none' }}>
-            <FontAwesomeIcon icon={faAtom} /> MoleculeGo
-          </a>
         </div>
-        <div style={{ flex: '1', textAlign: 'right' }}>
-          <a href="https://www.utdallas.edu/" target="_blank" rel="noreferrer">
-            <img src={UTDLogo} alt="UTD Logo" style={{ height: '40px' }} />
-          </a>
-        </div>
+
       </footer>
     </div>
   );

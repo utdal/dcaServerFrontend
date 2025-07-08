@@ -6,6 +6,10 @@ import './SEECResults.css';
 import {fileReader} from '../functions/fileReader'
 import SEECTable from "../components/SEECTable";
 import D3Graph from '../components/D3Graph';
+import {
+    Button,
+    Paper
+} from "@mui/material";
 
 
 const SEECResults = () => {
@@ -47,31 +51,32 @@ const SEECResults = () => {
                     <h1>SEEC Results</h1>
 
                 </div>
-                <div className='seec-graph'>
-                    <h3>
-                        Evolution of Sequence
-                    </h3>
+                <div className=''>
                     <div>
                         {steps.length > 0 && (
                             <>
-                                <D3Graph selectedMap={selectedMap} SetSelectedMap={SetSelectedMap}/>
-
-                        {/*<SEECGraph
-                            hamiltonians={hamiltonians}
-                            steps={steps}
-                            aminoacids={aminoacids}
-                            selectedMap={selectedMap}
-                            SetSelectedMap={SetSelectedMap}
-                        />*/}
-                        <div style={{justifyContent:'center', alignItems:'center', margin:'40px'}}>
+                                <div style={{width:'100%', display:'flex', justifyContent:'center'}} >
+                                <Paper elevation={3} sx={{width:'90%', marginTop:'30px'}}>
+                                    <div>
+                                        <D3Graph selectedMap={selectedMap} SetSelectedMap={SetSelectedMap} hamiltonians={hamiltonians} steps={steps}/>
+                                    </div>
+                                    <div>
+                                    </div>
+                                </Paper>
+                                </div>
+                        
+                        <div style={{marginTop:'30px'}}>                        
+                            <Button color="warning" onClick={()=>{console.log(selectedMap); SetSelectedMap([])}}>
+                            Reset Selection
+                            </Button>                        
+                        </div>
+                        <div style={{justifyContent:'center', alignItems:'center', margin:'30px'}}>
                                 <SEECTable hamiltonians={hamiltonians} selectedMap={selectedMap} aminoacids={aminoacids}></SEECTable>
                         </div>
                         </>
                         )}
                         
                     </div>
-
-
                 </div>
                 <div className="seec-analysis">
                     <h2>

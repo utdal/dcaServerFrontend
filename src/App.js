@@ -33,7 +33,7 @@ import './App.css';
 
 import { Link } from 'react-router-dom';
 import { width } from '@fortawesome/free-brands-svg-icons/fa42Group';
-
+import {Button} from '@mui/material';
 function App() {
   return (
     <BrowserRouter>
@@ -144,19 +144,18 @@ function App() {
       </a>
     </div>
     <div className="footer-center">
-      <div>
         <a href="https://www.utdallas.edu/" target="_blank" rel="noopener noreferrer">
           <img src={UTDLogo} alt="UTD Logo" className="utd-logo" />
         </a>
         <a href="https://www.rice.edu/">
           <img src={RiceLogo} alt="Rice Logo" className='rice-logo'/>
         </a>
-      </div>
-      <a href="https://nsf.gov/" target="_blank" rel="noopener noreferrer">
+        <a href="https://nsf.gov/" target="_blank" rel="noopener noreferrer">
         <img src={nsfLogo} alt="NSF Logo" className="nsf-logo" />
       </a>
     </div>
   </div>
+
 </footer>
 
           </>
