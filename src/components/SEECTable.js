@@ -1,9 +1,9 @@
 import React from 'react';
-import {Box, Table, TableBody, TableCell, TableHead, TableRow, Paper} from '@mui/material'
+import {Button, Box, Table, TableBody, TableCell, TableHead, TableRow, Paper} from '@mui/material'
 const SEECTable = ({hamiltonians, selectedMap, aminoacids}) => {
     const exportTable =()=>{
         const headers = ["Hamiltonian", "Step", "Sequence"];
-        const rows = selectedMap.map(entry => [entry.y, entry.x, entry.id]);
+        const rows = selectedMap.map((entry, idx) => [hamiltonians[entry], entry, aminoacids[entry]]);
 
         let csvContent = "data:text/csv;charset=utf-8," 
             + headers.join(",") + "\n"
@@ -50,7 +50,7 @@ const SEECTable = ({hamiltonians, selectedMap, aminoacids}) => {
                 </Table>
             </Paper>
             {selectedMap.length>0&&(
-                <button className='seec-button' onClick={exportTable}>Export Table</button>)
+                <Button color='warning' variant='contained' onClick={exportTable} sx={{mt:'15px'}}>Export Table</Button>)
             }
         </Box>
     );

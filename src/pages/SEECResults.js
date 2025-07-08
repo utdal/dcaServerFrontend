@@ -1,13 +1,15 @@
+import * as d3 from "d3";
 import React, { useEffect, useState } from 'react';
-import SEECGraph from '../components/SEECGraph';
 import TopBar from '../components/TopBar';
 import { Link } from 'react-router-dom';
 import './SEECResults.css';
 import {fileReader} from '../functions/fileReader'
 import SEECTable from "../components/SEECTable";
-import D3Graph from '../components/D3Graph';
+import CompleteGraph from '../components/CompleteGraph';
+import SelectedGraph from '../components/SelectedGraph';
 import {
     Button,
+
     Paper
 } from "@mui/material";
 
@@ -17,7 +19,14 @@ const SEECResults = () => {
     const [hamiltonians, setHamiltonians] = useState([]); 
     const [aminoacids, setAminoacids] = useState([]);
     const [steps, setSteps] = useState([]);
+    const [data, setData] = useState([]);
 
+    useEffect(() => {
+        setData(steps.map((step, i) => ({
+            step,
+            hamiltonian: hamiltonians[i],
+        })));
+    }, [steps, hamiltonians]);
     useEffect(() => {
     async function fetchAndParse() {
         try {
@@ -57,15 +66,19 @@ const SEECResults = () => {
                             <>
                                 <div style={{width:'100%', display:'flex', justifyContent:'center'}} >
                                 <Paper elevation={3} sx={{width:'90%', marginTop:'30px'}}>
-                                    <div>
-                                        <D3Graph selectedMap={selectedMap} SetSelectedMap={SetSelectedMap} hamiltonians={hamiltonians} steps={steps}/>
+                                    <div style={{width:'100%'}}>
+                                        <CompleteGraph SetSelectedMap={SetSelectedMap} hamiltonians={hamiltonians} steps={steps} data={data}/>
                                     </div>
-                                    <div>
+                                    {selectedMap.length>0&&(
+                                    <div style={{width:'100%', marginTop: '30px'}}> 
+                                        <SelectedGraph rawData={data} selectedMap={selectedMap}/>
                                     </div>
+                                    )}
+                                    {console.log(selectedMap.length)}
                                 </Paper>
                                 </div>
                         
-                        <div style={{marginTop:'30px'}}>                        
+                        <div style={{marginTop:'15px'}}>                        
                             <Button color="warning" onClick={()=>{console.log(selectedMap); SetSelectedMap([])}}>
                             Reset Selection
                             </Button>                        
@@ -77,11 +90,6 @@ const SEECResults = () => {
                         )}
                         
                     </div>
-                </div>
-                <div className="seec-analysis">
-                    <h2>
-                        Analysis
-                    </h2>
                 </div>
             </div>
         </div>

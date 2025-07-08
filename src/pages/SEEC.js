@@ -9,7 +9,6 @@ import{
 } from '@mui/material';
 import MSAInput from '../components/MSAInput';
 import TopBar from '../components/TopBar';
-import SEECGraph from '../components/SEECGraph';
 import SequenceInput from '../components/sequence-input';
 import { Link } from 'react-router-dom';
 import './SEEC.css'

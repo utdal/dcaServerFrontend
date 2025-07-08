@@ -1,6 +1,6 @@
 const apiBaseUrl = 'http://localhost:8000/api/';
-//const apiBaseUrl = 'http://18.213.103.176/api/';
-//const apiBaseUrl ='http://127.0.0.1:8000/api/';
+// const apiBaseUrl = 'http://18.213.103.176/api/';
+
 
 class APIObject {
     objectName = null;
@@ -339,8 +339,9 @@ async function startTask(endpoint, data) {
             body: JSON.stringify(data)
         }
     );
+
     if (!response.ok) {
-        throw new Error('Bad network response{}');
+        throw new Error('Bad network response');
     }
 
     const result = await response.json();
@@ -422,11 +423,13 @@ export async function mapResidues({ dcaId, pdbId, chain1, chain2, authChainIdSup
 }
 
 
-export async function generateContacts({ pdbId, caOnly, distThresh, isCIF }) {
+export async function generateContacts({ pdbId, caOnly, distThresh, isCIF, authChainIdSupplied, authResidueIdSupplied}) {
     return await startTask('generate-contacts', {
         pdb_id: pdbId,
         ca_only: caOnly,
         threshold: distThresh,
-        is_cif: isCIF
+        is_cif: isCIF,
+        auth_chain_id_supplied: authChainIdSupplied,
+        auth_residue_id_supplied: authResidueIdSupplied
     });
 }

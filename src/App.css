@@ -52,7 +52,7 @@ main { flex: 1; padding: 20px;}
 }
 
 .footer-content {
-  margin: 20px;
+  margin-top: 20px;
   width: 100%;
   display: grid;
   grid-template-areas: "footer-left footer-center footer-right";
@@ -60,6 +60,7 @@ main { flex: 1; padding: 20px;}
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
+  margin-bottom: 0px;
 }
 
 .footer-left a,
