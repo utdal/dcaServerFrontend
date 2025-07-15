@@ -40,6 +40,20 @@ const CoevolvingPairs = () => {
   const [theta, setTheta] = useState(defaultTheta);
   const [analysisMethod, setAnalysisMethod] = useState('mfDCA');
 
+
+  const isValidNumber = (val) => val.toString().trim() !== '' && !isNaN(Number(val));
+
+  const isFormValid =
+    (inputMSA.trim() !== '' || inputFile !== null) &&
+    (inputPDBID.trim() !== '' || inputPDBFile !== null) &&
+    chain1.trim() !== '' &&
+    distThresh.trim() !== '' &&
+    theta.toString().trim() !== '' &&
+    analysisMethod.trim() !== '' &&
+    isValidNumber(distThresh) &&
+    ECutoff !== '-';
+  
+
   const handleFileTypeChange = (type) => {
     setSelectedFileTypes((prev) => ({
       ...prev,
@@ -105,7 +119,7 @@ const CoevolvingPairs = () => {
   };
 
   const handleDistThreshChange = (event) => {
-    if (!isNaN(event.target.value) || event.target.value === '' || event.target.value === '-') {
+    if ((!isNaN(event.target.value) || event.target.value === '') && (!event.target.value.includes('-'))) {
       setDistThresh(event.target.value);
     }
   };
@@ -263,7 +277,7 @@ const CoevolvingPairs = () => {
                 selectedPDBTypes={selectedPDBTypes} />
             </Box>
 
-            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={!isFormValid}>
               Submit
             </Button>
           </form>
