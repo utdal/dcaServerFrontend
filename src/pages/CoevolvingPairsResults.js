@@ -9,6 +9,7 @@ import { Task, DCA, MappedDi, StructureContacts } from '../backend/api';
 import MolViewer from '../components/MolViewer';
 import { CirclePlot } from '../components/CirclePlot';
 import ChainSelector from '../components/ChainSelector';
+import { use } from 'react';
 
 const CoevolvingPairsResults = () => {
     const [loading, setLoading] = useState(true);
@@ -42,7 +43,7 @@ const CoevolvingPairsResults = () => {
                     const task = await Task.fetch(dcaId);
                     setLoadingMessage('Running DCA...');
                     await task.waitForCompletion();
-                    setDca(await DCA.fetch(dcaId));
+                    setDca(await DCA.fetch(dcaId));   
                 }
                 if (mappedDiId) {
                     const task = await Task.fetch(mappedDiId);
@@ -76,6 +77,15 @@ const CoevolvingPairsResults = () => {
         }
         fetchData();
     }, [dcaId, mappedDiId, structueContactsId]);
+    useEffect(() => {
+        console.log(dca)
+    }, [dca])
+    useEffect(() => {
+        console.log(mappedDi)
+    }, [mappedDi])
+    useEffect(() => {
+        console.log(structueContactsId)
+    }, [structueContactsId])
 
     const toggleSection = (section) => {
         setCollapsedSections(prevState => ({
@@ -95,7 +105,7 @@ const CoevolvingPairsResults = () => {
         header: {
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: '#0D47A1',
+            backgroundColor: '#e87500',
             padding: '15px 25px',
             fontSize: '28px',
             fontWeight: 'bold',
@@ -111,6 +121,7 @@ const CoevolvingPairsResults = () => {
             // position: 'fixed',
             // top: 0,
             // left: 0,
+            color: '#e87500'
         },
         resultsSection: {
             display: 'flex',
@@ -133,8 +144,8 @@ const CoevolvingPairsResults = () => {
         heading: {
             fontSize: '24px',
             marginBottom: '15px',
-            color: '#0D47A1',
-            borderBottom: '2px solid #0D47A1',
+            color: '#e87500',
+            borderBottom: '2px solid #e87500',
             paddingBottom: '5px',
             cursor: 'pointer',
             display: 'flex',

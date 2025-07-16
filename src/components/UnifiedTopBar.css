@@ -10,6 +10,7 @@
     top: 0;
     z-index: 1000;
   }
+
   
 .site-title {
   font-size: 24px;
@@ -29,7 +30,20 @@
   color: #333;
   font-size: 12px;
 }
-
 .nav-links-utb a:hover, .nav-links-utb p:hover{
-  color: #e87500;
+  color: #e87400b9;
+}
+
+@media(prefers-color-scheme: dark){
+  .site-title {
+    color: #fdf7f3;
+  }
+  .unified-header{
+    color: #fdf7f3;
+    background-color: rgba(32,33,36,255);
+    box-shadow: rgba(0,0,0,0.5) 0px 7px 29px 0px;  
+  }
+  .nav-links-utb a, .nav-links-utb p{
+      color: #fdf7f3;
+  }
 }

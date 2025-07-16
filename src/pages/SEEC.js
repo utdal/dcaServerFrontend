@@ -20,8 +20,7 @@ const SEEC = () => {
     const [msaFile, setMsaFile] = useState(null);
     const [inputType, setInputType] = useState('AminoAcid');
     const [sequence, setSequence] = useState('');
-    const [temperature, SetTemperature] = useState(0); {/* Temperature in Kelvin */}
-    const [steps, SetSteps] = useState(0);
+    const [steps, setSteps] = useState(0);
     const allowed_letters= new Set(['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']);
 
     const handleFileChange = (event) => {
@@ -37,21 +36,79 @@ const SEEC = () => {
     useEffect(()=>{
       
     },[]);
-    const handleSubmit = async(e) =>{
-        e.preventDefault();
+  const [ntSequence, setNtSequence] = useState("");
+  const [temperature, setTemperature] = useState(1.0);
+  const [taskId, setTaskId] = useState(null);
+  const [simulationId, setSimulationId] = useState(null);
+  const [result, setResult] = useState(null);
+  const [polling, setPolling] = useState(false);
+  const [error, setError] = useState(null);
 
-            {/*
-        const msa = await uploadMsa({ msa: msaFile });
-        let msaId = msa.id;
+  const API_BASE = "http://localhost:8000/api/evolution-simulations/";
 
-        if(inputType==='AminoAcid'){
-          const seq_nucleotides=
-        }
-        const url = '/seec-results/?seec=' + contactsTask.id + '&hamiltonians=' + residuesTask.id;
-        window.open(url, '_blank');
-           */}
-        navigate('/seec-results');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!msaFile) {
+      setError("Please select an MSA file.");
+      return;
     }
+    if (!sequence.trim()) {
+      setError("Please enter nucleotide sequence.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("msa_file", msaFile);
+    formData.append("nt_sequence", sequence);
+    formData.append("steps", steps);
+    formData.append("temperature", temperature);
+
+    try {
+      const response = await fetch(API_BASE, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        setError(errData.error || "Failed to start simulation.");
+        return;
+      }
+
+      const data = await response.json();
+      console.log("Simulation started:", data.simulation_id);
+      navigate(`/seec-results/?resultID=${data.simulation_id}`);
+    } catch (err) {
+      setError("Network error: " + err.message);
+    }
+  };
+
+
+  useEffect(() => {
+    if (!polling || !simulationId) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`${API_BASE}${simulationId}/`);
+        if (!res.ok) throw new Error("Failed to fetch simulation results.");
+        const data = await res.json();
+
+        if (data.completed) {
+          setResult(data);
+          setPolling(false);
+        }
+      } catch (e) {
+        setError(e.message);
+        setPolling(false);
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [polling, simulationId]);
+  useEffect(() => {console.log(result)},[result])
 
     return ( 
         <Box>
@@ -131,13 +188,13 @@ const SEEC = () => {
                     <h5>Temperature for evolving the sequence</h5>
                   </div>
                   <div className="cs-temp-input">
-                    <TemperatureInput temperature={temperature} SetTemperature={SetTemperature}/>
+                    <TemperatureInput temperature={temperature} SetTemperature={setTemperature}/>
                   </div>
                   <div className='steps-description'>
                     <h5>Number of Evolutionary Steps</h5>
                   </div>
                   <div className="cs-steps">
-                    <StepsInput steps={steps} SetSteps={SetSteps}/>
+                    <StepsInput steps={steps} SetSteps={setSteps}/>
                   </div>
                 </Box>
                 <Box sx={{display:'flex', justifyContent:'flex-end', m:'50px'}}>

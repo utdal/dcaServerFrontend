@@ -3,16 +3,9 @@
   margin:0px;
 }
 .App { text-align: center; min-height: 100vh; display: flex; flex-direction: column; font-family: Helvetica, Arial, sans-serif; color: #1f1f1f} 
-.app-header { 
-  background-color: #e87500; 
-  margin-top: 30px;
-  color: rgba(50, 50, 50, 0.836);
-  color: #1f1f1f	;
-  position: fixed; 
-  width: 100%;  
-  height: 80px;
-  z-index: 1000; 
-} 
+
+
+
 .container{
   display: grid; 
   grid-template-areas: "grid-title grid-buttons";
@@ -49,6 +42,7 @@ main { flex: 1; padding: 20px;}
   color: #333;
   display: flex;
   justify-content: center;
+  padding-bottom: 10px;
 }
 
 .footer-content {
@@ -73,14 +67,14 @@ main { flex: 1; padding: 20px;}
   grid-area: footer-left;
   display: flex;
   justify-content: center;
-  margin-top:20px;
+  margin-top:10px;
 }
 
 .footer-right {
   grid-area: footer-right;
   display: flex;
   justify-content: center;
-  margin-top:20px;
+  margin-top:10px;
 }
 .footer-center{
   grid-area: footer-center;
@@ -94,10 +88,28 @@ main { flex: 1; padding: 20px;}
   transform: scale(1.1);
 }
 
-.utd-logo { width: 100px; height: auto; }
-.rice-logo{ width:90px;height:auto; margin-left: 20px;} 
+.utd-logo { width: 95px; height: auto; margin-left: 20px;}
+.rice-logo{ width:43px;height:auto;} 
 .nsf-logo{width: 40px; height:auto; margin-left: 20px;}
 @media (min-width: 600px) { .footer-content { flex-direction: row; justify-content: space-between; width: 100%; } } 
 a { text-decoration: none; color: inherit; } 
 .hide-header-footer { display: none; } 
 
+@media (prefers-color-scheme: dark){
+  .App{
+    color: #fdf7f3;
+    background-color: rgba(60,60,60,255);
+  }
+  .web-servers hr { border: 1px solid #fdf7f3; } 
+  
+  .pretty-footer {
+    color: #fdf7f3;
+    background-color: rgba(32,33,36,255);
+  }
+  .footer-left a,
+  .footer-right a {
+    color: #b7b7b7;
+
+  }
+
+}

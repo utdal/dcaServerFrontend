@@ -164,6 +164,7 @@ const CoevolvingPairs = () => {
       const msa = await uploadMsa({ msa: inputFile });
       msaId = msa.id;
     }
+    console.log("MSA ID: " + msaId);
 
     let pdbId = null;
     if (inputPDBFile) {
@@ -184,7 +185,7 @@ const CoevolvingPairs = () => {
       msaId,
       theta: Number(theta)
     });
-
+    console.log("DCA ID: " + dcaTask);
     const residuesTask = await mapResidues({
       dcaId: dcaTask.id,
       pdbId: pdbId,

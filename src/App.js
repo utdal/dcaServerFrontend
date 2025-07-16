@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import CoevolvingPairs from './pages/CoevolvingPairs';
 import LGL from './pages/LGL';
 import SEEC from './pages/SEEC';
@@ -15,15 +15,18 @@ import dcascapesLogo from './pages/dcascapesLogo.png';
 import seecLogo from './pages/SEEC-SF-Long.png';
 import molegulegoLogo from './pages/moleculego.png';
 import githibLogo from './pages/github-mark.png';
+import githubLogoWhite from './pages/github-mark-white.png';
 import nsfLogo from './pages/nsfLogo.webp';
 import LGLThumbnail from './pages/LGLThumbnail.png';
 import DCATaskList from './pages/DCATaskList';
 import LoadingPage from './pages/LoadingPage';
 import Tile from './components/Tile';
 import ResultsPage from './pages/ResultsPage';
+import SeecTest from './pages/SeecTest';
 import HomeButton from './components/HomeButton';
 import ViewTasks from './pages/ViewTasks';
 import UTDLogo from './pages/UTDLogo.png';
+import UTDLogoWhite from './pages/UTDLogo-white.png';
 import RiceLogo from './pages/rice-logo.png';
 import ApiTest from './backend/ApiTest';
 import UnifiedTopBar from './components/UnifiedTopBar';
@@ -35,6 +38,7 @@ import { Link } from 'react-router-dom';
 import { width } from '@fortawesome/free-brands-svg-icons/fa42Group';
 import {Button} from '@mui/material';
 function App() {
+  const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
   return (
     <BrowserRouter>
       <div className="App">
@@ -51,10 +55,13 @@ function App() {
           <Route path="/dca-task-list" element={<DCATaskList />} />
           <Route path="/tasks" element={<ViewTasks />} />
           <Route path="/test" element={<ApiTest />} />
+          <Route path="/seec-test" element={<SeecTest />} />
           <Route path="/" element={
           <>
             <UnifiedTopBar />
+            
             <main>
+              <a href='/seec-test'>Seec Test</a>
               <section className="web-servers">
                 <h2>Tools</h2>
                 <hr />
@@ -120,13 +127,13 @@ function App() {
                     toolName="MfDCA Source Code"
                     description="View on GitHub"
                     link="https://github.com/utdal/py-mfdca"
-                    imageSrc={githibLogo}
+                    imageSrc={!prefersDarkScheme.matches? githibLogo: githubLogoWhite}
                   />
                   <Tile
                     toolName="SEEC Source Code"
                     description="View on GitHub"
                     link="https://github.com/utdal/seec-nt"
-                    imageSrc={githibLogo}
+                    imageSrc={!prefersDarkScheme.matches? githibLogo: githubLogoWhite}
                   />
                 </div>
               </section>
@@ -144,11 +151,11 @@ function App() {
       </a>
     </div>
     <div className="footer-center">
-        <a href="https://www.utdallas.edu/" target="_blank" rel="noopener noreferrer">
-          <img src={UTDLogo} alt="UTD Logo" className="utd-logo" />
-        </a>
         <a href="https://www.rice.edu/">
           <img src={RiceLogo} alt="Rice Logo" className='rice-logo'/>
+        </a>
+        <a href="https://www.utdallas.edu/" target="_blank" rel="noopener noreferrer">
+          <img src={ !prefersDarkScheme.matches ? UTDLogo : UTDLogoWhite } alt="UTD Logo" className="utd-logo" />
         </a>
         <a href="https://nsf.gov/" target="_blank" rel="noopener noreferrer">
         <img src={nsfLogo} alt="NSF Logo" className="nsf-logo" />
