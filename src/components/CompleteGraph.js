@@ -41,7 +41,7 @@ export default function D3Graph({SetSelectedMap, data}) {
       .attr("text-anchor", "middle")
       .text("Evolution of Sequence");
 
-    const { x, y } = createScales(data, width, height, margin, -500, 300, -22, 20);
+    const { x, y } = createScales(data, width, height, margin, -100, 100, -22, 20);
 
     drawAxes(svg, x, y, width, height, margin);
 

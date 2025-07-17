@@ -19,11 +19,18 @@ function TabPanel({ children, value, index }) {
 }
 
 const AdvancedSettings = ({caSettings, msaSettings, renderMSA}) => {
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
     const [display, SetDisplay] = useState(false);
     const [tabIndex, SetTabIndex]= useState(0);
     const handleDisplay=(e)=>{
         e.preventDefault();
         SetDisplay(!display);
+    }
+    const paperSx={
+        backgroundColor: prefersDarkScheme.matches && '#333',
+    }
+    const tabSx={
+        color: prefersDarkScheme.matches && '#fdf7f3',
     }
 
     return ( 
@@ -33,7 +40,7 @@ const AdvancedSettings = ({caSettings, msaSettings, renderMSA}) => {
             </Button>
             <div>
                 <Collapse in={display}>
-                    <Paper elevation={3} sx={{mt: 2, p: 3, width: '100%', maxWidth: 500, mx: 'auto', textAlign: 'left'}}>
+                    <Paper elevation={3} sx={[paperSx, {mt: 2, p: 3, width: '100%', maxWidth: 500, mx: 'auto', textAlign: 'left'}]}>
                         <Tabs
                             value={tabIndex}
                             onChange={(e, newValue) => SetTabIndex(newValue)}
@@ -41,9 +48,9 @@ const AdvancedSettings = ({caSettings, msaSettings, renderMSA}) => {
                             textColor="primary"
                             variant="fullWidth"
                         >
-                            <Tab label="Coevolutionary Analysis Settings" />
+                            <Tab label="Coevolutionary Analysis Settings" sx={tabSx}/>
                             {renderMSA&&(
-                            <Tab label="MSA Generation Settings"></Tab>
+                            <Tab label="MSA Generation Settings" sx={tabSx}></Tab>
                             )}
                         </Tabs>
 

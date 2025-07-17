@@ -1,6 +1,31 @@
 import React from 'react';
 import { Box, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
 const MSAInput = ({ inputType, inputMSA, handleInputMSAChange, handleFileTypeChange}) => {
+  const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+  const textFieldSx = {
+    color: prefersDarkScheme.matches && '#fdf7f3',
+    '& .MuiInputBase-input': {
+      color: prefersDarkScheme.matches && '#fdf7f3',
+    },
+    '& .MuiInputBase-inputMultiline': {
+      color: prefersDarkScheme.matches && '#fdf7f3',
+    },
+    '& .MuiInputLabel-root': {
+      color: prefersDarkScheme.matches && '#fdf7f3',
+    },
+    '& .MuiFilledInput-underline:before': {
+      borderBottomColor: prefersDarkScheme.matches && '#fdf7f3',
+    },
+  };
+  const radioSx = {
+    color: prefersDarkScheme.matches && '#fdf7f3',
+    '&.Mui-checked': {
+      color: prefersDarkScheme.matches && '#fdf7f3',
+    },
+  };
+  const textSx = {
+    color: prefersDarkScheme.matches && '#fdf7f3',
+  }
   const handleInputChange = (event) => {
     
   }
@@ -29,8 +54,7 @@ const MSAInput = ({ inputType, inputMSA, handleInputMSAChange, handleFileTypeCha
             maxRows={5}
             value={inputMSA}
             onChange={handleInputMSAChange}
-            sx={{width:"40%"}}
-          />
+            sx={[textFieldSx, {width: "40%"}]}          />
           </>
         :
         <>
@@ -49,7 +73,7 @@ const MSAInput = ({ inputType, inputMSA, handleInputMSAChange, handleFileTypeCha
       }
       <div>
       <FormControl>
-        <FormLabel id="input-msa-type">Input Type</FormLabel>
+        <FormLabel id="input-msa-type" sx={textSx}>Input Type</FormLabel>
         <RadioGroup
           row
           aria-labelledby="input-msa-type"
@@ -58,13 +82,13 @@ const MSAInput = ({ inputType, inputMSA, handleInputMSAChange, handleFileTypeCha
         >
           <FormControlLabel
             value="Seed"
-            control={<Radio />}
+            control={<Radio   sx={radioSx}/>}
             onChange={() => handleFileTypeChange('Seed')}
             label="Seed"
           />
           <FormControlLabel
             value="MSA"
-            control={<Radio />}
+            control={<Radio   sx={radioSx}/>}
             onChange={() => handleFileTypeChange('MSA')}
             label="Full MSA"
           />

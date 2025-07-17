@@ -14,7 +14,7 @@ import prosspecLogo from './pages/ProSSpeC_logo.png';
 import dcascapesLogo from './pages/dcascapesLogo.png';
 import seecLogo from './pages/SEEC-SF-Long.png';
 import molegulegoLogo from './pages/moleculego.png';
-import githibLogo from './pages/github-mark.png';
+import githubLogo from './pages/github-mark.png';
 import githubLogoWhite from './pages/github-mark-white.png';
 import nsfLogo from './pages/nsfLogo.webp';
 import LGLThumbnail from './pages/LGLThumbnail.png';
@@ -22,7 +22,6 @@ import DCATaskList from './pages/DCATaskList';
 import LoadingPage from './pages/LoadingPage';
 import Tile from './components/Tile';
 import ResultsPage from './pages/ResultsPage';
-import SeecTest from './pages/SeecTest';
 import HomeButton from './components/HomeButton';
 import ViewTasks from './pages/ViewTasks';
 import UTDLogo from './pages/UTDLogo.png';
@@ -55,13 +54,11 @@ function App() {
           <Route path="/dca-task-list" element={<DCATaskList />} />
           <Route path="/tasks" element={<ViewTasks />} />
           <Route path="/test" element={<ApiTest />} />
-          <Route path="/seec-test" element={<SeecTest />} />
           <Route path="/" element={
           <>
             <UnifiedTopBar />
             
             <main>
-              <a href='/seec-test'>Seec Test</a>
               <section className="web-servers">
                 <h2>Tools</h2>
                 <hr />
@@ -127,13 +124,13 @@ function App() {
                     toolName="MfDCA Source Code"
                     description="View on GitHub"
                     link="https://github.com/utdal/py-mfdca"
-                    imageSrc={!prefersDarkScheme.matches? githibLogo: githubLogoWhite}
+                    imageSrc={!prefersDarkScheme.matches? githubLogo: githubLogoWhite}
                   />
                   <Tile
                     toolName="SEEC Source Code"
                     description="View on GitHub"
                     link="https://github.com/utdal/seec-nt"
-                    imageSrc={!prefersDarkScheme.matches? githibLogo: githubLogoWhite}
+                    imageSrc={!prefersDarkScheme.matches? githubLogo: githubLogoWhite}
                   />
                 </div>
               </section>

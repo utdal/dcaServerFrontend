@@ -8,9 +8,3 @@
     background-color: transparent;
     color: inherit;
 }
-
-@media(prefers-color-scheme: dark){
-    .advanced-settings-paper Tabs{
-        background-color: rgba(60,60,60,255);
-    }
-}

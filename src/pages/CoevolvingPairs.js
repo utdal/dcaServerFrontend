@@ -29,6 +29,7 @@ import { Link } from 'react-router-dom';
 
 
 const CoevolvingPairs = () => {
+  const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
   const defaultTheta = '0.2'; //Cast to numbers ar submit
   const defaultMaxGaps = 20;
   const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: true }); // Use object to track file types
@@ -262,28 +263,61 @@ const CoevolvingPairs = () => {
               <AdvancedSettings
                   caSettings={
                   <>
-                    <p style={{justifyContent:'center', display:'flex'}}>Coevolutionary Analysis Method</p>
-                    <Box sx={{display:'flex', justifyContent:'center'}}>
+                    <p style={{justifyContent:'center', display:'flex', color: prefersDarkScheme.matches && '#fdf7f3'}}>Coevolutionary Analysis Method</p>
+                    <Box sx={{display:'flex', justifyContent:'center',}}>
                     <Select
                     labelId="coevolutionary-analysis-method"
                     id="analysis-method-select"
                     value={analysisMethod}
-                    label="Coevolutionary Analysis Method"
-                    variant='filled'
-                    margin='200'
                     onChange={handleAnalysisMethodChange}
+                    variant="filled"
+                    sx={{
+                      minWidth: '100px',
+                      marginTop: '15px',
+                      height: '48px',
+                      ...(prefersDarkScheme.matches && {
+                        backgroundColor: '#333',
+                        color: '#fdf7f3',
+                        '& .MuiSelect-icon': {
+                          color: '#fdf7f3',
+                        },
+                      }),
+                    }}
                     inputProps={{
                       sx: {
                         padding: '10px 12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent:'center'
                       }
                     }}
-                    sx={{minWidth:'100px',maxWidth:'auto',marginTop:'15px', height:'48px', alignItems:'center', display:'flex', paddingTop:'0px'}}
+                    MenuProps={{
+                      PaperProps: {
+                        sx: {
+                          ...(prefersDarkScheme.matches && {
+                            backgroundColor: '#333',
+                            color: '#fdf7f3',
+                          }),
+                        },
+                      },
+                    }}
                   >
-                    <MenuItem value={'mfDCA'} sx={{alignItems:'center', display:'flex'}}>mean-field DCA</MenuItem>
-                    <MenuItem value={''}>More to Come!</MenuItem>
+                    <MenuItem
+                      value={'mfDCA'}
+                      sx={prefersDarkScheme.matches && {
+                        backgroundColor: '#333',
+                        color: '#fdf7f3',
+                      }}
+                    >
+                      mean-field DCA
+                    </MenuItem>
+
+                    <MenuItem
+                      value={''}
+                      sx={prefersDarkScheme.matches && {
+                        backgroundColor: '#333',
+                        color: '#fdf7f3',
+                      }}
+                    >
+                      More to Come!
+                    </MenuItem>
                   </Select>
                   </Box>
 
@@ -295,7 +329,7 @@ const CoevolvingPairs = () => {
                 msaSettings={
                   <Box>
                 <div style={{display:'flex', justifyContent:'center'}}>
-                  <p style={{width:'40vh', textAlign:'center'}}>Max Number of Continuous Gaps (as percentage of MSA length):</p>
+                  <p style={{width:'40vh', textAlign:'center', color: prefersDarkScheme.matches && '#fdf7f3'}}>Max Number of Continuous Gaps (as percentage of MSA length):</p>
                 </div>
                 <div style={{display:'flex', justifyContent:'center', marginTop:'15px'}}>
                   <Slider

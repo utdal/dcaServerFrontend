@@ -78,7 +78,7 @@
                       "tile-structure-text";
   grid-template-rows: 3fr 1fr;
 }
-/*
+
 @media (prefers-color-scheme: dark){
   .tile-inner {
     border: #333;
@@ -95,4 +95,3 @@
     background-color: #333;
   }
 }
-*/
