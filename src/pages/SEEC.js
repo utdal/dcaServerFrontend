@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Form, useNavigate } from 'react-router-dom';
-import { uploadMsa } from '../backend/api';
+import { startEvolutionSimulation } from '../backend/api';
 import{
   Box,
   Button,
@@ -22,7 +22,10 @@ const SEEC = () => {
     const [sequence, setSequence] = useState('');
     const [steps, setSteps] = useState(0);
     const allowed_letters= new Set(['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']);
-
+    const [temperature, setTemperature] = useState(1.0);
+    const [result, setResult] = useState(null);
+    const [error, setError] = useState(null);
+    
     const handleFileChange = (event) => {
       const file = event.target.files[0];
       setMsaFile(file);
@@ -36,15 +39,7 @@ const SEEC = () => {
     useEffect(()=>{
       
     },[]);
-  const [ntSequence, setNtSequence] = useState("");
-  const [temperature, setTemperature] = useState(1.0);
-  const [taskId, setTaskId] = useState(null);
-  const [simulationId, setSimulationId] = useState(null);
-  const [result, setResult] = useState(null);
-  const [polling, setPolling] = useState(false);
-  const [error, setError] = useState(null);
 
-  const API_BASE = "http://localhost:8000/api/evolution-simulations/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,55 +54,23 @@ const SEEC = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("msa_file", msaFile);
-    formData.append("nt_sequence", sequence);
-    formData.append("steps", steps);
-    formData.append("temperature", temperature);
-
     try {
-      const response = await fetch(API_BASE, {
-        method: "POST",
-        body: formData,
-        credentials: "include",
+      const { simulationId } = await startEvolutionSimulation({
+        msaFile: msaFile,
+        ntSequence: sequence,
+        steps: steps,
+        temperature: temperature,
       });
 
-      if (!response.ok) {
-        const errData = await response.json();
-        setError(errData.error || "Failed to start simulation.");
-        return;
-      }
-
-      const data = await response.json();
-      console.log("Simulation started:", data.simulation_id);
-      navigate(`/seec-results/?resultID=${data.simulation_id}`);
+      console.log(simulationId)
+      console.log("Simulation ID", simulationId);
+      navigate(`/seec-results/?resultID=${simulationId}`);
     } catch (err) {
       setError("Network error: " + err.message);
     }
   };
 
 
-  useEffect(() => {
-    if (!polling || !simulationId) return;
-
-    const interval = setInterval(async () => {
-      try {
-        const res = await fetch(`${API_BASE}${simulationId}/`);
-        if (!res.ok) throw new Error("Failed to fetch simulation results.");
-        const data = await res.json();
-
-        if (data.completed) {
-          setResult(data);
-          setPolling(false);
-        }
-      } catch (e) {
-        setError(e.message);
-        setPolling(false);
-      }
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [polling, simulationId]);
   useEffect(() => {console.log(result)},[result])
 
     return ( 

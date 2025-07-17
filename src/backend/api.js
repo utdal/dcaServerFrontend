@@ -312,6 +312,30 @@ export class StructureContacts extends APIDataObject {
 }
 
 
+export class EvolutionSimulation extends APIDataObject {
+    static objectName = 'evolution-simulation';
+
+    constructor({ id, user, created_at, expires, msa_file, nt_sequence, steps, temperature, result_file, task_id, completed }) {
+        super({ id, user, created: created_at, expires });
+        this.msa_file = msa_file;
+        this.nt_sequence = nt_sequence;
+        this.steps = steps;
+        this.temperature = temperature;
+        this.result_file = result_file;
+        this.task_id = task_id;
+        this.completed = completed;
+    }
+
+    static async fetch(id) {
+        return APIObject.fetch(id, EvolutionSimulation);
+    }
+
+    static async fetchAll() {
+        return APIObject.fetchAll(EvolutionSimulation);
+    }
+}
+
+
 function getCSRFToken() {
     let csrfToken = null;
     const cookies = document.cookie.split(';');
@@ -432,4 +456,25 @@ export async function generateContacts({ pdbId, caOnly, distThresh, isCIF, authC
         auth_chain_id_supplied: authChainIdSupplied,
         auth_residue_id_supplied: authResidueIdSupplied
     });
+}
+
+export async function startEvolutionSimulation({ msaFile, ntSequence, steps, temperature }) {
+    const formData = new FormData();
+    formData.append('msa_file', msaFile);
+    formData.append('nt_sequence', ntSequence);
+    formData.append('steps', steps);
+    formData.append('temperature', temperature);
+
+    const response = await fetch(apiBaseUrl + 'evolution-simulations/', {
+        method: 'POST',
+        body: formData,
+        credentials: "include",
+    });
+
+    if (!response.ok) {
+        throw new Error('Bad network response');
+    }
+
+    const { task_id, simulation_id } = await response.json();
+    return { taskId: task_id, simulationId: simulation_id };
 }

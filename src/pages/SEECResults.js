@@ -7,6 +7,7 @@ import {fileReader} from '../functions/fileReader'
 import SEECTable from "../components/SEECTable";
 import CompleteGraph from '../components/CompleteGraph';
 import SelectedGraph from '../components/SelectedGraph';
+import { EvolutionSimulation } from '../backend/api';
 import {
     Button,
     Box,
@@ -14,8 +15,6 @@ import {
     CircularProgress,
     Paper
 } from "@mui/material";
-const API_BASE = "http://localhost:8000/api/evolution-simulations/";
-
 
 const SEECResults = () => {
     const [selectedMap, SetSelectedMap] = useState([]);
@@ -39,29 +38,30 @@ const SEECResults = () => {
     useEffect(() => {
     const poll = setInterval(async () => {
         try {
-        const res = await fetch(`${API_BASE}${resultID}/`);
-        if (!res.ok) throw new Error("Failed to fetch simulation results.");
-        const fetchedData = await res.json();
+            const sim = await EvolutionSimulation.fetch(resultID);
+            if (sim.completed) {
+                setResult(sim);
+                try {
+                    let resultUrl = sim.result_file;
+                    if (resultUrl && !resultUrl.startsWith('http')) {
+                        resultUrl = `http://localhost:8000${resultUrl.startsWith('/') ? '' : '/'}${resultUrl}`;
+                    }
+                    const response = await fetch(resultUrl);
+                    const text = await response.text();
+                    const parsed = fileReader(text);
+                    setHamiltonians(parsed[0].hamiltonians);
+                    setAminoacids(parsed[0].aminoacids);
+                    setSteps(parsed[0].steps);
+                    clearInterval(poll);
 
-        if (fetchedData.completed) {
-            setResult(fetchedData);
-            try {
-            const response = await fetch(`http://localhost:8000/files/evolution_simulations/${resultID}/result.json`);
-            const text = await response.text();
-            const parsed = fileReader(text);
-            setHamiltonians(parsed[0].hamiltonians);
-            setAminoacids(parsed[0].aminoacids);
-            setSteps(parsed[0].steps);
-            clearInterval(poll);
-
-            } catch (error) {
-            console.error('Failed to fetch or parse file:', error);
-            clearInterval(poll);
+                } catch (error) {
+                    console.error('Failed to fetch or parse file:', error);
+                    clearInterval(poll);
+                }
             }
-        }
         } catch (e) {
-        setError(e.message);
-        clearInterval(poll);
+            setError(e.message);
+            clearInterval(poll);
         }
     }, 3000);
 
