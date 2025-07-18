@@ -100,7 +100,7 @@ const SEECResults = () => {
             )
     }
     return ( 
-        <div>
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             <div style={{marginBottom:'50px'}}>
             <TopBar>
                 <li>
@@ -115,7 +115,6 @@ const SEECResults = () => {
                     <h1>SEEC Results</h1>
 
                 </div>
-                <div className=''>
                     <div>
                         {steps.length > 0 && (
                             <>
@@ -145,7 +144,6 @@ const SEECResults = () => {
                         )}
                         
                     </div>
-                </div>
             </div>
         </div>
         

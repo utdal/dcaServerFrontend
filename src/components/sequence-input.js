@@ -8,13 +8,15 @@ import {
     TextField
 } from '@mui/material'
 import React, { useEffect, useState } from 'react';
+const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+const darkColor = '#fdf7f3';
 
 const SequenceInput = ({inputType, setInputType, sequence, setSequence}) => {
 
-
     const handleInputTypeChange = (event) => {
-        setInputType(event.target.value);
-        setSequence(''); // optionally clear when switching
+        setInputType(event.target.checked ? 'Nucleotide' : 'AminoAcid');
+        setSequence('');
     };
 
     const placeholderMap = {
@@ -26,6 +28,7 @@ const SequenceInput = ({inputType, setInputType, sequence, setSequence}) => {
         AminoAcid: 'Protein Sequence',
         Nucleotide: 'Nucleotide Sequence',
     };
+
     return ( 
         <Box sx={{
                 borderRadius: 2,
@@ -40,14 +43,42 @@ const SequenceInput = ({inputType, setInputType, sequence, setSequence}) => {
                     label={labelMap[inputType]}
                     placeholder={placeholderMap[inputType]}
                     value={sequence}
-                    onChange={(e) => setSequence(e.target.value)}
+                    onChange={(e) => setSequence(e.target.value.toUpperCase())}
+                    sx={{
+                      '& .MuiInputBase-input': {
+                        color: prefersDarkScheme.matches ? darkColor : undefined,
+                        '::placeholder': {
+                          color: prefersDarkScheme.matches ? darkColor : undefined,
+                          opacity: 0.8
+                        }
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: prefersDarkScheme.matches ? darkColor : undefined,
+                        '&.Mui-focused': {
+                          color: prefersDarkScheme.matches ? darkColor : undefined,
+                        }
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: prefersDarkScheme.matches ? darkColor : undefined,
+                        },
+                        '&:hover fieldset': {
+                          borderColor: prefersDarkScheme.matches ? darkColor : undefined,
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: prefersDarkScheme.matches ? darkColor : undefined,
+                        },
+                      },
+                    }}
                     multiline
                     minRows={5}
+                    maxRows={10}
                     fullWidth
                     margin="normal"
                     variant="outlined"
-                    inputProps={{ spellCheck: false }}
+                    inputProps={{ spellCheck: false, style: { overflow: 'auto' } }}
                     />
+                    
                 <FormGroup>
                     <FormControlLabel
                         label={inputType === 'Nucleotide' ? 'Nucleotides' : 'Amino Acids'}
@@ -55,9 +86,7 @@ const SequenceInput = ({inputType, setInputType, sequence, setSequence}) => {
                         <Switch
                             color='warning'
                             checked={inputType === 'Nucleotide'}
-                            onChange={(e) =>
-                            setInputType(e.target.checked ? 'Nucleotide' : 'AminoAcid')
-                            }
+                            onChange={handleInputTypeChange}
                         />
                         }
                         style={{display:'flex', justifyContent:'center'}}
@@ -65,6 +94,7 @@ const SequenceInput = ({inputType, setInputType, sequence, setSequence}) => {
                     />
                 </FormGroup>
             </FormControl>
+            
         
 
         </Box>

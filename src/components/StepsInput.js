@@ -6,6 +6,8 @@ import {
     Input,
 } from '@mui/material'
 const StepsInput = ({steps, SetSteps}) => {
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkColor = '#fdf7f3';
 
     const handleStepsChange=(e)=>{
     if (e.target.value<=10000 && e.target.value>=0){
@@ -15,12 +17,14 @@ const StepsInput = ({steps, SetSteps}) => {
     return ( 
         <Box sx={{display:'flex', justifyContent:'center'}}>
             <FormControl variant="standard" sx={{ width: '120px'}}>
-                <InputLabel>Steps</InputLabel>
+                <InputLabel sx={{color: prefersDarkScheme.matches ? darkColor : undefined}}>Steps</InputLabel>
                 <Input
                 type="number"
                 onChange={handleStepsChange}
                 placeholder="0-10,000"
                 inputProps={{ min: 0, max: 10000 }}
+                sx={{color: prefersDarkScheme.matches ? darkColor : undefined,
+                    '&::placeholder': {color: prefersDarkScheme.matches ? darkColor : undefined, opacity:0.8}}}
                 value={steps}
                 />
             </FormControl>

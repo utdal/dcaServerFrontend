@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import './SEEC.css'
 import TemperatureInput from '../components/TemperatureInput';
 import StepsInput from '../components/StepsInput';
+import aaToNt from '../functions/aaToNt';
 
 const SEEC = () => {
     const navigate = useNavigate();
@@ -25,20 +26,38 @@ const SEEC = () => {
     const [temperature, setTemperature] = useState(1.0);
     const [result, setResult] = useState(null);
     const [error, setError] = useState(null);
+    const [ntSequence, setNtSequence] = useState('');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
     
     const handleFileChange = (event) => {
       const file = event.target.files[0];
       setMsaFile(file);
       console.log("File uploaded:", file);
     };
+
     
     useEffect(()=>{
-      console.log(steps);
-    }, [steps]);
-    
+      const cleaned = sequence.replace(/\s+/g, '');
+      if(inputType === 'AminoAcid'){
+        const [nt_seq, aa_filtered] = aaToNt(cleaned);
+        setNtSequence(nt_seq);
+        const sequenceElement = document.getElementById('sequence');
+        sequenceElement.textContent = aa_filtered;
+      }
+      else{
+        const filtered = cleaned.replace(/[^GgCcTtAa]/g, '');
+        const sequenceElement = document.getElementById('sequence');
+        sequenceElement.textContent = filtered;
+        setNtSequence(filtered);
+
+      }
+    },[inputType, sequence]);
+
     useEffect(()=>{
-      
-    },[]);
+      console.log(ntSequence);
+    },[ntSequence]);
+
 
 
   const handleSubmit = async (e) => {
@@ -57,7 +76,7 @@ const SEEC = () => {
     try {
       const { simulationId } = await startEvolutionSimulation({
         msaFile: msaFile,
-        ntSequence: sequence,
+        ntSequence: ntSequence,
         steps: steps,
         temperature: temperature,
       });
@@ -112,6 +131,14 @@ const SEEC = () => {
                   <div className="cs-seq-input">
                     <Box style={{ width: '40%' }}>
                       <SequenceInput inputType={inputType} setInputType={setInputType} sequence={sequence} setSequence={setSequence}/>
+                      <Box sx={{display:'flex', flexWrap:'wrap', justifyContent:'center'}}>
+                        <p id='sequence' style={{
+                          color: prefersDarkScheme.matches ? '#fdf7f372' : '#1f1f1f72',
+                          whiteSpace: 'pre-wrap',
+                          overflowWrap: 'break-word',
+                          wordBreak: 'break-all',
+                        }}></p>
+                      </Box>
                     </Box>
                   </div>
                   <div className='msa-description'>
@@ -125,7 +152,7 @@ const SEEC = () => {
                       onChange={handleFileChange}
                       sx={{
                         backgroundColor:'transparent', 
-                        color:'#1f1f1f',
+                        color: prefersDarkScheme.matches ? '#fdf7f3' : '#1f1f1f',
                         '&:hover': {
                           backgroundColor: 'transparent', 
                           boxShadow: '0px 0px 10px rgba(0,0,0,0.3)'}
@@ -140,7 +167,7 @@ const SEEC = () => {
                     </div>
                     <div>
                     {msaFile && (
-                      <Typography fontStyle='italic' variant="body2" sx={{ marginTop: 1, color: '#1f1f1f86' }}>
+                      <Typography fontStyle='italic' variant="body2" sx={{ marginTop: 1, color: prefersDarkScheme.matches ? '#fdf7f372' : '#1f1f1f86' }}>
                         Selected file: {msaFile.name}
                       </Typography>
                     )}
