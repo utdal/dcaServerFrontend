@@ -15,7 +15,7 @@ const UnifiedTopBar = () => {
         <a href="https://morcoslaboratory.org/?page_id=53">Publications</a>
         <a href="https://morcoslaboratory.org/?page_id=66">People</a>
         <Link to="/guide-for-biologists">Guide</Link>
-
+        <Link to="/tasks">Tasks</Link>
       </nav>
     </header>
   );

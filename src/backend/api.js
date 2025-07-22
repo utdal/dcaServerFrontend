@@ -34,10 +34,11 @@ class APIObject {
 
         const result = await response.json();
 
-        return result.map(t => new Task(t));
+        return result.map(obj => new type(obj));
     }
 
 }
+
 
 
 export class Task extends APIObject {
@@ -475,6 +476,9 @@ export async function startEvolutionSimulation({ msaFile, ntSequence, steps, tem
         throw new Error('Bad network response');
     }
 
-    const { task_id, simulation_id } = await response.json();
-    return { taskId: task_id, simulationId: simulation_id };
+    const { id, simulation_id, ...taskData } = await response.json();
+
+    const task = new Task({ id, ...taskData });
+
+    return { task, simulationId: simulation_id };
 }

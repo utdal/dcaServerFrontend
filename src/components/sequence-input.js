@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useState } from 'react';
 const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-const darkColor = '#fdf7f3';
+const lightColor = '#fdf7f3';
 
 const SequenceInput = ({inputType, setInputType, sequence, setSequence}) => {
 
@@ -46,27 +46,27 @@ const SequenceInput = ({inputType, setInputType, sequence, setSequence}) => {
                     onChange={(e) => setSequence(e.target.value.toUpperCase())}
                     sx={{
                       '& .MuiInputBase-input': {
-                        color: prefersDarkScheme.matches ? darkColor : undefined,
+                        color: prefersDarkScheme.matches ? lightColor : undefined,
                         '::placeholder': {
-                          color: prefersDarkScheme.matches ? darkColor : undefined,
+                          color: prefersDarkScheme.matches ? lightColor : undefined,
                           opacity: 0.8
                         }
                       },
                       '& .MuiInputLabel-root': {
-                        color: prefersDarkScheme.matches ? darkColor : undefined,
+                        color: prefersDarkScheme.matches ? lightColor : undefined,
                         '&.Mui-focused': {
-                          color: prefersDarkScheme.matches ? darkColor : undefined,
+                          color: prefersDarkScheme.matches ? lightColor : undefined,
                         }
                       },
                       '& .MuiOutlinedInput-root': {
                         '& fieldset': {
-                          borderColor: prefersDarkScheme.matches ? darkColor : undefined,
+                          borderColor: prefersDarkScheme.matches ? lightColor : undefined,
                         },
                         '&:hover fieldset': {
-                          borderColor: prefersDarkScheme.matches ? darkColor : undefined,
+                          borderColor: prefersDarkScheme.matches ? lightColor : undefined,
                         },
                         '&.Mui-focused fieldset': {
-                          borderColor: prefersDarkScheme.matches ? darkColor : undefined,
+                          borderColor: prefersDarkScheme.matches ? lightColor : undefined,
                         },
                       },
                     }}

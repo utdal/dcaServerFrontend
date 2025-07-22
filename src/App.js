@@ -77,13 +77,13 @@ function App() {
                   />
                   <Tile
                     toolName="ProSSpeC"
-                    description={<>ProSSpeC: Protease (NIa) Substrate Specificity Calculator<br/><br/><i>Comming Soon!</i></>}
+                    description={<>ProSSpeC: Protease (NIa) Substrate Specificity Calculator</>}
                     link="#"
                     imageSrc={prosspecLogo}
                   />
                   <Tile
                     toolName="Sequence Evolution with Epistatic Contributions"
-                    description={<>SEEC<br/><br/><i>Comming Soon!</i></>}
+                    description={<>Simulates protein evolution using inferred epistasis from natural protein families</>}
                     link="/seec"
                     imageSrc={seecLogo}      
                   />

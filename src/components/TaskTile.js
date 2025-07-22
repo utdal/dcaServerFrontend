@@ -1,17 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { MSA, Task } from '../backend/api';
+import { MSA, Task, EvolutionSimulation } from '../backend/api';
+import {Link} from 'react-router-dom';
 
-const TaskTile = ({ task_id, updateInterval = 5 }) => {
+const TaskTile = ({ task_id, isSimulation = false, updateInterval = 5 }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [task, setTask] = useState(null);
     const [lastUpdated, setLastUpdated] = useState(null);
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
     useEffect(() => {
         async function fetchTask() {
             setLoading(true);
             try {
-                setTask(await Task.fetch(task_id));
+                if (isSimulation) {
+                    const sim = await EvolutionSimulation.fetch(task_id);
+                    const pseudoTask = {
+                        id: sim.id,
+                        state: sim.completed ? 'SUCCESS' : 'PENDING',
+                        percent: sim.completed ? 100 : 0,
+                        successful: sim.completed,
+                        name: 'evolution-simulation',
+                        time_started: sim.created,
+                        time_ended: sim.completed ? new Date() : null,
+                        message: sim.completed ? 'Simulation finished' : 'Running…',
+                        link: '',
+                        getNiceName() { return 'Evolution Simulation'; }
+                    };
+                    setTask(pseudoTask);
+                } else {
+                    setTask(await Task.fetch(task_id));
+                }
                 setLastUpdated(Date.now());
             } catch (error) {
                 setError('Error: ' + error.message);
@@ -34,17 +53,28 @@ const TaskTile = ({ task_id, updateInterval = 5 }) => {
     useEffect(() => {
         if (task) {
             const interval = setInterval(() => {
-                task.update();
-                setLastUpdated(Date.now());
+                if (isSimulation) {
+                    EvolutionSimulation.fetch(task_id).then(sim => {
+                        setTask(prev => ({
+                            ...prev,
+                            state: sim.completed ? 'SUCCESS' : 'PENDING',
+                            percent: sim.completed ? 100 : 0,
+                            successful: sim.completed,
+                        }));
+                        setLastUpdated(Date.now());
+                    });
+                } else {
+                    task.update().then(() => setLastUpdated(Date.now()));
+                }
             }, updateInterval * 1000);
 
             return () => clearInterval(interval);
         }
-    }, [task, updateInterval]);
+    }, [task, updateInterval, isSimulation]);
 
     const linkStyle = {
-        fontSize: 16,
-        color: '#0066cc',  // Updated color
+        fontSize: 12,
+        color: '#0066cc',
         textDecoration: 'underline',
         backgroundColor: 'transparent',
         border: 'none',
@@ -61,6 +91,7 @@ const TaskTile = ({ task_id, updateInterval = 5 }) => {
     }
 
     const resultsLink = () => {
+
         if (task.name === 'api.tasks.generate_msa_task') {
             return (
                 <button
@@ -97,6 +128,15 @@ const TaskTile = ({ task_id, updateInterval = 5 }) => {
                 </a>
             );
         }
+        else if(task.name === 'evolution-simulation'){
+            return (
+                <Link
+                    to={'/seec-results/?resultID=' + task.id}
+                    style={linkStyle}
+
+                >View Results</Link>
+            )
+        }
         return undefined;
     }
 
@@ -115,11 +155,11 @@ const TaskTile = ({ task_id, updateInterval = 5 }) => {
                 <div style={{ fontWeight: 'bold', color: '#003366' }}>
                     {task.getNiceName() + ' (' + task.state + ' ' + task.percent + '%)'}
                 </div>
-                <div style={{ fontSize: '10px', fontStyle: 'italic', color: '#003366' }}>ID: {task.id}</div>
-                {task.time_started ? <div><b>Started:</b> {task.time_started.toISOString()}</div> : undefined}
-                {task.time_ended ? <div><b>Ended:</b> {task.time_ended.toISOString()}</div> : undefined}
+                <div style={{ fontSize: '10px', fontStyle: 'italic', color: prefersDarkScheme.matches?'black':'#003366' }}>ID: {task.id}</div>
+                {task.time_started ? <div style={{color: '#003366' }}><b>Started:</b> {task.time_started.toISOString()}</div> : undefined}
+                {task.time_ended ? <div style={{color: '#003366' }}><b>Ended:</b> {task.time_ended.toISOString()}</div> : undefined}
                 {task.message ? <div><i>{task.message}</i></div> : undefined}
-                {/* {task.successful ? resultsLink() : undefined} */}
+                {task.successful ? resultsLink() : undefined}
                 {lastUpdated ? <div style={{ fontSize: '10px', fontStyle: 'italic', color: '#003366' }}>
                     Last updated {new Date(lastUpdated).toISOString()}
                 </div> : undefined}

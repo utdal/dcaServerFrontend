@@ -44,7 +44,9 @@ const SEECResults = () => {
                 try {
                     let resultUrl = sim.result_file;
                     if (resultUrl && !resultUrl.startsWith('http')) {
+                        
                         resultUrl = `http://localhost:8000${resultUrl.startsWith('/') ? '' : '/'}${resultUrl}`;
+                        console.log(resultUrl)
                     }
                     const response = await fetch(resultUrl);
                     const text = await response.text();

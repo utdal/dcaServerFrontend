@@ -10,6 +10,7 @@ import MolViewer from '../components/MolViewer';
 import { CirclePlot } from '../components/CirclePlot';
 import ChainSelector from '../components/ChainSelector';
 import { use } from 'react';
+import { faWindows } from '@fortawesome/free-brands-svg-icons';
 
 const CoevolvingPairsResults = () => {
     const [loading, setLoading] = useState(true);
@@ -27,6 +28,7 @@ const CoevolvingPairsResults = () => {
         pdbViewer: false,
         circlePlot: true,
     });
+    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme:dark)");
 
     const query = new URLSearchParams(useLocation().search);
     const dcaId = query.get('dca');
@@ -95,8 +97,9 @@ const CoevolvingPairsResults = () => {
     };
 
     const styles = {
+
         container: {
-            backgroundColor: '#f4f4f4',
+            backgroundColor: prefersDarkScheme.matches?'rgba(60,60,60,255)':'#f4f4f4',
             // minHeight: '100vh',
             padding: '20px',
             paddingTop: '100px',
@@ -105,7 +108,7 @@ const CoevolvingPairsResults = () => {
         header: {
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: '#e87500',
+            backgroundColor: prefersDarkScheme.matches?'#1f1f1f':'#e87500',
             padding: '15px 25px',
             fontSize: '28px',
             fontWeight: 'bold',
@@ -114,7 +117,8 @@ const CoevolvingPairsResults = () => {
             position: 'fixed',
             top: 0,
             left: 0,
-            zIndex: 10,
+            zIndex: 100,
+            boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
         },
         chainSelect: {
             // width: '100%',
@@ -193,7 +197,7 @@ const CoevolvingPairsResults = () => {
 
             <div style={styles.resultsSection}>
                 {loading ? (
-                    <p style={{ fontStyle: 'italic', color: '#333' }}>{loadingMessage}</p>
+                    <p style={{ fontStyle: 'italic', color: prefersDarkScheme.matches?'#fdf7f3':'#333' }}>{loadingMessage}</p>
                 ) : error ? (
                     <p style={{ color: '#B71C1C', fontWeight: 'bold' }}>{error}</p>
                 ) : (
