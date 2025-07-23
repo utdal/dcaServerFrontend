@@ -67,9 +67,8 @@ const CoevolvingPairs = () => {
 
   const handleInputMSAChange = (event) => {
     if (selectedFileTypes.Seed){
-      if ([...event.target.value.toUpperCase()].every(char => allowed_letters.has(char))) {
-        setInputMSA(event.target.value.toUpperCase());
-      }
+      setInputMSA(event.target.value.toUpperCase());
+      
     }
     else setInputFile(event.target.files[0]);
 
@@ -161,11 +160,20 @@ const CoevolvingPairs = () => {
         maxGaps: Number(maxContGaps) || undefined
       });
       msaId = msaTask.id;
+      if (localStorage.getItem('tasks')){
+        let tasks = JSON.parse(localStorage.getItem('tasks'));
+        tasks.push({id: msaTask.id, isSimulation: false});
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+      }
+      else{
+        localStorage.setItem('tasks', JSON.stringify([{id: msaTask.id, isSimulation: false}]));
+      }
     } else {
       const msa = await uploadMsa({ msa: inputFile });
       msaId = msa.id;
+
     }
-    console.log("MSA ID: " + msaId);
+
 
     let pdbId = null;
     if (inputPDBFile) {
@@ -195,6 +203,12 @@ const CoevolvingPairs = () => {
       authChainIdSupplied: isAuthChain,
       authResidueIdSupplied: isAuthResidue
     });
+    if (localStorage.getItem('tasks')){
+      let tasks = JSON.parse(localStorage.getItem('tasks'));
+      tasks.push({id: dcaTask.id, isSimulation: false});
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+    
 
     const contactsTask = await generateContacts({
       pdbId: pdbId,
@@ -354,7 +368,6 @@ const CoevolvingPairs = () => {
             </div>
           </form>
           </ThemeProvider>
-          {/* I'll add in a settings pane. Filtering the MSA, MSAutils whatever settings are needed., Bit Score */}
         </>
   );
 }

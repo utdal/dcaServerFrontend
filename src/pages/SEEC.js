@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import './SEEC.css'
 import TemperatureInput from '../components/TemperatureInput';
 import StepsInput from '../components/StepsInput';
-import aaToNt from '../functions/aaToNt';
+import {aaToNt} from '../functions/aaToNt';
 
 const SEEC = () => {
     const navigate = useNavigate();
@@ -46,7 +46,7 @@ const SEEC = () => {
         sequenceElement.textContent = aa_filtered;
       }
       else{
-        const filtered = cleaned.replace(/[^GgCcTtAa]/g, '');
+        const filtered = cleaned.replace(/[^GgCcTtAa-]/g, '');
         const sequenceElement = document.getElementById('sequence');
         sequenceElement.textContent = filtered;
         setNtSequence(filtered);
@@ -83,6 +83,14 @@ const SEEC = () => {
 
       console.log(simulationId)
       console.log("Simulation ID", simulationId);
+      if (localStorage.getItem('tasks')){
+        let tasks = JSON.parse(localStorage.getItem('tasks'));
+        tasks.push({id: simulationId, isSimulation: true});
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+      }
+      else{
+        localStorage.setItem('tasks', JSON.stringify([{id: simulationId, isSimulation: true}]));
+      }
       navigate(`/seec-results/?resultID=${simulationId}`);
     } catch (err) {
       setError("Network error: " + err.message);

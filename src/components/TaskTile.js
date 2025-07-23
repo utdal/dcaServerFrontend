@@ -2,12 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { MSA, Task, EvolutionSimulation } from '../backend/api';
 import {Link} from 'react-router-dom';
 
-const TaskTile = ({ task_id, isSimulation = false, updateInterval = 5 }) => {
+const TaskTile = ({ task_id, isSimulation = false, updateInterval = 5, onDelete }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [task, setTask] = useState(null);
     const [lastUpdated, setLastUpdated] = useState(null);
-    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const COLORS = {
+        primaryBG: prefersDarkScheme ? '#1b1b1b' : '#fff9f0',
+        border: prefersDarkScheme ? '#1b1b1b' : '#e87500',
+        text: prefersDarkScheme ? '#fdf7f3' : '#1f1f1f',
+        buttonBG: prefersDarkScheme ? 'rgba(255, 28, 28, 0.45)' : 'rgba(255, 28, 28)',
+    }
+
 
     useEffect(() => {
         async function fetchTask() {
@@ -17,8 +24,8 @@ const TaskTile = ({ task_id, isSimulation = false, updateInterval = 5 }) => {
                     const sim = await EvolutionSimulation.fetch(task_id);
                     const pseudoTask = {
                         id: sim.id,
-                        state: sim.completed ? 'SUCCESS' : 'PENDING',
-                        percent: sim.completed ? 100 : 0,
+                        state: !sim.error_message ? sim.completed ? 'SUCCESS' : 'PENDING' : 'ERROR',
+                        percent: sim.percent,
                         successful: sim.completed,
                         name: 'evolution-simulation',
                         time_started: sim.created,
@@ -57,8 +64,8 @@ const TaskTile = ({ task_id, isSimulation = false, updateInterval = 5 }) => {
                     EvolutionSimulation.fetch(task_id).then(sim => {
                         setTask(prev => ({
                             ...prev,
-                            state: sim.completed ? 'SUCCESS' : 'PENDING',
-                            percent: sim.completed ? 100 : 0,
+                            state: !sim.error_message ? sim.completed ? 'SUCCESS' : 'PENDING' : 'ERROR',
+                            percent: sim.percent,
                             successful: sim.completed,
                         }));
                         setLastUpdated(Date.now());
@@ -74,7 +81,7 @@ const TaskTile = ({ task_id, isSimulation = false, updateInterval = 5 }) => {
 
     const linkStyle = {
         fontSize: 12,
-        color: '#0066cc',
+        color: COLORS.text,
         textDecoration: 'underline',
         backgroundColor: 'transparent',
         border: 'none',
@@ -142,27 +149,62 @@ const TaskTile = ({ task_id, isSimulation = false, updateInterval = 5 }) => {
 
     return (
         <div style={{ 
-            border: '2px solid #0066cc', 
-            background: '#f0f8ff', 
+            border: '2px solid ' + COLORS.border, 
+            background: COLORS.primaryBG, 
             borderRadius: '10px', 
             padding: '20px', 
             margin: '20px' }}>
             {loading ? <>
-                <p style={{ fontStyle: 'italic', color: '#0066cc' }}>Loading...</p>
+                <p style={{ fontStyle: 'italic', color: COLORS.text }}>Loading...</p>
             </> : (error ? <>
                 <p style={{ color: 'maroon' }}>{error}</p>
+                {onDelete && (
+                    <div style={{ marginTop: '10px' }}>
+                        <button
+                            onClick={() => onDelete(task_id)}
+                            style={{
+                                color: 'white',
+                                background: '#cc0000',
+                                border: 'none',
+                                borderRadius: '4px',
+                                padding: '6px 12px',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            Delete Task
+                        </button>
+                    </div>
+                )}
+
             </> : <>
-                <div style={{ fontWeight: 'bold', color: '#003366' }}>
+                <div style={{ fontWeight: 'bold', color: COLORS.text }}>
                     {task.getNiceName() + ' (' + task.state + ' ' + task.percent + '%)'}
                 </div>
-                <div style={{ fontSize: '10px', fontStyle: 'italic', color: prefersDarkScheme.matches?'black':'#003366' }}>ID: {task.id}</div>
-                {task.time_started ? <div style={{color: '#003366' }}><b>Started:</b> {task.time_started.toISOString()}</div> : undefined}
-                {task.time_ended ? <div style={{color: '#003366' }}><b>Ended:</b> {task.time_ended.toISOString()}</div> : undefined}
+                <div style={{ fontSize: '10px', fontStyle: 'italic', color: COLORS.text }}>ID: {task.id}</div>
+                {task.time_started ? <div style={{color: COLORS.text }}><b>Started:</b> {task.time_started.toISOString()}</div> : undefined}
+                {task.time_ended ? <div style={{color: COLORS.text }}><b>Ended:</b> {task.time_ended.toISOString()}</div> : undefined}
                 {task.message ? <div><i>{task.message}</i></div> : undefined}
                 {task.successful ? resultsLink() : undefined}
-                {lastUpdated ? <div style={{ fontSize: '10px', fontStyle: 'italic', color: '#003366' }}>
+                {lastUpdated ? <div style={{ fontSize: '10px', fontStyle: 'italic', color: COLORS.text }}>
                     Last updated {new Date(lastUpdated).toISOString()}
                 </div> : undefined}
+                {onDelete && (
+                    <div style={{ marginTop: '10px' }}>
+                        <button
+                            onClick={() => onDelete(task_id)}
+                            style={{
+                                color: 'white',
+                                background: COLORS.buttonBG,
+                                border: 'none',
+                                borderRadius: '4px',
+                                padding: '6px 12px',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            Delete Task
+                        </button>
+                    </div>
+                )}
             </>)}
         </div>
     );

@@ -21,7 +21,7 @@ const genetic_code = {
     "V": ["GTT", "GTC", "GTA", "GTG"],
     "-": ["---"]
 }
-export default function aaToNt(amino_acid_seq) {
+export function aaToNt(amino_acid_seq) {
   const cleaned = amino_acid_seq.replace(/\s+/g, '');
   const filtered = cleaned.replace(/[^A-Za-z-]/g, '');
   const validKeys = Object.keys(genetic_code);

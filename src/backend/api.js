@@ -316,7 +316,7 @@ export class StructureContacts extends APIDataObject {
 export class EvolutionSimulation extends APIDataObject {
     static objectName = 'evolution-simulation';
 
-    constructor({ id, user, created_at, expires, msa_file, nt_sequence, steps, temperature, result_file, task_id, completed }) {
+    constructor({ id, user, created_at, expires, msa_file, nt_sequence, steps, temperature, result_file, task_id, completed, error_message, percent}) {
         super({ id, user, created: created_at, expires });
         this.msa_file = msa_file;
         this.nt_sequence = nt_sequence;
@@ -325,6 +325,8 @@ export class EvolutionSimulation extends APIDataObject {
         this.result_file = result_file;
         this.task_id = task_id;
         this.completed = completed;
+        this.error_message = error_message;
+        this.percent = percent;
     }
 
     static async fetch(id) {
@@ -364,8 +366,9 @@ async function startTask(endpoint, data) {
             body: JSON.stringify(data)
         }
     );
-
+    console.log(response.status);
     if (!response.ok) {
+
         throw new Error('Bad network response');
     }
 

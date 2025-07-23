@@ -39,6 +39,13 @@ const SEECResults = () => {
     const poll = setInterval(async () => {
         try {
             const sim = await EvolutionSimulation.fetch(resultID);
+            console.log(sim.error_message);
+            if (sim.status === 'ERROR' || sim.error_message) {
+                setError(sim.error_message || 'Evolution simulation failed');
+                clearInterval(poll);
+                return;
+            }
+
             if (sim.completed) {
                 setResult(sim);
                 try {
@@ -78,17 +85,17 @@ const SEECResults = () => {
             <div>             
             <TopBar>
                 <li>
-                <Link to="/" style={{padding: '0', margin: '0'}}>
+                <Link to="/" style={{padding: '0', marginTop: '0'}}>
                     Home
                 </Link>
                 </li>
             </TopBar>
-            <Typography color="error">Error: {error}</Typography>
+            <Typography color="error" style={{marginTop:'50px'}}>Error: {error}</Typography>
             </div>
     );
     }
 
-    if (!result) {
+    if (!result && !error) {
         return(
             <div>             
                 <TopBar>
@@ -101,54 +108,57 @@ const SEECResults = () => {
             </div>
             )
     }
-    return ( 
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-            <div style={{marginBottom:'50px'}}>
-            <TopBar>
-                <li>
-                <Link to="/" style={{padding: '0', margin: '0'}}>
-                    Home
-                </Link>
-                </li>
-            </TopBar>
-            </div>
-            <div className="seec-layout">
-                <div className="seec-title">
-                    <h1>SEEC Results</h1>
-
+    else if (!error) {
+        return ( 
+            <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+                <div style={{marginBottom:'50px'}}>
+                <TopBar>
+                    <li>
+                    <Link to="/" style={{padding: '0', margin: '0'}}>
+                        Home
+                    </Link>
+                    </li>
+                </TopBar>
                 </div>
-                    <div>
-                        {steps.length > 0 && (
-                            <>
-                                <div style={{width:'100%', display:'flex', justifyContent:'center'}} >
-                                <Paper elevation={3} sx={{width:'90%', marginTop:'30px'}}>
-                                    <div style={{width:'100%'}}>
-                                        <CompleteGraph SetSelectedMap={SetSelectedMap} hamiltonians={hamiltonians} steps={steps} data={data}/>
-                                    </div>
-                                    {selectedMap.length>0&&(
-                                    <div style={{width:'100%', marginTop: '30px'}}> 
-                                        <SelectedGraph rawData={data} selectedMap={selectedMap}/>
-                                    </div>
-                                    )}
-                                    {console.log(selectedMap.length)}
-                                </Paper>
-                                </div>
-                        
-                        <div style={{marginTop:'15px'}}>                        
-                            <Button color="warning" onClick={()=>{console.log(selectedMap); SetSelectedMap([])}}>
-                            Reset Selection
-                            </Button>                        
-                        </div>
-                        <div style={{justifyContent:'center', alignItems:'center', margin:'30px'}}>
-                                <SEECTable hamiltonians={hamiltonians} selectedMap={selectedMap} aminoacids={aminoacids}></SEECTable>
-                        </div>
-                        </>
-                        )}
-                        
+                <div className="seec-layout">
+                    <div className="seec-title">
+                        <h1>SEEC Results</h1>
+
                     </div>
+                        <div>
+                            {steps.length > 0 && (
+                                <>
+                                    <div style={{width:'100%', display:'flex', justifyContent:'center'}} >
+                                    <Paper elevation={3} sx={{width:'90%', marginTop:'30px'}}>
+                                        <div style={{width:'100%'}}>
+                                            <CompleteGraph SetSelectedMap={SetSelectedMap} hamiltonians={hamiltonians} steps={steps} data={data}/>
+                                        </div>
+                                        {selectedMap.length>0&&(
+                                        <div style={{width:'100%', marginTop: '30px'}}> 
+                                            <SelectedGraph rawData={data} selectedMap={selectedMap}/>
+                                        </div>
+                                        )}
+                                        {console.log(selectedMap.length)}
+                                    </Paper>
+                                    </div>
+                            
+                            <div style={{marginTop:'15px'}}>                        
+                                <Button color="warning" onClick={()=>{console.log(selectedMap); SetSelectedMap([])}}>
+                                Reset Selection
+                                </Button>                        
+                            </div>
+                            <div style={{justifyContent:'center', alignItems:'center', margin:'30px'}}>
+                                    <SEECTable hamiltonians={hamiltonians} selectedMap={selectedMap} aminoacids={aminoacids}></SEECTable>
+                            </div>
+                            </>
+                            )}
+                            
+                        </div>
+                </div>
             </div>
-        </div>
         
-     );
+        );
+    }
 }
+
 export default SEECResults;
