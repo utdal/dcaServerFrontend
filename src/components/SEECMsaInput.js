@@ -1,8 +1,8 @@
 import React from 'react';
 import theme from '../theme';
 
-import { Box, TextField, ThemeProvider, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Button } from '@mui/material';
-const MSAInput = ({ inputType, inputMSA, handleInputMSAChange, handleFileTypeChange}) => {
+import { Box, TextField, ThemeProvider, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Button, Typography} from '@mui/material';
+const SEECMsaInput = ({ inputType, handleInputMSAChange, handleFileTypeChange}) => {
   const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
   const lightColor = '#fdf7f3';
 
@@ -54,48 +54,31 @@ const MSAInput = ({ inputType, inputMSA, handleInputMSAChange, handleFileTypeCha
   return (
     <>
     <ThemeProvider theme={theme}>
-
-    {/*
-      <h3 style={{ justifyContent: 'center', width: '60%', textAlign: 'center', margin: 'auto', marginTop: '30px' }}>
-        Welcome to the Coevolving Pairs tile.
-        Here, a user may supply a sequence corresponding to a complete protein or a portion of that protein and identify which residue sites may be directly coupled with others.
-        A Multiple Sequence Alignment provided or produced by a seed sequence that has been supplied is used as input for the coevolutionary model chosen.
-        Finally, the pairs are returned, mapped to the protein structure of interest.
-      </h3>
-      */}
-      {/*
-      <h3 style={{marginTop:'20px', marginBottom:'30px'}}>Multiple Sequence Alignment</h3>
-      */}
       
-      {inputType === 'Seed' ?
-        <>
+      {inputType !== 'Seed' && (
 
-          <TextField
-            id="InputSequence"
-            variant="outlined"
-            placeholder='Please supply a seed sequence or full Multiple Sequence Alignment in FASTA format and specify the format with the radio buttons below.'
-            multiline
-            minRows={5}
-            maxRows={5}
-            value={inputMSA}
-            onChange={handleInputMSAChange}
-            sx={[textFieldSx, {width: "50%", }]}          />
-          </>
-        :
         <>
-          <Button variant="contained" component="label">
-            Upload FASTA
+        <Button 
+            variant="contained" 
+            component="label" 
+            sx={{
+            backgroundColor:'transparent', 
+            color: prefersDarkScheme.matches ? '#fdf7f3' : '#1f1f1f',
+            '&:hover': {
+                backgroundColor: 'transparent', 
+                boxShadow: '0px 0px 10px rgba(0,0,0,0.3)'}
+            }}
+        >
+            Upload MSA
             <input
-              type="file"
-              hidden
-              onChange={handleInputMSAChange}
+            type="file"
+            hidden
+            onChange={handleInputMSAChange}
             />
-          </Button>
-          <span style={{padding: '10px', fontStyle: 'italic'}}>
-            {inputMSA?.name}
-          </span>
+        </Button>
+
         </>
-      }
+      )}
       <div>
       <FormControl>
         <FormLabel id="input-msa-type" sx={textSx}>Input Type</FormLabel>
@@ -126,4 +109,4 @@ const MSAInput = ({ inputType, inputMSA, handleInputMSAChange, handleFileTypeCha
   );
 };
 
-export default MSAInput;
+export default SEECMsaInput;

@@ -5,9 +5,12 @@ import {
     FormLabel,
     FormControlLabel,
     Switch,
-    TextField
+    TextField,
+    ThemeProvider
 } from '@mui/material'
 import React, { useEffect, useState } from 'react';
+import theme from '../theme';
+
 const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
 const lightColor = '#fdf7f3';
@@ -37,6 +40,8 @@ const SequenceInput = ({inputType, setInputType, sequence, setSequence}) => {
                 fontFamily: 'Helvetica',
               }}
             >
+          <ThemeProvider theme={theme}>
+
             <FormControl fullWidth>
                 <h3 id="sequence-input-type">Introduce Sequence to Evolve</h3>
                 <TextField
@@ -94,7 +99,7 @@ const SequenceInput = ({inputType, setInputType, sequence, setSequence}) => {
                     />
                 </FormGroup>
             </FormControl>
-            
+        </ThemeProvider>
         
 
         </Box>

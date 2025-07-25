@@ -4,7 +4,9 @@ import {
     FormControl,
     InputLabel,
     Input,
+    ThemeProvider
 } from '@mui/material'
+import theme from '../theme';
 const StepsInput = ({steps, SetSteps}) => {
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
     const darkColor = '#fdf7f3';
@@ -16,6 +18,7 @@ const StepsInput = ({steps, SetSteps}) => {
     }
     return ( 
         <Box sx={{display:'flex', justifyContent:'center'}}>
+            <ThemeProvider theme={theme}>
             <FormControl variant="standard" sx={{ width: '120px'}}>
                 <InputLabel sx={{color: prefersDarkScheme.matches ? darkColor : undefined}}>Steps</InputLabel>
                 <Input
@@ -28,6 +31,7 @@ const StepsInput = ({steps, SetSteps}) => {
                 value={steps}
                 />
             </FormControl>
+            </ThemeProvider>
         </Box>
      );
 }

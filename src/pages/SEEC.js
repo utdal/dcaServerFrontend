@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Form, useNavigate } from 'react-router-dom';
-import { startEvolutionSimulation } from '../backend/api';
+import { startEvolutionSimulation, generateMsa, uploadMsa } from '../backend/api';
 import{
   Box,
   Button,
   Typography,
   Tooltip,
 } from '@mui/material';
-import MSAInput from '../components/MSAInput';
+import MSAInput from '../components/SEECMsaInput';
 import TopBar from '../components/TopBar';
 import SequenceInput from '../components/sequence-input';
 import { Link } from 'react-router-dom';
@@ -15,11 +15,19 @@ import './SEEC.css'
 import TemperatureInput from '../components/TemperatureInput';
 import StepsInput from '../components/StepsInput';
 import {aaToNt} from '../functions/aaToNt';
-
+import {ntToAa} from '../functions/ntToAA';
 const SEEC = () => {
     const navigate = useNavigate();
-    const [msaFile, setMsaFile] = useState(null);
+    const defaultMaxGaps = 20;
+    const defaultECutoff = 0.2;
     const [inputType, setInputType] = useState('AminoAcid');
+    const [inputMSA, setInputMSA] = useState('');
+    const [inputFile, setInputFile] = useState(null);
+    const [aaSequence, setAaSequence] = useState('');
+    const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: true });
+    const [ECutoff, setECutoff] = useState(defaultECutoff);
+    const [maxContGaps, setMaxContGaps] = useState(defaultMaxGaps);
+
     const [sequence, setSequence] = useState('');
     const [steps, setSteps] = useState(0);
     const allowed_letters= new Set(['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']);
@@ -28,14 +36,6 @@ const SEEC = () => {
     const [error, setError] = useState(null);
     const [ntSequence, setNtSequence] = useState('');
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-
-    
-    const handleFileChange = (event) => {
-      const file = event.target.files[0];
-      setMsaFile(file);
-      console.log("File uploaded:", file);
-    };
-
     
     useEffect(()=>{
       const cleaned = sequence.replace(/\s+/g, '');
@@ -44,13 +44,14 @@ const SEEC = () => {
         setNtSequence(nt_seq);
         const sequenceElement = document.getElementById('sequence');
         sequenceElement.textContent = aa_filtered;
+        setAaSequence(aa_filtered);
       }
       else{
         const filtered = cleaned.replace(/[^GgCcTtAa-]/g, '');
         const sequenceElement = document.getElementById('sequence');
         sequenceElement.textContent = filtered;
         setNtSequence(filtered);
-
+        setAaSequence(ntToAa(filtered)[0]);
       }
     },[inputType, sequence]);
 
@@ -59,23 +60,71 @@ const SEEC = () => {
     },[ntSequence]);
 
 
+  const handleFileTypeChange = (type) => {
+    setSelectedFileTypes((prev) => ({
+      ...prev,
+      MSA: type === 'MSA' ? true : false,
+      Seed: type === 'Seed' ? true : false,
+    }));
+  };
+  const handleInputMSAChange = (event) => {
+    if (selectedFileTypes.MSA){
+      setInputFile(event.target.files[0]);
+      
+    }
+  };
+
+  useEffect(()=>{
+    if (selectedFileTypes.Seed===true){
+      setInputMSA(aaSequence);
+      console.log(aaSequence);
+    }
+  },[aaSequence, selectedFileTypes]);
+  const handleMaxContGapsChange = (event) => {
+    if (((!isNaN(event.target.value)) || event.target.value === '')) {
+      setMaxContGaps(event.target.value);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
-    if (!msaFile) {
-      setError("Please select an MSA file.");
-      return;
-    }
+
     if (!sequence.trim()) {
       setError("Please enter nucleotide sequence.");
       return;
     }
 
     try {
+      let msaId = null;
+      if (selectedFileTypes.Seed) {
+        const msaTask = await generateMsa({
+          seed: inputMSA,
+          ECutoff: Number(ECutoff) || undefined,
+          maxGaps: Number(maxContGaps) || undefined
+        });
+        msaId = msaTask.id;
+        
+        if (localStorage.getItem('tasks')){
+          let tasks = JSON.parse(localStorage.getItem('tasks'));
+          tasks.push({id: msaTask.id, isSimulation: false});
+          localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+        else{
+          localStorage.setItem('tasks', JSON.stringify([{id: msaTask.id, isSimulation: false}]));
+        }
+      } else {
+        if (!inputFile){
+          setError("Please upload an MSA file.");
+          return;
+        }
+        const msa = await uploadMsa({ msa: inputFile });
+        msaId = msa.id;
+      }
+      console.log("MSA ID", msaId);
       const { simulationId } = await startEvolutionSimulation({
-        msaFile: msaFile,
+        msa_id: msaId,
         ntSequence: ntSequence,
         steps: steps,
         temperature: temperature,
@@ -98,7 +147,6 @@ const SEEC = () => {
   };
 
 
-  useEffect(() => {console.log(result)},[result])
 
     return ( 
         <Box>
@@ -153,30 +201,17 @@ const SEEC = () => {
                     <h5>Upload MSA in FASTA format</h5>
                   </div>
                   <div className="cs-msa">
-                    <div>
-                    <Button 
-                      variant="contained" 
-                      component="label" 
-                      onChange={handleFileChange}
-                      sx={{
-                        backgroundColor:'transparent', 
-                        color: prefersDarkScheme.matches ? '#fdf7f3' : '#1f1f1f',
-                        '&:hover': {
-                          backgroundColor: 'transparent', 
-                          boxShadow: '0px 0px 10px rgba(0,0,0,0.3)'}
-                      }}
-                    >
-                      Upload MSA
-                      <input
-                        type="file"
-                        hidden
-                      />
-                    </Button>
+                    <div style={{width: '50%', display:'flex', flexDirection:'column', alignItems:'center'}}>
+                    <MSAInput
+                      inputType={selectedFileTypes.Seed ? 'Seed' : 'MSA'}
+                      handleInputMSAChange={handleInputMSAChange}
+                      handleFileTypeChange={handleFileTypeChange}
+                    />
                     </div>
                     <div>
-                    {msaFile && (
+                    {inputFile && (
                       <Typography fontStyle='italic' variant="body2" sx={{ marginTop: 1, color: prefersDarkScheme.matches ? '#fdf7f372' : '#1f1f1f86' }}>
-                        Selected file: {msaFile.name}
+                        Selected file: {inputFile.name}
                       </Typography>
                     )}
                     </div>

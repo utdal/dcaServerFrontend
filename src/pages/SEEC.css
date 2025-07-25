@@ -3,7 +3,7 @@
     grid-template-areas: 'cs-seq-input cs-seq-input cs-seq-input'
                 ' temp-description msa-description steps-description'
                ' cs-temp-input cs-msa cs-steps ';
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 2fr 1fr;
     gap:1;
 }
 .cs-seq-input, .cs-msa, .cs-temp-input, .cs-steps{

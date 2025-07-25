@@ -1,4 +1,4 @@
-const genetic_code = {
+export const genetic_code = {
     "A": ["GCT", "GCC", "GCA", "GCG"],
     "R": ["CGT", "CGC", "CGA", "CGG", "AGA", "AGG"],
     "N": ["AAT", "AAC"],

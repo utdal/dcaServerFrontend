@@ -462,9 +462,9 @@ export async function generateContacts({ pdbId, caOnly, distThresh, isCIF, authC
     });
 }
 
-export async function startEvolutionSimulation({ msaFile, ntSequence, steps, temperature }) {
+export async function startEvolutionSimulation({ msa_id, ntSequence, steps, temperature }) {
     const formData = new FormData();
-    formData.append('msa_file', msaFile);
+    formData.append('msa_id', msa_id);
     formData.append('nt_sequence', ntSequence);
     formData.append('steps', steps);
     formData.append('temperature', temperature);

@@ -12,11 +12,12 @@ import {
   Slider,
   Select,
   Typography,
-  MenuItem
+  MenuItem,
+  ThemeProvider
 } from '@mui/material';
 import {useState, useEffect} from 'react';
 import { Form } from 'react-router-dom';
-
+import theme from '../theme';
 
 export default function TemperatureInput({temperature, SetTemperature}) {
   const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
@@ -26,6 +27,7 @@ export default function TemperatureInput({temperature, SetTemperature}) {
   }
   return (
     <Box sx={{display:'flex', justifyContent:'center'}}>
+      <ThemeProvider theme={theme}>
       <FormControl variant="standard" sx={{width: 120 }}>
         <InputLabel sx={{color: prefersDarkScheme.matches ? darkColor : undefined}}>Temperature</InputLabel>
         <Input id="temperature-input" type="number" value={temperature} onChange={handleTemperature}
@@ -35,6 +37,7 @@ export default function TemperatureInput({temperature, SetTemperature}) {
           }}
         />
       </FormControl>
+      </ThemeProvider>
     </Box>
   );
 }
