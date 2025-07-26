@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route} from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import CoevolvingPairs from './pages/CoevolvingPairs';
 import LGL from './pages/LGL';
 import SEEC from './pages/SEEC';
@@ -14,8 +14,7 @@ import prosspecLogo from './pages/ProSSpeC_logo.png';
 import dcascapesLogo from './pages/dcascapesLogo.png';
 import seecLogo from './pages/SEEC-SF-Long.png';
 import molegulegoLogo from './pages/moleculego.png';
-import githubLogo from './pages/github-mark.png';
-import githubLogoWhite from './pages/github-mark-white.png';
+import githibLogo from './pages/github-mark.png';
 import nsfLogo from './pages/nsfLogo.webp';
 import LGLThumbnail from './pages/LGLThumbnail.png';
 import DCATaskList from './pages/DCATaskList';
@@ -25,7 +24,6 @@ import ResultsPage from './pages/ResultsPage';
 import HomeButton from './components/HomeButton';
 import ViewTasks from './pages/ViewTasks';
 import UTDLogo from './pages/UTDLogo.png';
-import UTDLogoWhite from './pages/UTDLogo-white.png';
 import RiceLogo from './pages/rice-logo.png';
 import ApiTest from './backend/ApiTest';
 import UnifiedTopBar from './components/UnifiedTopBar';
@@ -35,9 +33,9 @@ import './App.css';
 
 import { Link } from 'react-router-dom';
 import { width } from '@fortawesome/free-brands-svg-icons/fa42Group';
-import {Button} from '@mui/material';
+import LabTeam from './pages/Labdirectory';
+
 function App() {
-  const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
   return (
     <BrowserRouter>
       <div className="App">
@@ -50,14 +48,15 @@ function App() {
           <Route path="/introductory-video" element={<Introvid />} />
           <Route path="/results" element={<ResultsPage />} />
           <Route path="/guide-for-biologists" element={<Bioguide />} />
+          <Route path="/lab-team" element={<LabTeam />} />
           <Route path="/loading" element={<LoadingPage />} />
           <Route path="/dca-task-list" element={<DCATaskList />} />
           <Route path="/tasks" element={<ViewTasks />} />
           <Route path="/test" element={<ApiTest />} />
           <Route path="/" element={
           <>
+         
             <UnifiedTopBar />
-            
             <main>
               <section className="web-servers">
                 <h2>Tools</h2>
@@ -77,13 +76,13 @@ function App() {
                   />
                   <Tile
                     toolName="ProSSpeC"
-                    description={<>ProSSpeC: Protease (NIa) Substrate Specificity Calculator</>}
+                    description={<>ProSSpeC: Protease (NIa) Substrate Specificity Calculator<br/><br/><i>Comming Soon!</i></>}
                     link="#"
                     imageSrc={prosspecLogo}
                   />
                   <Tile
                     toolName="Sequence Evolution with Epistatic Contributions"
-                    description={<>Simulates protein evolution using inferred epistasis from natural protein families</>}
+                    description={<>SEEC<br/><br/><i>Comming Soon!</i></>}
                     link="/seec"
                     imageSrc={seecLogo}      
                   />
@@ -124,13 +123,13 @@ function App() {
                     toolName="MfDCA Source Code"
                     description="View on GitHub"
                     link="https://github.com/utdal/py-mfdca"
-                    imageSrc={!prefersDarkScheme.matches? githubLogo: githubLogoWhite}
+                    imageSrc={githibLogo}
                   />
                   <Tile
                     toolName="SEEC Source Code"
                     description="View on GitHub"
                     link="https://github.com/utdal/seec-nt"
-                    imageSrc={!prefersDarkScheme.matches? githubLogo: githubLogoWhite}
+                    imageSrc={githibLogo}
                   />
                 </div>
               </section>
@@ -148,18 +147,19 @@ function App() {
       </a>
     </div>
     <div className="footer-center">
+      <div>
+        <a href="https://www.utdallas.edu/" target="_blank" rel="noopener noreferrer">
+          <img src={UTDLogo} alt="UTD Logo" className="utd-logo" />
+        </a>
         <a href="https://www.rice.edu/">
           <img src={RiceLogo} alt="Rice Logo" className='rice-logo'/>
         </a>
-        <a href="https://www.utdallas.edu/" target="_blank" rel="noopener noreferrer">
-          <img src={ !prefersDarkScheme.matches ? UTDLogo : UTDLogoWhite } alt="UTD Logo" className="utd-logo" />
-        </a>
-        <a href="https://nsf.gov/" target="_blank" rel="noopener noreferrer">
+      </div>
+      <a href="https://nsf.gov/" target="_blank" rel="noopener noreferrer">
         <img src={nsfLogo} alt="NSF Logo" className="nsf-logo" />
       </a>
     </div>
   </div>
-
 </footer>
 
           </>

@@ -13,7 +13,7 @@ const UnifiedTopBar = () => {
         <a href="https://morcoslaboratory.org/">Morcos Lab</a>
         <a href="https://morcoslaboratory.org/?page_id=38">Research</a>
         <a href="https://morcoslaboratory.org/?page_id=53">Publications</a>
-        <a href="https://morcoslaboratory.org/?page_id=66">People</a>
+        <Link to="/lab-team">Directory</Link>
         <Link to="/guide-for-biologists">Guide</Link>
         <Link to="/tasks">Tasks</Link>
       </nav>
