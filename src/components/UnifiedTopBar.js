@@ -12,7 +12,7 @@ const UnifiedTopBar = () => {
       <nav className="nav-links-utb">
         <a href="https://morcoslaboratory.org/">Morcos Lab</a>
         <a href="https://morcoslaboratory.org/?page_id=38">Research</a>
-        <a href="https://morcoslaboratory.org/?page_id=53">Publications</a>
+        <Link to="/publications">Publications</Link>
         <Link to="/lab-team">Directory</Link>
         <Link to="/guide-for-biologists">Guide</Link>
         <Link to="/tasks">Tasks</Link>

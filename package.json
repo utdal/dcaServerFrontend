@@ -17,6 +17,7 @@
     "@testing-library/user-event": "^13.5.0",
     "3dmol": "^2.3.0",
     "chart.js": "^4.4.4",
+    "clsx": "^2.1.1",
     "d3": "^7.9.0",
     "framer-motion": "^12.23.0",
     "install": "^0.13.0",
@@ -59,6 +60,9 @@
     ]
   },
   "devDependencies": {
-    "react-router-dom": "^6.25.1"
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "react-router-dom": "^6.25.1",
+    "tailwindcss": "^4.1.11"
   }
 }
