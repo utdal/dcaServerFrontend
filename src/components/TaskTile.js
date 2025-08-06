@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MSA, Task, EvolutionSimulation } from '../backend/api';
 import {Link} from 'react-router-dom';
 
-const TaskTile = ({ task_id, isSimulation = false, updateInterval = 5, onDelete }) => {
+const TaskTile = ({ task_id, isSimulation = false, updateInterval = 5, onDelete, contactsId, mappedId }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [task, setTask] = useState(null);
@@ -110,28 +110,10 @@ const TaskTile = ({ task_id, isSimulation = false, updateInterval = 5, onDelete 
         } else if (task.name === 'api.tasks.compute_dca_task') {
             return (
                 <a
-                    href={'/coevolving-pairs-results?task_id=' + task.id}
+                    href={'/coevolving-pairs-results?structure_contacts=' + contactsId + '&mapped_di=' + mappedId}
                     style={linkStyle}
                     target='_blank'>
                     View DCA Results
-                </a>
-            );
-        } else if (task.name === 'api.tasks.map_residues_task') {
-            return (
-                <a
-                    href={'/coevolving-pairs-results?task_id=' + task.id}
-                    style={linkStyle}
-                    target='_blank'>
-                    View Results
-                </a>
-            );
-        } else if (task.name === 'api.tasks.generate_contacts_task') {
-            return (
-                <a
-                    href={'/coevolving-pairs-results?structure_id=' + task.id}
-                    style={linkStyle}
-                    target='_blank'>
-                    View Results
                 </a>
             );
         }

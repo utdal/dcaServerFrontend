@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import HomeButton from '../components/HomeButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link} from 'react-router-dom';
 import ContactMap from '../components/ContactMap';
 import DiTable from '../components/DiTable';
 import { Task, DCA, MappedDi, StructureContacts } from '../backend/api';
@@ -197,7 +197,11 @@ const CoevolvingPairsResults = () => {
 
             <div style={styles.resultsSection}>
                 {loading ? (
-                    <p style={{ fontStyle: 'italic', color: prefersDarkScheme.matches?'#fdf7f3':'#333' }}>{loadingMessage}</p>
+                    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+                        <p style={{ fontStyle: 'italic', color: prefersDarkScheme.matches?'#fdf7f3':'#333' }}>{loadingMessage}</p>
+                        <Link to='/tasks' style={{color: '#e87500', textDecoration: 'underline', fontSize: '16px', marginTop: '10px'}}>Monitor tasks</Link>
+                    </div>
+                    
                 ) : error ? (
                     <p style={{ color: '#B71C1C', fontWeight: 'bold' }}>{error}</p>
                 ) : (
@@ -284,7 +288,7 @@ const CoevolvingPairsResults = () => {
                                     ...(collapsedSections.circlePlot ? styles.contentCollapsed : styles.contentExpanded),
                                 }}
                             >
-                                <CirclePlot mappedDi={mappedDi} chain={chain} />
+                                <CirclePlot mappedDi={mappedDi} chain={chain} selectedDI={selectedDI}/>
                             </div>
                         </div>
                         <div style={styles.section}>

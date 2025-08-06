@@ -53,14 +53,15 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
               onChange={handleChain1Change}
               sx={textFieldSx}
             />
-            <TextField
+            
+            {/* <TextField
               label="2 (optional)"
               variant='filled'
               name="chainId"
               value={chain2}
               onChange={handleChain2Change}
               sx={textFieldSx}
-            />
+            /> */}
           </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 5, flexDirection: 'row'}}>

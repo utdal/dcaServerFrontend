@@ -5,7 +5,9 @@ import { faAtom } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import UTDLogo from './UTDLogo.png';
 import UnifiedTopBar from '../components/UnifiedTopBar';
+import SEECVideo from '../components/SEECVideo';
 import { motion } from 'framer-motion';
+import Tabs from '../components/GuideTabs';
 
 const Bioguide = () => {
   const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -42,62 +44,126 @@ const Bioguide = () => {
     marginTop: '20px',
   };
 
+  const tabs = [
+    {
+      title: 'DCA Guide',
+      content: (
+        <>
+          <motion.div
+            style={sectionStyle}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h3 style={headingStyle}>Basics to DCA</h3>
+            <p style={paragraphStyle}>
+              As organisms evolve, point mutations in genes encoding functional proteins may result in a nonsynonymous codon change. Nonsynonymous codon changes lead to an amino acid residue change in the encoded protein. If the residue is important in the structure and/or function of the protein, then selective pressure is increased upon other residues that stabilize the intramolecular or intermolecular interaction in the wild-type protein(s).
+            </p>
+          </motion.div>
+          <motion.div
+            style={sectionStyle}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <h3 style={headingStyle}>Instructions for Using the MSA-DCA Tool</h3>
+            <p style={paragraphStyle}>
+              To generate an MSA or DCA based off of a protein sequence, click on the MSA-DCA tile on the front page. You’ll then be directed to enter your protein sequence and generate an MSA and DCA. The default settings are configured to generate both, but you can manually specify which ones to generate and where to store task IDs for these products in the MSA-DCA settings.
+            </p>
+          </motion.div>
+          <motion.div
+            style={sectionStyle}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <img src={dcaImage} alt="DCA Guide" style={imageStyle} />
+          </motion.div>
+        </>
+      ),
+    },
+    {
+      title: 'SEEC Video',
+      content: (
+
+          <SEECVideo prefersDarkScheme={prefersDarkScheme}/>
+      ),
+    },
+  ];
+
   return (
-    <div style={{
-      backgroundColor: prefersDarkScheme ? '#121212' : '#eaf1f8',
-      minHeight: '100vh',
-      paddingBottom: '80px'
-    }}>
-      <UnifiedTopBar />
-      <div style={{ paddingTop: '100px', paddingLeft: '20px', paddingRight: '20px' }}>
-
-        <motion.div style={sectionStyle} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h2 style={{ ...headingStyle, textAlign: 'center' }}>Guide for Biologists</h2>
-          <p style={{ ...paragraphStyle, textAlign: 'center' }}>
-            Hi! Welcome to the Morcos Lab DCA Server. Read below to understand how to use the algorithms available here as well as the math behind them.
-          </p>
-        </motion.div>
-
-        <motion.div style={sectionStyle} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <h3 style={headingStyle}>Basics to DCA</h3>
-          <p style={paragraphStyle}>
-          As organisms evolve, point mutations in genes encoding functional proteins may result in a nonsynonymous codon change. Nonsynonymous codon changes lead to an amino acid residue change in the encoded protein. If the residue is important in the structure and/or function of the protein, then selective pressure is increased upon other residues that stabilize the intramolecular or intermolecular interaction in the wild-type protein(s). Thus, secondary mutations occur in other residues that complement the initial mutation in order to re-stabilize the protein, interface, or maintain function. This is referred to as coevolution.  </p>
-          <p style={paragraphStyle}>Direct-coupling analysis (DCA) is a method that exploits the coevolution of the amino acid residues to infer intramolecular and intermolecular residue interactions. DCA is a global statistical inference model and has been used for the study of coevolution in protein sequences with the ability to disentangle direct correlations from indirect correlations. With the usage of DCA, an approximation of the global probability distribution estimated from a large amount of sequences could be modeled for a set of residual positions in a sequence. This model accurately estimates the direct covariations between any two variables, such as pairwise residues within sequence, multiple lineages or evolutionary history, while excluding secondary correlations between dependent variables.</p>
-        </motion.div>
-
-        <motion.div style={sectionStyle} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-          <img src={dcaImage} alt="Guide for Biologists" style={imageStyle} />
-        </motion.div>
-
-        <motion.div style={sectionStyle} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-          <h3 style={headingStyle}>Instructions for Using the MSA-DCA Tool</h3>
-          <p style={paragraphStyle}>
-          To generate an MSA or DCA based off of a protein sequence, click on the MSA-DCA tile on the front page. You’ll then be directed to enter your protein sequence and generate an MSA and DCA. The default settings are configured to generate both, but you can manually specify which ones to generate and where to store task IDs for these products in the MSA-DCA settings. After clicking submit, you’ll be faced with a task page showing you all of your currently running tasks. When they complete, you can click on them and either download your MSA or open a page displaying your DCA results. To access past DCAs, go to the front page and click on the DCA Results tile.   </p>
-        </motion.div>
-      </div>
-
-      <footer style={{
-        backgroundColor: prefersDarkScheme ? '#333' : '#C4CEDC',
-        color: prefersDarkScheme ? '#f0f0f0' : '#333',
-        padding: '20px 40px',
+    <div
+      style={{
         display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        fontSize: '16px',
-        borderTop: '3px solid #ff6600'
-      }}>
+        flexDirection: 'column',
+        minHeight: '100vh',
+        backgroundColor: prefersDarkScheme ? '#121212' : '#eaf1f8',
+      }}
+    >
+      <UnifiedTopBar />
+      <main style={{ flex: '1', paddingBottom: '80px' }}>
+        <div style={{ paddingTop: '30px', paddingLeft: '20px', paddingRight: '20px' }}>
+          <motion.div
+            style={sectionStyle}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h2 style={{ ...headingStyle, textAlign: 'center' }}>Guide for Biologists</h2>
+            <p style={{ ...paragraphStyle, textAlign: 'center' }}>
+              Hi! Welcome to the Morcos Lab DCA Server. Read below to understand how to use the algorithms available here as well as the math behind them.
+            </p>
+          </motion.div>
+          <Tabs tabs={tabs} darkMode={prefersDarkScheme} />
+        </div>
+      </main>
+      <footer
+        style={{
+          backgroundColor: prefersDarkScheme ? '#333' : '#C4CEDC',
+          color: prefersDarkScheme ? '#f0f0f0' : '#333',
+          padding: '20px 40px',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          fontSize: '16px',
+          borderTop: '3px solid #ff6600',
+        }}
+      >
         <div style={{ flex: '1' }}>
           <p style={{ margin: 0 }}>Designed by Morcos Lab</p>
         </div>
         <div style={{ flex: '2', textAlign: 'center' }}>
-          <a href="mailto:insert@gmail.com" style={{ margin: '0 15px', color: prefersDarkScheme ? '#f0f0f0' : '#333', textDecoration: 'none' }}>
+          <a
+            href="mailto:insert@gmail.com"
+            style={{
+              margin: '0 15px',
+              color: prefersDarkScheme ? '#f0f0f0' : '#333',
+              textDecoration: 'none',
+            }}
+          >
             insert@gmail.com
           </a>
-          <a href="https://morcoslaboratory.org/" target="_blank" rel="noreferrer" style={{ margin: '0 15px', color: prefersDarkScheme ? '#f0f0f0' : '#333', textDecoration: 'none' }}>
+          <a
+            href="https://morcoslaboratory.org/"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              margin: '0 15px',
+              color: prefersDarkScheme ? '#f0f0f0' : '#333',
+              textDecoration: 'none',
+            }}
+          >
             About the Lab
           </a>
-          <a href="https://www.moleculego.com/" target="_blank" rel="noreferrer" style={{ margin: '0 15px', color: prefersDarkScheme ? '#f0f0f0' : '#333', textDecoration: 'none' }}>
+          <a
+            href="https://www.moleculego.com/"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              margin: '0 15px',
+              color: prefersDarkScheme ? '#f0f0f0' : '#333',
+              textDecoration: 'none',
+            }}
+          >
             <FontAwesomeIcon icon={faAtom} /> MoleculeGo
           </a>
         </div>

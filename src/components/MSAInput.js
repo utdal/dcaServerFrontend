@@ -82,7 +82,7 @@ const MSAInput = ({ inputType, inputMSA, handleInputMSAChange, handleFileTypeCha
             sx={[textFieldSx, {width: "50%", }]}          />
           </>
         :
-        <>
+        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
           <Button variant="contained" component="label">
             Upload FASTA
             <input
@@ -94,7 +94,7 @@ const MSAInput = ({ inputType, inputMSA, handleInputMSAChange, handleFileTypeCha
           <span style={{padding: '10px', fontStyle: 'italic'}}>
             {inputMSA?.name}
           </span>
-        </>
+        </div>
       }
       <div>
       <FormControl>

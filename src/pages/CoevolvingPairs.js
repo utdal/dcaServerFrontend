@@ -48,7 +48,17 @@ const CoevolvingPairs = () => {
   const [caOnly, setCaOnly] = useState(false)
   const [theta, setTheta] = useState(defaultTheta);
   const [analysisMethod, setAnalysisMethod] = useState('mfDCA');
-  const allowed_letters= new Set(['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']);
+  const isValidNumber = (val) => val.toString().trim() !== '' && !isNaN(Number(val));
+ 
+  const isFormValid =
+    (inputMSA.trim() !== '' || inputFile !== null) &&
+    (inputPDBID.trim() !== '' || inputPDBFile !== null) &&
+    chain1.trim() !== '' &&
+    distThresh.trim() !== '' &&
+    theta.toString().trim() !== '' &&
+    analysisMethod.trim() !== '' &&
+    isValidNumber(distThresh) &&
+    ECutoff !== '-';
 
   const handleFileTypeChange = (type) => {
     setSelectedFileTypes((prev) => ({
@@ -119,7 +129,7 @@ const CoevolvingPairs = () => {
   };
 
   const handleDistThreshChange = (event) => {
-    if (!isNaN(event.target.value) || event.target.value === '' || event.target.value === '-') {
+    if ((!isNaN(event.target.value) || event.target.value === '') && (!event.target.value.includes('-'))){
       setDistThresh(event.target.value);
     }
   };
@@ -203,13 +213,7 @@ const CoevolvingPairs = () => {
       authChainIdSupplied: isAuthChain,
       authResidueIdSupplied: isAuthResidue
     });
-    if (localStorage.getItem('tasks')){
-      let tasks = JSON.parse(localStorage.getItem('tasks'));
-      tasks.push({id: dcaTask.id, isSimulation: false});
-      localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
     
-
     const contactsTask = await generateContacts({
       pdbId: pdbId,
       caOnly: caOnly,
@@ -218,7 +222,14 @@ const CoevolvingPairs = () => {
       authChainIdSupplied: isAuthChain,
       authResidueIdSupplied: isAuthResidue
     });
-
+    if (localStorage.getItem('tasks')){
+      let tasks = JSON.parse(localStorage.getItem('tasks'));
+      tasks.push({id: dcaTask.id, contactsId: contactsTask.id, mappedId: residuesTask.id, isSimulation: false});
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      console.log(dcaTask.id);
+      console.log(contactsTask.id);
+      console.log(residuesTask.id);
+    }
     const url = '/coevolving-pairs-results/?structure_contacts=' + contactsTask.id + '&mapped_di=' + residuesTask.id;
     window.open(url, '_blank');
   };
@@ -362,7 +373,7 @@ const CoevolvingPairs = () => {
                 renderMSA={selectedFileTypes.Seed}
               ></AdvancedSettings>
 
-            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, margin: '10px 20px' }}>
+            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, margin: '10px 20px' }} disabled={!isFormValid}>
               Submit
             </Button>
             </div>

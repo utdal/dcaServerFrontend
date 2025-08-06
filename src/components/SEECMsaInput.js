@@ -69,7 +69,7 @@ const SEECMsaInput = ({ inputType, handleInputMSAChange, handleFileTypeChange}) 
                 boxShadow: '0px 0px 10px rgba(0,0,0,0.3)'}
             }}
         >
-            Upload MSA
+            Upload MSA (AA Only)
             <input
             type="file"
             hidden

@@ -49,8 +49,8 @@ const DiTable = ({ mappedDi, selectedDi = null, highlightRow = null, onRowClick 
                                 }}
                             >
                                 <td style={rowStyle}>{index + 1}</td>
-                                <td style={rowStyle}>{row[0]}</td>
-                                <td style={rowStyle}>{row[1]}</td>
+                                <td style={rowStyle}>{row[0]+1}</td>
+                                <td style={rowStyle}>{row[1]+1}</td>
                                 <td style={rowStyle}>{row[2].toFixed(5)}</td>
                             </tr>
                         ))}

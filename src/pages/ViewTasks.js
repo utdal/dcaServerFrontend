@@ -93,6 +93,8 @@ const ViewTasks = () => {
                 <TaskTile
                     key={item.id}
                     task_id={item.id}
+                    contactsId={item.contactsId}
+                    mappedId={item.mappedId}
                     isSimulation={item.isSimulation}
                     onDelete={handleDeleteTask}
                 />

@@ -105,6 +105,8 @@ const SEECResults = () => {
                     </Link>
                     </li>
                 </TopBar><Box sx={{ textAlign: 'center', mt: 10 }}><CircularProgress /><Typography>Waiting for results...</Typography></Box>
+                <Link to='/tasks' style={{color: '#e87500', textDecoration: 'underline', fontSize: '12px', marginTop: '15px'}}>Monitor Tasks</Link>
+
             </div>
             )
     }

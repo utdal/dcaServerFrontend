@@ -1,87 +1,89 @@
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
 
-export const CirclePlot = ({ mappedDi, chain }) => {
-    const [diCount, setDiCount] = useState(500);
-    const nodes = 100;
-
-    let edges = [];
-
-    if (mappedDi !== null) {
-        const pairs = mappedDi.topDiPairs(diCount);
-        for (let i = 0; i < pairs.length; i++) {
-            edges.push(pairs[i])
-        }
+export const CirclePlot = ({ mappedDi, chain, selectedDI}) => {
+    let nodes;
+    const radius1 = 1.5;
+    const radius2 = 1.7;
+    let edges;
+    if (selectedDI) {
+        edges = selectedDI.map(i => mappedDi.mapped_di[i]);
+        const residues = edges.flat();
+        nodes = Math.max(...residues) + 1;
+    } else {
+        edges = mappedDi.mapped_di;
+        nodes = 100;
     }
+    
 
     return (
-        <div style={{}}>
-            <div style={{
-                fontWeight: 'bold'
-            }}>DI Count:</div>
-            <input
-                type="range"
-                min="1"
-                max={mappedDi.mapped_di.length}
-                value={diCount}
-                onChange={e => setDiCount(e.target.value)}
-                style={{
-                    width: "80%",
-                    height: "8px",
-                    borderRadius: "5px",
-                    background: "linear-gradient(90deg, rgb(187, 222, 251) 0%, rgb(13, 71, 161) 100%)",
-                    appearance: "none",
-                    outline: "none",
-                    transition: "background 0.3s",
-                }}
-            />
-            <ChordDiagram nodes={nodes} edges={edges} />
+        <div>
+            
+            <ChordDiagram nodes={nodes} edges={edges} radius1={radius1} radius2={radius2} />
         </div>
     );
 };
 
-export const ChordDiagram = ({ nodes, edges }) => {
+export const ChordDiagram = ({ nodes, edges, radius1, radius2 }) => {
     const [plotData, setPlotData] = useState(null);
 
     useEffect(() => {
         const offset = Math.PI * (0.5 - 1 / nodes);
         const theta = Array.from({ length: nodes }, (_, i) => -2 * Math.PI * i / nodes + offset);
 
-        // Define the nodes (points on the circle)
-        const x = theta.map(t => Math.cos(t));
-        const y = theta.map(t => Math.sin(t));
+        const x1 = theta.map(t => Math.cos(t) * radius1);
+        const y1 = theta.map(t => Math.sin(t) * radius1);
 
-        // Plot the nodes
-        const nodePlot = {
+        const x2 = theta.map(t => Math.cos(t) * radius2);
+        const y2 = theta.map(t => Math.sin(t) * radius2);
+
+        const labelInterval = Math.ceil(nodes/5); 
+        const labeledNodes = Array.from({ length: nodes }, (_, i) => (i % labelInterval === 0) ? i : null).filter(i => i !== null);
+
+        const nodePlot1 = {
             type: 'scatter',
-            mode: 'markers+lines',
-            x: x,
-            y: y,
-            text: theta.map((_, i) => 'Residue ' + (i + 1)),
+            mode: 'markers',
+            x: x1,
+            y: y1,
             marker: { size: 6, color: 'black' },
             showlegend: false,
-            hoverinfo: 'text'
+            hoverinfo: 'text',
+            text: Array.from({ length: nodes }, (_, i) => `Residue ${i+1}`),
+        };
+
+        const nodePlot2 = {
+            type: 'scatter',
+            mode: 'text',
+            x: x2,
+            y: y2,
+            text: Array.from({ length: nodes }, (_, i) => labeledNodes.includes(i) ? `${i+1}` : ''),
+            textposition: 'middle center',
+            showlegend: false,
+            hoverinfo: 'none', 
+            textfont: {
+                size: 12,
+                color: 'black',
+            },
         };
 
         const curves = edges.map(([i, j, w]) => {
-            const arcPoints = generateArcPoints(x[i], y[i], x[j], y[j], 8);
+            const arcPoints = generateArcPoints(x1[i], y1[i], x1[j], y1[j], 8);
             return {
                 type: 'scatter',
                 mode: 'lines',
                 x: arcPoints.x,
                 y: arcPoints.y,
-                line: { color: '#3B75AF', width: w*w * 30, shape: 'spline' },
+                line: { color: '#3B75AF', width: w * w * 30, shape: 'spline' },
                 showlegend: false,
-                hoverinfo: 'none'
+                hoverinfo: 'none',
             };
         });
 
-        // Combine nodes and arcs in a single layout
-        setPlotData([...curves, nodePlot]);
-    }, [nodes, edges]);
+        // Combine both circles and edges in a single plot data
+        setPlotData([...curves, nodePlot1, nodePlot2]);
+    }, [nodes, edges, radius1, radius2]);
 
     // Function to generate points on an arc
-    // Arc connects x1, y1 and x2, y2 and is tangent to a radius at both points
     function generateArcPoints(x1, y1, x2, y2, n) {
         const mX = (x1 + x2) / 2;
         const mY = (y1 + y2) / 2;
@@ -121,7 +123,7 @@ export const ChordDiagram = ({ nodes, edges }) => {
                 showlegend: false,
                 uirevision: 'true',
                 xaxis: {
-                    range: [-1.1, 1.1],
+                    range: [-2, 2], 
                     showgrid: false,
                     zeroline: false,
                     showticklabels: false,
@@ -129,7 +131,7 @@ export const ChordDiagram = ({ nodes, edges }) => {
                     mirror: true,
                 },
                 yaxis: {
-                    range: [-1.1, 1.1],
+                    range: [-2, 2], 
                     showgrid: false,
                     zeroline: false,
                     showticklabels: false,
