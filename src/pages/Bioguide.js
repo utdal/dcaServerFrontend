@@ -49,27 +49,17 @@ const Bioguide = () => {
       title: 'DCA Guide',
       content: (
         <>
-          <motion.div
-            style={sectionStyle}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <h3 style={headingStyle}>Basics to DCA</h3>
-            <p style={paragraphStyle}>
-              As organisms evolve, point mutations in genes encoding functional proteins may result in a nonsynonymous codon change. Nonsynonymous codon changes lead to an amino acid residue change in the encoded protein. If the residue is important in the structure and/or function of the protein, then selective pressure is increased upon other residues that stabilize the intramolecular or intermolecular interaction in the wild-type protein(s).
-            </p>
-          </motion.div>
-          <motion.div
-            style={sectionStyle}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <h3 style={headingStyle}>Instructions for Using the MSA-DCA Tool</h3>
-            <p style={paragraphStyle}>
-              To generate an MSA or DCA based off of a protein sequence, click on the MSA-DCA tile on the front page. You’ll then be directed to enter your protein sequence and generate an MSA and DCA. The default settings are configured to generate both, but you can manually specify which ones to generate and where to store task IDs for these products in the MSA-DCA settings.
-            </p>
-          </motion.div>
+        <motion.div style={sectionStyle} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <h3 style={headingStyle}>Basics to DCA</h3>
+          <p style={paragraphStyle}>
+          As organisms evolve, point mutations in genes encoding functional proteins may result in a nonsynonymous codon change. Nonsynonymous codon changes lead to an amino acid residue change in the encoded protein. If the residue is important in the structure and/or function of the protein, then selective pressure is increased upon other residues that stabilize the intramolecular or intermolecular interaction in the wild-type protein(s). Thus, secondary mutations occur in other residues that complement the initial mutation in order to re-stabilize the protein, interface, or maintain function. This is referred to as coevolution.  </p>
+          <p style={paragraphStyle}>Direct-coupling analysis (DCA) is a method that exploits the coevolution of the amino acid residues to infer intramolecular and intermolecular residue interactions. DCA is a global statistical inference model and has been used for the study of coevolution in protein sequences with the ability to disentangle direct correlations from indirect correlations. With the usage of DCA, an approximation of the global probability distribution estimated from a large amount of sequences could be modeled for a set of residual positions in a sequence. This model accurately estimates the direct covariations between any two variables, such as pairwise residues within sequence, multiple lineages or evolutionary history, while excluding secondary correlations between dependent variables.</p>
+        </motion.div>
+        <motion.div style={sectionStyle} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
+          <h3 style={headingStyle}>Instructions for Using the MSA-DCA Tool</h3>
+          <p style={paragraphStyle}>
+          To generate an MSA or DCA based off of a protein sequence, click on the MSA-DCA tile on the front page. You’ll then be directed to enter your protein sequence and generate an MSA and DCA. The default settings are configured to generate both, but you can manually specify which ones to generate and where to store task IDs for these products in the MSA-DCA settings. After clicking submit, you’ll be faced with a task page showing you all of your currently running tasks. When they complete, you can click on them and either download your MSA or open a page displaying your DCA results. To access past DCAs, go to the front page and click on the DCA Results tile.   </p>
+        </motion.div>
           <motion.div
             style={sectionStyle}
             initial={{ opacity: 0, y: 20 }}
