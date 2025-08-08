@@ -20,6 +20,31 @@ const DiTable = ({ mappedDi, selectedDi = null, highlightRow = null, onRowClick 
         pairs = mappedDi.mapped_di;
     }
 
+    const downloadCSV = () => {
+        const header = ["Index", "Residue 1", "Residue 2", "DI Score"];
+        const rows = pairs.map((row, index) => [
+            index + 1,
+            row[0] + 1,
+            row[1] + 1,
+            row[2].toFixed(5)
+        ]);
+
+        const csvContent = [header, ...rows]
+            .map(e => e.join(","))
+            .join("\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "di_pairs.csv");
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div>
             <div style={{ fontWeight: 'bold' }}>
@@ -27,7 +52,7 @@ const DiTable = ({ mappedDi, selectedDi = null, highlightRow = null, onRowClick 
             </div>
 
             <div style={{ margin: '20px auto', overflowY: 'scroll', maxHeight: '360px', border: '1px solid #ddd' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                         <tr>
                             <th style={headerStyle}>Index</th>
@@ -49,14 +74,31 @@ const DiTable = ({ mappedDi, selectedDi = null, highlightRow = null, onRowClick 
                                 }}
                             >
                                 <td style={rowStyle}>{index + 1}</td>
-                                <td style={rowStyle}>{row[0]+1}</td>
-                                <td style={rowStyle}>{row[1]+1}</td>
+                                <td style={rowStyle}>{row[0] + 1}</td>
+                                <td style={rowStyle}>{row[1] + 1}</td>
                                 <td style={rowStyle}>{row[2].toFixed(5)}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+            {!selectedDi&&(
+            <button
+                onClick={downloadCSV}
+                style={{
+                    margin: '10px 0',
+                    padding: '8px 16px',
+                    backgroundColor: '#FF6600',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer'
+                }}
+            >
+                Download All as CSV
+            </button>
+            )
+        }
         </div>
     );
 };
