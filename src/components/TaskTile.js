@@ -103,7 +103,8 @@ const TaskTile = ({ task_id, isSimulation = false, updateInterval = 5, onDelete,
             return (
                 <button
                     onClick={() => downloadMsa(task.id)}
-                    style={linkStyle}>
+                    style={linkStyle}
+                    rel="noreferrer">
                     Download MSA
                 </button>
             );
@@ -112,7 +113,9 @@ const TaskTile = ({ task_id, isSimulation = false, updateInterval = 5, onDelete,
                 <a
                     href={'/coevolving-pairs-results?structure_contacts=' + contactsId + '&mapped_di=' + mappedId}
                     style={linkStyle}
-                    target='_blank'>
+                    target='_blank'
+                    rel="noreferrer"
+                    >
                     View DCA Results
                 </a>
             );
@@ -122,7 +125,7 @@ const TaskTile = ({ task_id, isSimulation = false, updateInterval = 5, onDelete,
                 <Link
                     to={'/seec-results/?resultID=' + task.id}
                     style={linkStyle}
-
+                    rel="noreferrer"
                 >View Results</Link>
             )
         }

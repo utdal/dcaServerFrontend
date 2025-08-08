@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import HomeButton from '../components/HomeButton';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
 import TopBar from '../components/TopBar'
 import TaskTile from '../components/TaskTile';
-// ... existing code ...
 import { Link } from 'react-router-dom';
 
 const ViewTasks = () => {

@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import HomeButton from '../components/HomeButton';
-import { generateMsa, computeDca, MSA, mapResidues, generateContacts, uploadMsa, uploadPDB } from '../backend/api';
+import { generateMsa, computeDca, mapResidues, generateContacts, uploadMsa, uploadPDB } from '../backend/api';
 import MSAInput from '../components/MSAInput';
 import PDBInput from '../components/PDBInput';
 import MFDCASettings from '../components/MFDCASettings';
@@ -8,24 +8,15 @@ import { ThemeProvider } from '@mui/material/styles';
 import UnifiedTopBar from '../components/UnifiedTopBar';
 import theme from '../theme';
 import{
-  CssBaseline,
   Box,
   Button,
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
   Select,
-  InputLabel,
-  FormControl,
   Tooltip,
-  TextField,
   MenuItem,
   Slider
 } from '@mui/material';
 import AdvancedSettings from '../components/AdvancedSettings';
 import PDBSettings from '../components/PDBSettings';
-import TopBar from '../components/TopBar';
-import { Link } from 'react-router-dom';
 
 
 const CoevolvingPairs = () => {
@@ -60,18 +51,6 @@ const CoevolvingPairs = () => {
     isValidNumber(distThresh) &&
     ECutoff !== '-';
 
-
-  const isValidNumber = (val) => val.toString().trim() !== '' && !isNaN(Number(val));
-
-  const isFormValid =
-    (inputMSA.trim() !== '' || inputFile !== null) &&
-    (inputPDBID.trim() !== '' || inputPDBFile !== null) &&
-    chain1.trim() !== '' &&
-    distThresh.trim() !== '' &&
-    theta.toString().trim() !== '' &&
-    analysisMethod.trim() !== '' &&
-    isValidNumber(distThresh) &&
-    ECutoff !== '-';
   
 
   const handleFileTypeChange = (type) => {

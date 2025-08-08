@@ -1,7 +1,6 @@
-import * as d3 from "d3";
 import React, { useEffect, useState } from 'react';
 import TopBar from '../components/TopBar';
-import { Link, useParams, useLocation} from 'react-router-dom';
+import { Link, useLocation} from 'react-router-dom';
 import './SEECResults.css';
 import {fileReader} from '../functions/fileReader'
 import SEECTable from "../components/SEECTable";

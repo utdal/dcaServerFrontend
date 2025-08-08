@@ -7,7 +7,6 @@ import Alejandro from '../pages/labdirectoryphotos/alejandro.png';
 import Donald from '../pages/labdirectoryphotos/donald.png';
 import Fariha from '../pages/labdirectoryphotos/fariha.png';
 import Jonathan from '../pages/labdirectoryphotos/jonathan.png';
-import labpicture from '../pages/labdirectoryphotos/labpicture.png';
 import Luis from '../pages/labdirectoryphotos/luis.png';
 import Marjan from '../pages/labdirectoryphotos/marjan.png';
 import Rand from '../pages/labdirectoryphotos/rand.png';

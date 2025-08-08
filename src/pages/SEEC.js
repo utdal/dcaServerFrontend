@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { startEvolutionSimulation, generateMsa, uploadMsa } from '../backend/api';
 import{
   Box,
@@ -30,7 +30,6 @@ const SEEC = () => {
 
     const [sequence, setSequence] = useState('');
     const [steps, setSteps] = useState(0);
-    const allowed_letters= new Set(['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']);
     const [temperature, setTemperature] = useState(1.0);
     const [result, setResult] = useState(null);
     const [error, setError] = useState(null);
