@@ -28,10 +28,12 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
     },
   };
   return (
+
     <Box sx={{marginTop:'15px'}}>
         <p>Structural Contact Distance Threshold</p>
         <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'row', marginTop:'15px'}}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-start'}}>
+
             <TextField
                 label = "Threshold (Å)"
                 variant='filled'
@@ -41,7 +43,7 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
             >
             </TextField>
           </Box>
-          </Box>
+        </Box>
 
           <p style={{marginTop:'15px'}}>Chain IDs</p>
           <Box sx={{ display: 'flex', justifyContent: 'center', gap: 5, flexDirection: 'row', marginTop:'15px'}}>
@@ -53,7 +55,7 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
               onChange={handleChain1Change}
               sx={textFieldSx}
             />
-            
+                
             {/* <TextField
               label="2 (optional)"
               variant='filled'
@@ -97,6 +99,15 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
       <FormGroup sx={{ alignItems: 'center' }}>
           <FormControlLabel control={<Checkbox checked={caOnly} onChange={handleCaOnlyChange} sx={radioButtonSx}/>} label="Alpha-carbon contacts only" />
       </FormGroup>
+    </Box>
+  );
+};
+
+export default PDBSettings;
+
+
+
+
 {/* </Box>
         <FormControlLabel
   control={
@@ -112,15 +123,5 @@ const PDBSettings = ({ distThresh, handleDistThreshChange, caOnly, handleCaOnlyC
   labelPlacement="start"
 />
 */}
-    </Box> 
-  );
-};
-
-export default PDBSettings;
-
-
-
-
-
 
 

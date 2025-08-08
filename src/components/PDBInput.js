@@ -71,15 +71,15 @@ const PDBInput = ({ inputPDBID, inputPDBFile, handleInputPDBChange, handlePDBCha
                 <RadioGroup
                   row
                   aria-labelledby="input-pdb-type"
-                  defaultValue="CIF"
+                  defaultValue="PDB"
                   name="Input PDB Group"
                 >
-                <FormControlLabel
+                {/* <FormControlLabel
                   value="CIF"
                   control={<Radio sx={radioButtonSx}/>}
                   onChange={() => handlePDBChange('CIF')}
                   label="CIF"
-                />
+                /> */}
                 <FormControlLabel
                   value="PDB"
                   control={<Radio sx={radioButtonSx}/>}

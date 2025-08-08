@@ -60,6 +60,20 @@ const CoevolvingPairs = () => {
     isValidNumber(distThresh) &&
     ECutoff !== '-';
 
+
+  const isValidNumber = (val) => val.toString().trim() !== '' && !isNaN(Number(val));
+
+  const isFormValid =
+    (inputMSA.trim() !== '' || inputFile !== null) &&
+    (inputPDBID.trim() !== '' || inputPDBFile !== null) &&
+    chain1.trim() !== '' &&
+    distThresh.trim() !== '' &&
+    theta.toString().trim() !== '' &&
+    analysisMethod.trim() !== '' &&
+    isValidNumber(distThresh) &&
+    ECutoff !== '-';
+  
+
   const handleFileTypeChange = (type) => {
     setSelectedFileTypes((prev) => ({
       ...prev,
@@ -353,29 +367,30 @@ const CoevolvingPairs = () => {
                 }
                 msaSettings={
                   <Box>
-                <div style={{display:'flex', justifyContent:'center'}}>
-                  <p style={{width:'40vh', textAlign:'center', color: prefersDarkScheme.matches && '#fdf7f3'}}>Max Number of Continuous Gaps (as percentage of MSA length):</p>
-                </div>
-                <div style={{display:'flex', justifyContent:'center', marginTop:'15px'}}>
-                  <Slider
-                    defaultValue={defaultMaxGaps}
-                    value={maxContGaps}
-                    onChange={handleMaxContGapsChange}
-                    step={1}
-                    min={0}
-                    max={100}
-                    style={{width: '40%'}}
-                  />
-                  <p style={{color:'rgba(50, 50, 50, 0.4)', alignContent:'center', marginLeft:'10px'}}>{maxContGaps}</p>
-                </div>
+                    <div style={{display:'flex', justifyContent:'center'}}>
+                      <p style={{width:'40vh', textAlign:'center', color: prefersDarkScheme.matches && '#fdf7f3'}}>Max Number of Continuous Gaps (as percentage of MSA length):</p>
+                    </div>
+                    <div style={{display:'flex', justifyContent:'center', marginTop:'15px'}}>
+                      <Slider
+                        defaultValue={defaultMaxGaps}
+                        value={maxContGaps}
+                        onChange={handleMaxContGapsChange}
+                        step={1}
+                        min={0}
+                        max={100}
+                        style={{width: '40%'}}
+                      />
+
+                      <p style={{color:'rgba(50, 50, 50, 0.4)', alignContent:'center', marginLeft:'10px'}}>{maxContGaps}</p>
+                    </div>
                   </Box>
                 }
                 renderMSA={selectedFileTypes.Seed}
               ></AdvancedSettings>
 
-            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, margin: '10px 20px' }} disabled={!isFormValid}>
-              Submit
-            </Button>
+              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, margin: '10px 20px' }} disabled={!isFormValid}>
+                Submit
+              </Button>
             </div>
           </form>
           </ThemeProvider>
