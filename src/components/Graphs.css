@@ -1,0 +1,22 @@
+.grid-x line,
+.grid-y line {
+  stroke: lightgray;
+  stroke-opacity: 0.3;
+  shape-rendering: crispEdges;
+}
+
+.grid-x path,
+.grid-y path {
+    display: none;
+}
+.graph-title, .axis{
+    font-size: 20px;
+    font-weight: bold;
+    fill: #333;
+}
+.axis{
+    font-size: 16px;
+}
+.scale-graph{
+    font-size: 12px;
+}

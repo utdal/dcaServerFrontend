@@ -24,7 +24,7 @@ const MolViewer = ({
                     chain = chain.substr(0, 1); //Need to fix chain labeling
                     model.removeAtoms(model.selectedAtoms({ chain: chain, invert: true }));
 
-                    model.setStyle({}, { cartoon: { color: 'spectrum' } });
+                    model.setStyle({}, { cartoon: { color: '#e87500' } });
 
                     viewer.setHoverable(
                         {}, true, (atom, viewer, event, container) => {
@@ -71,7 +71,7 @@ const MolViewer = ({
 
         // Resets
         viewer.removeAllShapes();
-        model.setStyle({}, { cartoon: { color: 'spectrum' } });
+        model.setStyle({}, { cartoon: { color: '#e87500' } });
 
         pairs.map(c => {
             viewer.addCylinder({
@@ -80,7 +80,7 @@ const MolViewer = ({
                 radius: 0.2,
                 fromCap: 2, //2=Round
                 toCap: 2,
-                color: '#efbf04',
+                color: 'green',
                 clickable: true,
                 hoverable: true,
                 callback: () => {
@@ -106,7 +106,7 @@ const MolViewer = ({
 
             model.setStyle(
                 { resi: [c[0], c[1]] },
-                { cartoon: { color: 'spectrum' }, stick: { radius: 0.2 } }
+                { cartoon: { color: '#e87500' }}
             );
 
             viewer.render();

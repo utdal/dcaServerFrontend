@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import HomeButton from '../components/HomeButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link} from 'react-router-dom';
 import ContactMap from '../components/ContactMap';
 import DiTable from '../components/DiTable';
 import { Task, DCA, MappedDi, StructureContacts } from '../backend/api';
 import MolViewer from '../components/MolViewer';
 import { CirclePlot } from '../components/CirclePlot';
 import ChainSelector from '../components/ChainSelector';
+import { use } from 'react';
+import { faWindows } from '@fortawesome/free-brands-svg-icons';
 
 const CoevolvingPairsResults = () => {
     const [loading, setLoading] = useState(true);
@@ -26,6 +28,7 @@ const CoevolvingPairsResults = () => {
         pdbViewer: false,
         circlePlot: true,
     });
+    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme:dark)");
 
     const query = new URLSearchParams(useLocation().search);
     const dcaId = query.get('dca');
@@ -42,7 +45,7 @@ const CoevolvingPairsResults = () => {
                     const task = await Task.fetch(dcaId);
                     setLoadingMessage('Running DCA...');
                     await task.waitForCompletion();
-                    setDca(await DCA.fetch(dcaId));
+                    setDca(await DCA.fetch(dcaId));   
                 }
                 if (mappedDiId) {
                     const task = await Task.fetch(mappedDiId);
@@ -76,6 +79,15 @@ const CoevolvingPairsResults = () => {
         }
         fetchData();
     }, [dcaId, mappedDiId, structueContactsId]);
+    useEffect(() => {
+        console.log(dca)
+    }, [dca])
+    useEffect(() => {
+        console.log(mappedDi)
+    }, [mappedDi])
+    useEffect(() => {
+        console.log(structueContactsId)
+    }, [structueContactsId])
 
     const toggleSection = (section) => {
         setCollapsedSections(prevState => ({
@@ -85,8 +97,9 @@ const CoevolvingPairsResults = () => {
     };
 
     const styles = {
+
         container: {
-            backgroundColor: '#f4f4f4',
+            backgroundColor: prefersDarkScheme.matches?'rgba(60,60,60,255)':'#f4f4f4',
             // minHeight: '100vh',
             padding: '20px',
             paddingTop: '100px',
@@ -95,7 +108,7 @@ const CoevolvingPairsResults = () => {
         header: {
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: '#0D47A1',
+            backgroundColor: prefersDarkScheme.matches?'#1f1f1f':'#e87500',
             padding: '15px 25px',
             fontSize: '28px',
             fontWeight: 'bold',
@@ -104,13 +117,15 @@ const CoevolvingPairsResults = () => {
             position: 'fixed',
             top: 0,
             left: 0,
-            zIndex: 10,
+            zIndex: 100,
+            boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
         },
         chainSelect: {
             // width: '100%',
             // position: 'fixed',
             // top: 0,
             // left: 0,
+            color: '#e87500'
         },
         resultsSection: {
             display: 'flex',
@@ -133,8 +148,8 @@ const CoevolvingPairsResults = () => {
         heading: {
             fontSize: '24px',
             marginBottom: '15px',
-            color: '#0D47A1',
-            borderBottom: '2px solid #0D47A1',
+            color: '#e87500',
+            borderBottom: '2px solid #e87500',
             paddingBottom: '5px',
             cursor: 'pointer',
             display: 'flex',
@@ -182,7 +197,11 @@ const CoevolvingPairsResults = () => {
 
             <div style={styles.resultsSection}>
                 {loading ? (
-                    <p style={{ fontStyle: 'italic', color: '#333' }}>{loadingMessage}</p>
+                    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+                        <p style={{ fontStyle: 'italic', color: prefersDarkScheme.matches?'#fdf7f3':'#333' }}>{loadingMessage}</p>
+                        <Link to='/tasks' style={{color: '#e87500', textDecoration: 'underline', fontSize: '16px', marginTop: '10px'}}>Monitor tasks</Link>
+                    </div>
+                    
                 ) : error ? (
                     <p style={{ color: '#B71C1C', fontWeight: 'bold' }}>{error}</p>
                 ) : (
@@ -269,7 +288,7 @@ const CoevolvingPairsResults = () => {
                                     ...(collapsedSections.circlePlot ? styles.contentCollapsed : styles.contentExpanded),
                                 }}
                             >
-                                <CirclePlot mappedDi={mappedDi} chain={chain} />
+                                <CirclePlot mappedDi={mappedDi} chain={chain} selectedDI={selectedDI}/>
                             </div>
                         </div>
                         <div style={styles.section}>

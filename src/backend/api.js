@@ -34,10 +34,11 @@ class APIObject {
 
         const result = await response.json();
 
-        return result.map(t => new Task(t));
+        return result.map(obj => new type(obj));
     }
 
 }
+
 
 
 export class Task extends APIObject {
@@ -312,6 +313,32 @@ export class StructureContacts extends APIDataObject {
 }
 
 
+export class EvolutionSimulation extends APIDataObject {
+    static objectName = 'evolution-simulation';
+
+    constructor({ id, user, created_at, expires, msa_file, nt_sequence, steps, temperature, result_file, task_id, completed, error_message, percent}) {
+        super({ id, user, created: created_at, expires });
+        this.msa_file = msa_file;
+        this.nt_sequence = nt_sequence;
+        this.steps = steps;
+        this.temperature = temperature;
+        this.result_file = result_file;
+        this.task_id = task_id;
+        this.completed = completed;
+        this.error_message = error_message;
+        this.percent = percent;
+    }
+
+    static async fetch(id) {
+        return APIObject.fetch(id, EvolutionSimulation);
+    }
+
+    static async fetchAll() {
+        return APIObject.fetchAll(EvolutionSimulation);
+    }
+}
+
+
 function getCSRFToken() {
     let csrfToken = null;
     const cookies = document.cookie.split(';');
@@ -339,8 +366,9 @@ async function startTask(endpoint, data) {
             body: JSON.stringify(data)
         }
     );
-
+    console.log(response.status);
     if (!response.ok) {
+
         throw new Error('Bad network response');
     }
 
@@ -432,4 +460,28 @@ export async function generateContacts({ pdbId, caOnly, distThresh, isCIF, authC
         auth_chain_id_supplied: authChainIdSupplied,
         auth_residue_id_supplied: authResidueIdSupplied
     });
+}
+
+export async function startEvolutionSimulation({ msa_id, ntSequence, steps, temperature }) {
+    const formData = new FormData();
+    formData.append('msa_id', msa_id);
+    formData.append('nt_sequence', ntSequence);
+    formData.append('steps', steps);
+    formData.append('temperature', temperature);
+
+    const response = await fetch(apiBaseUrl + 'evolution-simulations/', {
+        method: 'POST',
+        body: formData,
+        credentials: "include",
+    });
+
+    if (!response.ok) {
+        throw new Error('Bad network response');
+    }
+
+    const { id, simulation_id, ...taskData } = await response.json();
+
+    const task = new Task({ id, ...taskData });
+
+    return { task, simulationId: simulation_id };
 }

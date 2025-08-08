@@ -1,0 +1,109 @@
+import {
+    Box,
+    FormControl,
+    FormGroup,
+    FormLabel,
+    FormControlLabel,
+    Switch,
+    TextField,
+    ThemeProvider
+} from '@mui/material'
+import React, { useEffect, useState } from 'react';
+import theme from '../theme';
+
+const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+const lightColor = '#fdf7f3';
+
+const SequenceInput = ({inputType, setInputType, sequence, setSequence}) => {
+
+    const handleInputTypeChange = (event) => {
+        setInputType(event.target.checked ? 'Nucleotide' : 'AminoAcid');
+        setSequence('');
+    };
+
+    const placeholderMap = {
+        AminoAcid: 'Enter protein sequence (e.g., MVLTIYPDELVQIVS...)',
+        Nucleotide: 'Enter nucleotide sequence (e.g., ATGCGTACGTTAGC...)',
+    };
+
+    const labelMap = {
+        AminoAcid: 'Protein Sequence',
+        Nucleotide: 'Nucleotide Sequence',
+    };
+
+    return ( 
+        <Box sx={{
+                borderRadius: 2,
+                padding: 3,
+                width: '100%',
+                fontFamily: 'Helvetica',
+              }}
+            >
+          <ThemeProvider theme={theme}>
+
+            <FormControl fullWidth>
+                <h3 id="sequence-input-type">Introduce Sequence to Evolve</h3>
+                <TextField
+                    label={labelMap[inputType]}
+                    placeholder={placeholderMap[inputType]}
+                    value={sequence}
+                    onChange={(e) => setSequence(e.target.value.toUpperCase())}
+                    sx={{
+                      '& .MuiInputBase-input': {
+                        color: prefersDarkScheme.matches ? lightColor : undefined,
+                        '::placeholder': {
+                          color: prefersDarkScheme.matches ? lightColor : undefined,
+                          opacity: 0.8
+                        }
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: prefersDarkScheme.matches ? lightColor : undefined,
+                        '&.Mui-focused': {
+                          color: prefersDarkScheme.matches ? lightColor : undefined,
+                        }
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: prefersDarkScheme.matches ? lightColor : undefined,
+                        },
+                        '&:hover fieldset': {
+                          borderColor: prefersDarkScheme.matches ? lightColor : undefined,
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: prefersDarkScheme.matches ? lightColor : undefined,
+                        },
+                      },
+                    }}
+                    multiline
+                    minRows={5}
+                    maxRows={10}
+                    fullWidth
+                    margin="normal"
+                    variant="outlined"
+                    inputProps={{ spellCheck: false, style: { overflow: 'auto' } }}
+                    />
+                    
+                <FormGroup>
+                    <FormControlLabel
+                        label={inputType === 'Nucleotide' ? 'Nucleotides' : 'Amino Acids'}
+                        control={
+                        <Switch
+                            color='warning'
+                            checked={inputType === 'Nucleotide'}
+                            onChange={handleInputTypeChange}
+                        />
+                        }
+                        style={{display:'flex', justifyContent:'center'}}
+
+                    />
+                </FormGroup>
+            </FormControl>
+        </ThemeProvider>
+        
+
+        </Box>
+     );
+}
+ 
+export default SequenceInput;

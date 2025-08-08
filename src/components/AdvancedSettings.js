@@ -1,0 +1,72 @@
+import React from 'react';
+import './AdvancedSettings.css'
+import { useState } from 'react';
+import {
+  Box,
+  Button,
+  Collapse,
+  Paper,
+  Tabs,
+  Tab,
+} from '@mui/material'; 
+import { render } from '@testing-library/react';
+function TabPanel({ children, value, index }) {
+  return (
+    <div hidden={value !== index}>
+      {value===index&&(<Box sx={{ mt: 2 }}>{children}</Box>)}
+    </div>
+  );
+}
+
+const AdvancedSettings = ({caSettings, msaSettings, renderMSA}) => {
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    const [display, SetDisplay] = useState(false);
+    const [tabIndex, SetTabIndex]= useState(0);
+    const handleDisplay=(e)=>{
+        e.preventDefault();
+        SetDisplay(!display);
+    }
+    const paperSx={
+        backgroundColor: prefersDarkScheme.matches && '#333',
+    }
+    const tabSx={
+        color: prefersDarkScheme.matches && '#fdf7f3',
+    }
+
+    return ( 
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4}}>
+            <Button className='advanced-settings-button' onClick={handleDisplay}>
+                {display ? 'Hide Advanced Settings' : 'Show Advanced Settings'}
+            </Button>
+            <div>
+                <Collapse in={display}>
+                    <Paper elevation={3} sx={[paperSx, {mt: 2, p: 3, width: '100%', maxWidth: 500, mx: 'auto', textAlign: 'left'}]}>
+                        <Tabs
+                            value={tabIndex}
+                            onChange={(e, newValue) => SetTabIndex(newValue)}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            variant="fullWidth"
+                        >
+                            <Tab label="Coevolutionary Analysis Settings" sx={tabSx}/>
+                            {renderMSA&&(
+                            <Tab label="MSA Generation Settings" sx={tabSx}></Tab>
+                            )}
+                        </Tabs>
+
+                        <TabPanel value={tabIndex} index={0}>
+                            {caSettings}
+                        </TabPanel>
+                        {renderMSA&&(
+                        <TabPanel value={tabIndex} index={1}>
+                            {msaSettings}
+                        </TabPanel>
+                        )}
+                    </Paper>
+                </Collapse>          
+            </div>
+        </Box>
+     );
+}
+ 
+export default AdvancedSettings;

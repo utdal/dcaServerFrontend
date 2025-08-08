@@ -1,0 +1,49 @@
+.container-seec{
+    display: grid;
+    grid-template-areas: 'cs-seq-input cs-seq-input cs-seq-input'
+                ' temp-description msa-description steps-description'
+               ' cs-temp-input cs-msa cs-steps ';
+    grid-template-columns: 1fr 2fr 1fr;
+    gap:1;
+}
+.cs-seq-input, .cs-msa, .cs-temp-input, .cs-steps{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.temp-description, .msa-description, .steps-description{
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 10px;
+
+}
+.temp-description{
+    grid-area: temp-description;
+    justify-content: flex-end;
+
+}
+.msa-description{
+    grid-area: msa-description;
+}
+.steps-description{
+    grid-area: steps-description;
+    justify-content: flex-start;
+}
+.cs-seq-input{
+    margin-top: 10px;
+    grid-area: cs-seq-input;
+}
+.cs-msa{
+    grid-area: cs-msa;
+    flex-direction: column;
+}
+.cs-temp-input{
+    justify-content: flex-end;
+    grid-area: cs-temp-input;
+}
+.cs-steps{
+    justify-content: flex-start;
+    
+    grid-area: cs-steps;
+}

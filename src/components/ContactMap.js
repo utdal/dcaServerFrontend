@@ -140,7 +140,8 @@ const ContactMap = ({
             width: "60%",
             height: "8px",
             borderRadius: "5px",
-            background: "linear-gradient(90deg, rgb(187, 222, 251) 0%, rgb(13, 71, 161) 100%)",
+            background: "linear-gradient(90deg,rgb(219, 204, 189) 0%, #e87500 100%",
+            color:'#e87500',
             appearance: "none",
             outline: "none",
             transition: "background 0.3s",
@@ -168,6 +169,8 @@ const ContactMap = ({
             fontStyle: 'italic',
             color: '#888',
         },
+
+        
     };
 
     return (
@@ -230,18 +233,18 @@ const ContactMap = ({
             </div>
 
             <div>
-                <input type="checkbox" id="pairs" checked={showPairs} onChange={e => setShowPairs(e.target.checked)} />
+                <input style={{accentColor: '#e87500'}} type="checkbox" id="pairs" checked={showPairs} onChange={e => setShowPairs(e.target.checked)} />
                 <label htmlFor="pairs" style={{
                     margin: '5px 10px',
-                    color: '#3788d5'
+                    color: '#e87500'
                 }}>DI Pairs</label>
-                <input type="checkbox" id="contacts" checked={showContacts} onChange={e => setShowContacts(e.target.checked)} />
+                <input style={{accentColor: '#e87500'}} type="checkbox" id="contacts" checked={showContacts} onChange={e => setShowContacts(e.target.checked)} />
                 <label htmlFor="contacts" style={{
                     margin: '5px 10px',
                     color: '#969696'
                 }}>Contacts</label>
                 <br />
-                <input type="checkbox" id="hits" checked={showHits} onChange={e => setShowHits(e.target.checked)} />
+                <input style={{accentColor: '#e87500'}} type="checkbox" id="hits" checked={showHits} onChange={e => setShowHits(e.target.checked)} />
                 <label htmlFor="hits" style={{
                     margin: '5px 10px',
                     color: 'red'

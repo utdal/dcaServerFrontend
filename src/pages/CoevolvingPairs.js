@@ -1,26 +1,35 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import HomeButton from '../components/HomeButton';
 import { generateMsa, computeDca, MSA, mapResidues, generateContacts, uploadMsa, uploadPDB } from '../backend/api';
-import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button'
 import MSAInput from '../components/MSAInput';
 import PDBInput from '../components/PDBInput';
 import MFDCASettings from '../components/MFDCASettings';
-import { TextField } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
-import Slider from '@mui/material/Slider';
+import { ThemeProvider } from '@mui/material/styles';
+import UnifiedTopBar from '../components/UnifiedTopBar';
+import theme from '../theme';
+import{
+  CssBaseline,
+  Box,
+  Button,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+  Select,
+  InputLabel,
+  FormControl,
+  Tooltip,
+  TextField,
+  MenuItem,
+  Slider
+} from '@mui/material';
+import AdvancedSettings from '../components/AdvancedSettings';
 import PDBSettings from '../components/PDBSettings';
+import TopBar from '../components/TopBar';
+import { Link } from 'react-router-dom';
 
 
 const CoevolvingPairs = () => {
+  const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
   const defaultTheta = '0.2'; //Cast to numbers ar submit
   const defaultMaxGaps = 20;
   const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: true }); // Use object to track file types
@@ -39,6 +48,17 @@ const CoevolvingPairs = () => {
   const [caOnly, setCaOnly] = useState(false)
   const [theta, setTheta] = useState(defaultTheta);
   const [analysisMethod, setAnalysisMethod] = useState('mfDCA');
+  const isValidNumber = (val) => val.toString().trim() !== '' && !isNaN(Number(val));
+ 
+  const isFormValid =
+    (inputMSA.trim() !== '' || inputFile !== null) &&
+    (inputPDBID.trim() !== '' || inputPDBFile !== null) &&
+    chain1.trim() !== '' &&
+    distThresh.trim() !== '' &&
+    theta.toString().trim() !== '' &&
+    analysisMethod.trim() !== '' &&
+    isValidNumber(distThresh) &&
+    ECutoff !== '-';
 
 
   const isValidNumber = (val) => val.toString().trim() !== '' && !isNaN(Number(val));
@@ -70,8 +90,12 @@ const CoevolvingPairs = () => {
   };
 
   const handleInputMSAChange = (event) => {
-    if (selectedFileTypes.Seed) setInputMSA(event.target.value);
+    if (selectedFileTypes.Seed){
+      setInputMSA(event.target.value.toUpperCase());
+      
+    }
     else setInputFile(event.target.files[0]);
+
   };
 
   const handleInputPDBChange = (event) => {
@@ -119,7 +143,7 @@ const CoevolvingPairs = () => {
   };
 
   const handleDistThreshChange = (event) => {
-    if ((!isNaN(event.target.value) || event.target.value === '') && (!event.target.value.includes('-'))) {
+    if ((!isNaN(event.target.value) || event.target.value === '') && (!event.target.value.includes('-'))){
       setDistThresh(event.target.value);
     }
   };
@@ -160,10 +184,20 @@ const CoevolvingPairs = () => {
         maxGaps: Number(maxContGaps) || undefined
       });
       msaId = msaTask.id;
+      if (localStorage.getItem('tasks')){
+        let tasks = JSON.parse(localStorage.getItem('tasks'));
+        tasks.push({id: msaTask.id, isSimulation: false});
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+      }
+      else{
+        localStorage.setItem('tasks', JSON.stringify([{id: msaTask.id, isSimulation: false}]));
+      }
     } else {
       const msa = await uploadMsa({ msa: inputFile });
       msaId = msa.id;
+
     }
+
 
     let pdbId = null;
     if (inputPDBFile) {
@@ -181,10 +215,10 @@ const CoevolvingPairs = () => {
     }
 
     const dcaTask = await computeDca({
-      msaId: msaId,
+      msaId,
       theta: Number(theta)
     });
-
+    console.log("DCA ID: " + dcaTask);
     const residuesTask = await mapResidues({
       dcaId: dcaTask.id,
       pdbId: pdbId,
@@ -193,7 +227,7 @@ const CoevolvingPairs = () => {
       authChainIdSupplied: isAuthChain,
       authResidueIdSupplied: isAuthResidue
     });
-
+    
     const contactsTask = await generateContacts({
       pdbId: pdbId,
       caOnly: caOnly,
@@ -202,90 +236,165 @@ const CoevolvingPairs = () => {
       authChainIdSupplied: isAuthChain,
       authResidueIdSupplied: isAuthResidue
     });
-
+    if (localStorage.getItem('tasks')){
+      let tasks = JSON.parse(localStorage.getItem('tasks'));
+      tasks.push({id: dcaTask.id, contactsId: contactsTask.id, mappedId: residuesTask.id, isSimulation: false});
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      console.log(dcaTask.id);
+      console.log(contactsTask.id);
+      console.log(residuesTask.id);
+    }
     const url = '/coevolving-pairs-results/?structure_contacts=' + contactsTask.id + '&mapped_di=' + residuesTask.id;
     window.open(url, '_blank');
   };
-
+  useEffect(()=>{
+    console.log(selectedFileTypes.Seed)
+  }, [selectedFileTypes])
   return (
-    <React.Fragment>
-      <CssBaseline />
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#282c34', p: '20px', color: 'white', width: '100%' }}>
-        <HomeButton />
-      </Box>
-      <Container maxWidth="xl">
-        <Box sx={{ bgcolor: '#d0d8e8' }}>
+    <>
+       <UnifiedTopBar />
+      <ThemeProvider theme={theme}>
           <form onSubmit={handleSubmit}>
+            <div style={{marginTop:'50px'}}>
+              <Tooltip title='Here, a user may supply a sequence corresponding to a complete protein or a portion of that protein and identify which residue sites may be directly coupled with others.
+        A Multiple Sequence Alignment provided or produced by a seed sequence that has been supplied is used as input for the coevolutionary model chosen.
+        Finally, the pairs are returned, mapped to the protein structure of interest.'>
+                <Button variant='text'
+                  sx={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  minWidth: 0,
+                  textTransform: 'none',
+                  color: 'inherit',
+                  boxShadow: 'none',
+                  fontSize: '40px',
+                  fontWeight: 'bold'
+                }}
+                >
+                  Coevolving Pairs
+                </Button>
+              </Tooltip>
+            </div>
+            <div style={{marginTop:"40px"}}>
             <MSAInput
               inputType={selectedFileTypes.Seed ? 'Seed' : 'MSA'}
               inputMSA={selectedFileTypes.Seed ? inputMSA : inputFile}
               handleInputMSAChange={handleInputMSAChange}
               handleFileTypeChange={handleFileTypeChange}
             />
+            </div>
+            <div style={{marginTop:'40px'}}>
             <PDBInput
               inputPDBID={inputPDBID}
               inputPDBFile={inputPDBFile}
               handleInputPDBChange={handleInputPDBChange}
               handlePDBChange={handlePDBChange}
             />
-            <Box sx={{ width: '100%', p: 2 }}>
-              <h3>Coevolutionary Analysis Settings</h3>
-              <FormControl sx={{ width: '25%' }}>
-                <InputLabel id="coevolutionary-analysis-method">Coevolutionary Analysis Method</InputLabel>
-                <Select
-                  labelId="coevolutionary-analysis-method"
-                  id="analysis-method-select"
-                  value={analysisMethod}
-                  label="Coevolutionary Analysis Method"
-                  variant='filled'
-                  margin='200'
-                  onChange={handleAnalysisMethodChange}
-                >
-                  <MenuItem value={'mfDCA'}>mean-field DCA</MenuItem>
-                  <MenuItem value={''}>More to Come!</MenuItem>
-                </Select>
-              </FormControl>
-
-              {analysisMethod === 'mfDCA' ?
-                <MFDCASettings ECutoff={ECutoff} handleECutoffChange={handleECutoffChange} defaultTheta={defaultTheta} theta={theta} handleThetaChange={handleThetaChange} />
-                :
-                <></>
-              }
-
-              {selectedFileTypes.Seed ? <>
-                <h3> MSA Generation Settings </h3>
-                <p>Max Number of Continuous Gaps (as percentage of MSA length):</p>
-                <Box sx={{ width: "20%", margin: 'auto' }}>
-                  <Slider
-                    defaultValue={defaultMaxGaps}
-                    value={maxContGaps}
-                    onChange={handleMaxContGapsChange}
-                    valueLabelDisplay="auto"
-                    step={1}
-                    min={0}
-                    max={100}
-                  />
-                </Box>
-              </> : undefined}
-
-
-              <h3>PDB Settings</h3>
+            </div>
+            <div>
+              <h3 style={{marginTop:'40px'}}>PDB Settings</h3>
               <PDBSettings
                 distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange}
                 chain1={chain1} handleChain1Change={handleChain1Change} chain2={chain2} handleChain2Change={handleChain2Change}
                 isAuthChain={isAuthChain} handleIsAuthChainChange={handleIsAuthChainChange} isAuthResidue={isAuthResidue} handleIsAuthResidueChange={handleIsAuthResidueChange}
                 selectedPDBTypes={selectedPDBTypes} />
-            </Box>
+              <AdvancedSettings
+                  caSettings={
+                  <>
+                    <p style={{justifyContent:'center', display:'flex', color: prefersDarkScheme.matches && '#fdf7f3'}}>Coevolutionary Analysis Method</p>
+                    <Box sx={{display:'flex', justifyContent:'center',}}>
+                    <Select
+                    labelId="coevolutionary-analysis-method"
+                    id="analysis-method-select"
+                    value={analysisMethod}
+                    onChange={handleAnalysisMethodChange}
+                    variant="filled"
+                    sx={{
+                      minWidth: '100px',
+                      marginTop: '15px',
+                      height: '48px',
+                      ...(prefersDarkScheme.matches && {
+                        backgroundColor: '#333',
+                        color: '#fdf7f3',
+                        '& .MuiSelect-icon': {
+                          color: '#fdf7f3',
+                        },
+                      }),
+                    }}
+                    inputProps={{
+                      sx: {
+                        padding: '10px 12px',
+                      }
+                    }}
+                    MenuProps={{
+                      PaperProps: {
+                        sx: {
+                          ...(prefersDarkScheme.matches && {
+                            backgroundColor: '#333',
+                            color: '#fdf7f3',
+                          }),
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem
+                      value={'mfDCA'}
+                      sx={prefersDarkScheme.matches && {
+                        backgroundColor: '#333',
+                        color: '#fdf7f3',
+                      }}
+                    >
+                      mean-field DCA
+                    </MenuItem>
 
-            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={!isFormValid}>
-              Submit
-            </Button>
+                    <MenuItem
+                      value={''}
+                      sx={prefersDarkScheme.matches && {
+                        backgroundColor: '#333',
+                        color: '#fdf7f3',
+                      }}
+                    >
+                      More to Come!
+                    </MenuItem>
+                  </Select>
+                  </Box>
+
+                  {analysisMethod === 'mfDCA' &&(
+                    <MFDCASettings ECutoff={ECutoff} handleECutoffChange={handleECutoffChange} defaultTheta={defaultTheta} theta={theta} handleThetaChange={handleThetaChange} />)
+                  }
+                </>
+                }
+                msaSettings={
+                  <Box>
+                    <div style={{display:'flex', justifyContent:'center'}}>
+                      <p style={{width:'40vh', textAlign:'center', color: prefersDarkScheme.matches && '#fdf7f3'}}>Max Number of Continuous Gaps (as percentage of MSA length):</p>
+                    </div>
+                    <div style={{display:'flex', justifyContent:'center', marginTop:'15px'}}>
+                      <Slider
+                        defaultValue={defaultMaxGaps}
+                        value={maxContGaps}
+                        onChange={handleMaxContGapsChange}
+                        step={1}
+                        min={0}
+                        max={100}
+                        style={{width: '40%'}}
+                      />
+
+                      <p style={{color:'rgba(50, 50, 50, 0.4)', alignContent:'center', marginLeft:'10px'}}>{maxContGaps}</p>
+                    </div>
+                  </Box>
+                }
+                renderMSA={selectedFileTypes.Seed}
+              ></AdvancedSettings>
+
+              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, margin: '10px 20px' }} disabled={!isFormValid}>
+                Submit
+              </Button>
+            </div>
           </form>
-          {/* I'll add in a settings pane. Filtering the MSA, MSAutils whatever settings are needed., Bit Score */}
-        </Box>
-
-      </Container>
-    </React.Fragment>
+          </ThemeProvider>
+        </>
   );
 }
 

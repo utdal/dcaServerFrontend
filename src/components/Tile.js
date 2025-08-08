@@ -1,27 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-const Tile = ({ title, description, link, image }) => {
+import './Tile.css';
+const Tile = ({ toolName, description, link, imageSrc}) => {
   return (
-    <div className="server-card">
-      <Link to={link} className="server-card-link">
-        <div className="flip-card">
-          <div className="flip-card-inner">
-            <div className="flip-card-front">
-              <div
-                className="server-image"
-                style={{ backgroundImage: `url(${image})` }}  // Add the image here
-              ></div>
-              <p>{title}</p>
+        <Link to={link} className="tile-link">
+      <div className="tile">
+        <div className="tile-inner">
+          <div className="tile-front tile-structure">
+            <div className='tile-structure-image'>
+              <img src={imageSrc} alt={toolName} className="tile-image" />
             </div>
-            <div className="flip-card-back">
-              <p>{description}</p>
+            <div className='tile-structure-text'>
+              <h3 className="tile-title">{toolName}</h3>
             </div>
           </div>
+          <div className="tile-back">
+            <p className="tile-description">{description}</p>
+          </div>
         </div>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
+
 };
 
 export default Tile;

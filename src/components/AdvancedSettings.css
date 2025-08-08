@@ -1,0 +1,10 @@
+.advanced-settings-button{
+    border: none;
+    text-transform: none;
+    box-shadow: none;
+    padding: 5px 10px;
+}
+.advanced-settings-button:hover{
+    background-color: transparent;
+    color: inherit;
+}

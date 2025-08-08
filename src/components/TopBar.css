@@ -1,0 +1,46 @@
+.nav-bar {
+  background-color: #1f1f1f	;
+  width: 100%;
+  height: 30px;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  font-size: 10px;
+}
+
+.nav-links {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  height: 100%;
+}
+
+.nav-links li {
+  height: 100%;
+}
+
+.nav-links a, .nav-links p{
+  display: flex;           
+  align-items: center;     
+  height: 100%;            
+  padding: 0 15px;
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-links a:hover, .nav-links p:hover{
+  background-color: #e4e4e4;
+  color: #1f1f1f;
+  cursor: pointer;
+}
+.lab-logo {
+  width: 30px;
+  height: auto;
+  margin: 0px; 
+}
+
+  
+  

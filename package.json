@@ -3,26 +3,37 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
-    "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "@mui/material": "^5.16.4",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.17.1",
+    "@observablehq/plot": "^0.6.17",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "3dmol": "^2.3.0",
     "chart.js": "^4.4.4",
+    "clsx": "^2.1.1",
+    "d3": "^7.9.0",
+    "framer-motion": "^12.23.12",
     "install": "^0.13.0",
+    "motion": "^12.23.0",
     "npm": "^10.8.2",
-    "plotly.js": "^2.35.2",
+    "plotly.js": "^2.35.3",
+    "plotly.js-dist-min": "^3.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-player": "^3.3.1",
     "react-plotly.js": "^2.6.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "recharts": "^3.0.0",
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5",
+    "xlx": "^1.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -50,6 +61,9 @@
     ]
   },
   "devDependencies": {
-    "react-router-dom": "^6.25.1"
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "react-router-dom": "^6.25.1",
+    "tailwindcss": "^4.1.11"
   }
 }
