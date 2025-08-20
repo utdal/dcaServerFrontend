@@ -10,10 +10,10 @@ const UnifiedTopBar = () => {
         <Link to="/" className="site-title">Coevolutionary Tools</Link>
       </div>
       <nav className="nav-links-utb">
-        <a href="https://morcoslaboratory.org/">Morcos Lab</a>
+        {/* <a href="https://morcoslaboratory.org/">Morcos Lab</a> */}
         <a href="https://morcoslaboratory.org/?page_id=38">Research</a>
         <Link to="/publications">Publications</Link>
-        <Link to="/lab-team">Directory</Link>
+        {/* <Link to="/lab-team">Directory</Link> */}
         <Link to="/guide-for-biologists">Guide</Link>
         <Link to="/tasks">Tasks</Link>
       </nav>

@@ -78,13 +78,13 @@ function App() {
                   />
                   <Tile
                     toolName="ProSSpeC"
-                    description={<>ProSSpeC: Protease (NIa) Substrate Specificity Calculator<br/><br/><i>Comming Soon!</i></>}
-                    link="#"
+                    description={<>ProSSpeC: Protease (NIa) Substrate Specificity Calculator<br/><br/>Calculates Hamiltonian Specificity function for Nuclear incision a proteases and potential protein substrates</>}
+                    link="https://coevolutionary.org/prosspec"
                     imageSrc={prosspecLogo}
                   />
                   <Tile
                     toolName="Sequence Evolution with Epistatic Contributions"
-                    description={<>SEEC<br/><br/><i>Comming Soon!</i></>}
+                    description={<>SEEC<br/><br/>Simulates protein evolution using inferred epistasis from natural protein families.</>}
                     link="/seec"
                     imageSrc={seecLogo}      
                   />
