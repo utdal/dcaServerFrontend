@@ -1,4 +1,5 @@
-const apiBaseUrl = 'http://localhost:8000/api/';
+export const apiBaseUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/';
+export const apiMediaUrl = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL.replace('/api/', '') : 'http://localhost:8000';
 // const apiBaseUrl = 'http://18.213.103.176/api/';
 
 
@@ -316,7 +317,7 @@ export class StructureContacts extends APIDataObject {
 export class EvolutionSimulation extends APIDataObject {
     static objectName = 'evolution-simulation';
 
-    constructor({ id, user, created_at, expires, msa_file, nt_sequence, steps, temperature, result_file, task_id, completed, error_message, percent}) {
+    constructor({ id, user, created_at, expires, msa_file, nt_sequence, steps, temperature, result_file, task_id, completed, error_message, percent }) {
         super({ id, user, created: created_at, expires });
         this.msa_file = msa_file;
         this.nt_sequence = nt_sequence;
@@ -439,7 +440,7 @@ export async function computeDca({ msaId, theta }) {
 }
 
 
-export async function mapResidues({ dcaId, pdbId, chain1, chain2, authChainIdSupplied, authResidueIdSupplied}) {
+export async function mapResidues({ dcaId, pdbId, chain1, chain2, authChainIdSupplied, authResidueIdSupplied }) {
     return await startTask('map-residues', {
         dca_id: dcaId,
         pdb_id: pdbId,
@@ -451,7 +452,7 @@ export async function mapResidues({ dcaId, pdbId, chain1, chain2, authChainIdSup
 }
 
 
-export async function generateContacts({ pdbId, caOnly, distThresh, isCIF, authChainIdSupplied, authResidueIdSupplied}) {
+export async function generateContacts({ pdbId, caOnly, distThresh, isCIF, authChainIdSupplied, authResidueIdSupplied }) {
     return await startTask('generate-contacts', {
         pdb_id: pdbId,
         ca_only: caOnly,

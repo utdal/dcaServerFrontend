@@ -9,7 +9,20 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
+
+html, body, #root {
+  min-height: 100vh;
+}
+
+@media (prefers-color-scheme: dark) {
+  html, body, #root {
+    background-color: rgba(60, 60, 60, 255);
+    color: #fdf7f3;
+  }
+}
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

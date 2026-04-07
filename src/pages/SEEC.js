@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { startEvolutionSimulation, generateMsa, uploadMsa } from '../backend/api';
-import{
+import {
   Box,
   Button,
   Typography,
@@ -14,49 +14,50 @@ import { Link } from 'react-router-dom';
 import './SEEC.css'
 import TemperatureInput from '../components/TemperatureInput';
 import StepsInput from '../components/StepsInput';
-import {aaToNt} from '../functions/aaToNt';
-import {ntToAa} from '../functions/ntToAA';
+import { aaToNt } from '../functions/aaToNt';
+import { ntToAa } from '../functions/ntToAA';
 const SEEC = () => {
-    const navigate = useNavigate();
-    const defaultMaxGaps = 20;
-    const defaultECutoff = 0.2;
-    const [inputType, setInputType] = useState('AminoAcid');
-    const [inputMSA, setInputMSA] = useState('');
-    const [inputFile, setInputFile] = useState(null);
-    const [aaSequence, setAaSequence] = useState('');
-    const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: true });
-    const [ECutoff, setECutoff] = useState(defaultECutoff);
-    const [maxContGaps, setMaxContGaps] = useState(defaultMaxGaps);
+  const navigate = useNavigate();
+  const defaultMaxGaps = 20;
+  const defaultECutoff = 0.2;
+  const [inputType, setInputType] = useState('AminoAcid');
+  const [inputMSA, setInputMSA] = useState('');
+  const [inputFile, setInputFile] = useState(null);
+  const [aaSequence, setAaSequence] = useState('');
+  const [selectedFileTypes, setSelectedFileTypes] = useState({ MSA: false, Seed: true });
+  const [ECutoff, setECutoff] = useState(defaultECutoff);
+  const [maxContGaps, setMaxContGaps] = useState(defaultMaxGaps);
 
-    const [sequence, setSequence] = useState('');
-    const [steps, setSteps] = useState(0);
-    const [temperature, setTemperature] = useState(1.0);
-    const [result, setResult] = useState(null);
-    const [error, setError] = useState(null);
-    const [ntSequence, setNtSequence] = useState('');
-    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    useEffect(()=>{
-      const cleaned = sequence.replace(/\s+/g, '');
-      if(inputType === 'AminoAcid'){
-        const [nt_seq, aa_filtered] = aaToNt(cleaned);
-        setNtSequence(nt_seq);
-        const sequenceElement = document.getElementById('sequence');
-        sequenceElement.textContent = aa_filtered;
-        setAaSequence(aa_filtered);
-      }
-      else{
-        const filtered = cleaned.replace(/[^GgCcTtAa-]/g, '');
-        const sequenceElement = document.getElementById('sequence');
-        sequenceElement.textContent = filtered;
-        setNtSequence(filtered);
-        setAaSequence(ntToAa(filtered)[0]);
-      }
-    },[inputType, sequence]);
+  const [sequence, setSequence] = useState('');
+  const [steps, setSteps] = useState(0);
+  const [temperature, setTemperature] = useState(1.0);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [ntSequence, setNtSequence] = useState('');
+  const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-    useEffect(()=>{
-      console.log(ntSequence);
-    },[ntSequence]);
+  useEffect(() => {
+    const cleaned = sequence.replace(/\s+/g, '');
+    if (inputType === 'AminoAcid') {
+      const [nt_seq, aa_filtered] = aaToNt(cleaned);
+      setNtSequence(nt_seq);
+      const sequenceElement = document.getElementById('sequence');
+      sequenceElement.textContent = aa_filtered;
+      setAaSequence(aa_filtered);
+    }
+    else {
+      const filtered = cleaned.replace(/[^GgCcTtAa-]/g, '');
+      const sequenceElement = document.getElementById('sequence');
+      sequenceElement.textContent = filtered;
+      setNtSequence(filtered);
+      setAaSequence(ntToAa(filtered)[0]);
+    }
+  }, [inputType, sequence]);
+
+  useEffect(() => {
+    console.log(ntSequence);
+  }, [ntSequence]);
 
 
   const handleFileTypeChange = (type) => {
@@ -67,18 +68,18 @@ const SEEC = () => {
     }));
   };
   const handleInputMSAChange = (event) => {
-    if (selectedFileTypes.MSA){
+    if (selectedFileTypes.MSA) {
       setInputFile(event.target.files[0]);
-      
+
     }
   };
 
-  useEffect(()=>{
-    if (selectedFileTypes.Seed===true){
+  useEffect(() => {
+    if (selectedFileTypes.Seed === true) {
       setInputMSA(aaSequence);
       console.log(aaSequence);
     }
-  },[aaSequence, selectedFileTypes]);
+  }, [aaSequence, selectedFileTypes]);
   const handleMaxContGapsChange = (event) => {
     if (((!isNaN(event.target.value)) || event.target.value === '')) {
       setMaxContGaps(event.target.value);
@@ -89,12 +90,20 @@ const SEEC = () => {
     e.preventDefault();
     setError(null);
 
-
     if (!sequence.trim()) {
-      setError("Please enter nucleotide sequence.");
+      setError("Please enter a sequence.");
+      return;
+    }
+    if (!ntSequence.trim()) {
+      setError("Sequence could not be converted to nucleotide form. Please check your input.");
+      return;
+    }
+    if (!steps || Number(steps) <= 0) {
+      setError("Please enter a number of steps greater than 0.");
       return;
     }
 
+    setSubmitting(true);
     try {
       let msaId = null;
       if (selectedFileTypes.Seed) {
@@ -104,17 +113,17 @@ const SEEC = () => {
           maxGaps: Number(maxContGaps) || undefined
         });
         msaId = msaTask.id;
-        
-        if (localStorage.getItem('tasks')){
+
+        if (localStorage.getItem('tasks')) {
           let tasks = JSON.parse(localStorage.getItem('tasks'));
-          tasks.push({id: msaTask.id, isSimulation: false});
+          tasks.push({ id: msaTask.id, expires: msaTask.expires, isSimulation: false });
           localStorage.setItem('tasks', JSON.stringify(tasks));
         }
-        else{
-          localStorage.setItem('tasks', JSON.stringify([{id: msaTask.id, isSimulation: false}]));
+        else {
+          localStorage.setItem('tasks', JSON.stringify([{ id: msaTask.id, expires: msaTask.expires, isSimulation: false }]));
         }
       } else {
-        if (!inputFile){
+        if (!inputFile) {
           setError("Please upload an MSA file.");
           return;
         }
@@ -122,7 +131,7 @@ const SEEC = () => {
         msaId = msa.id;
       }
       console.log("MSA ID", msaId);
-      const { simulationId } = await startEvolutionSimulation({
+      const { task: simTask, simulationId } = await startEvolutionSimulation({
         msa_id: msaId,
         ntSequence: ntSequence,
         steps: steps,
@@ -131,115 +140,123 @@ const SEEC = () => {
 
       console.log(simulationId)
       console.log("Simulation ID", simulationId);
-      if (localStorage.getItem('tasks')){
+      if (localStorage.getItem('tasks')) {
         let tasks = JSON.parse(localStorage.getItem('tasks'));
-        tasks.push({id: simulationId, isSimulation: true});
+        tasks.push({ id: simulationId, expires: simTask.expires, isSimulation: true });
         localStorage.setItem('tasks', JSON.stringify(tasks));
       }
-      else{
-        localStorage.setItem('tasks', JSON.stringify([{id: simulationId, isSimulation: true}]));
+      else {
+        localStorage.setItem('tasks', JSON.stringify([{ id: simulationId, expires: simTask.expires, isSimulation: true }]));
       }
       navigate(`/seec-results/?resultID=${simulationId}`);
     } catch (err) {
       setError("Network error: " + err.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
 
 
-    return ( 
-        <Box>
-        <TopBar>
-            <li>
-                <a href='https://morcoslaboratory.org/'>
-                Morcos Lab
-                </a>
-            </li>
-            <li>
-                <Link to='/'>
-                Home
-                </Link>
-            </li>
-        </TopBar>
-            <div style={{marginTop:'50px'}}>
-              <Tooltip title='Simulates protein evolution using inferred epistasis from natural protein families.'>
-                <Button variant='text'
-                sx={{
-                  background: 'none',
-                  border: 'none',
-                  padding: 0,
-                  minWidth: 0,
-                  textTransform: 'none',
-                  color: 'inherit',
-                  boxShadow: 'none',
-                  fontSize: '30px',
-                  fontWeight: 'bold'
-                }}
-                >
-                  Sequence evolution with epistatic contributions
-                </Button>
-              </Tooltip>
+  return (
+    <Box>
+      <TopBar>
+        <li>
+          <a href='https://morcoslaboratory.org/'>
+            Morcos Lab
+          </a>
+        </li>
+        <li>
+          <Link to='/'>
+            Home
+          </Link>
+        </li>
+      </TopBar>
+      <div style={{ marginTop: '50px' }}>
+        <Tooltip title='Simulates protein evolution using inferred epistasis from natural protein families.'>
+          <Button variant='text'
+            sx={{
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              minWidth: 0,
+              textTransform: 'none',
+              color: 'inherit',
+              boxShadow: 'none',
+              fontSize: '30px',
+              fontWeight: 'bold'
+            }}
+          >
+            Sequence evolution with epistatic contributions
+          </Button>
+        </Tooltip>
+      </div>
+      <Box>
+        <form onSubmit={handleSubmit} >
+          <Box className="container-seec">
+            <div className="cs-seq-input">
+              <Box style={{ width: '40%' }}>
+                <SequenceInput inputType={inputType} setInputType={setInputType} sequence={sequence} setSequence={setSequence} />
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+                  <p id='sequence' style={{
+                    color: prefersDarkScheme.matches ? '#fdf7f372' : '#1f1f1f72',
+                    whiteSpace: 'pre-wrap',
+                    overflowWrap: 'break-word',
+                    wordBreak: 'break-all',
+                  }}></p>
+                </Box>
+              </Box>
             </div>
-            <Box>
-              <form onSubmit={handleSubmit} >
-                <Box className="container-seec">
-                  <div className="cs-seq-input">
-                    <Box style={{ width: '40%' }}>
-                      <SequenceInput inputType={inputType} setInputType={setInputType} sequence={sequence} setSequence={setSequence}/>
-                      <Box sx={{display:'flex', flexWrap:'wrap', justifyContent:'center'}}>
-                        <p id='sequence' style={{
-                          color: prefersDarkScheme.matches ? '#fdf7f372' : '#1f1f1f72',
-                          whiteSpace: 'pre-wrap',
-                          overflowWrap: 'break-word',
-                          wordBreak: 'break-all',
-                        }}></p>
-                      </Box>
-                    </Box>
-                  </div>
-                  <div className='msa-description'>
-                    <h5>Upload MSA in FASTA format</h5>
-                  </div>
-                  <div className="cs-msa">
-                    <div style={{width: '50%', display:'flex', flexDirection:'column', alignItems:'center'}}>
-                    <MSAInput
-                      inputType={selectedFileTypes.Seed ? 'Seed' : 'MSA'}
-                      handleInputMSAChange={handleInputMSAChange}
-                      handleFileTypeChange={handleFileTypeChange}
-                    />
-                    </div>
-                    <div>
-                    {inputFile && (
-                      <Typography fontStyle='italic' variant="body2" sx={{ marginTop: 1, color: prefersDarkScheme.matches ? '#fdf7f372' : '#1f1f1f86' }}>
-                        Selected file: {inputFile.name}
-                      </Typography>
-                    )}
-                    </div>
-                  </div>
-                  
-                  <div className='temp-description'>
-                    <h5>Temperature for evolving the sequence</h5>
-                  </div>
-                  <div className="cs-temp-input">
-                    <TemperatureInput temperature={temperature} SetTemperature={setTemperature}/>
-                  </div>
-                  <div className='steps-description'>
-                    <h5>Number of Evolutionary Steps</h5>
-                  </div>
-                  <div className="cs-steps">
-                    <StepsInput steps={steps} SetSteps={setSteps}/>
-                  </div>
-                </Box>
-                <Box sx={{display:'flex', justifyContent:'flex-end', m:'50px'}}>
-                <Button type="submit" variant="contained" color="warning">
-                  Submit
-                </Button>
-                </Box>
-              </form>
-            </Box>
+            <div className='msa-description'>
+              <h5>Upload MSA in FASTA format</h5>
+            </div>
+            <div className="cs-msa">
+              <div style={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <MSAInput
+                  inputType={selectedFileTypes.Seed ? 'Seed' : 'MSA'}
+                  handleInputMSAChange={handleInputMSAChange}
+                  handleFileTypeChange={handleFileTypeChange}
+                />
+              </div>
+              <div>
+                {inputFile && (
+                  <Typography fontStyle='italic' variant="body2" sx={{ marginTop: 1, color: prefersDarkScheme.matches ? '#fdf7f372' : '#1f1f1f86' }}>
+                    Selected file: {inputFile.name}
+                  </Typography>
+                )}
+              </div>
+            </div>
+
+            <div className='temp-description'>
+              <h5>Temperature for evolving the sequence</h5>
+            </div>
+            <div className="cs-temp-input">
+              <TemperatureInput temperature={temperature} SetTemperature={setTemperature} />
+            </div>
+            <div className='steps-description'>
+              <h5>Number of Evolutionary Steps</h5>
+            </div>
+            <div className="cs-steps">
+              <StepsInput steps={steps} SetSteps={setSteps} />
+            </div>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 2, m: '50px' }}>
+            {error && <Typography color="error" variant="body2">{error}</Typography>}
+            <Button
+              type="submit"
+              variant="contained"
+              color="warning"
+              disabled={submitting}
+            >
+              {submitting ? 'Submitting...' : 'Submit'}
+            </Button>
+          </Box>
+        </form>
+      </Box>
 
 
-        </Box>
-    );
+    </Box>
+  );
 }
- 
+
 export default SEEC;

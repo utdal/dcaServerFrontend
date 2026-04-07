@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import HomeButton from '../components/HomeButton'; 
+import HomeButton from '../components/HomeButton';
 
 const DcaTaskList = () => {
     const [taskIds, setTaskIds] = useState([]);
 
     useEffect(() => {
         const lastTaskIdsFromStorage = JSON.parse(localStorage.getItem('lastTaskIds')) || [];
-        const now = new Date().getTime();
-        const last24Hours = 24 * 60 * 60 * 1000;
-        const recentTaskIds = lastTaskIdsFromStorage.filter(task => now - task.time <= last24Hours);
+        const now = new Date();
+        const fallback24h = 24 * 60 * 60 * 1000;
+        const recentTaskIds = lastTaskIdsFromStorage.filter(task => {
+            // Use expires from backend if available, otherwise fall back to 24h from save time
+            if (task.expires) return new Date(task.expires) > now;
+            return now - task.time <= fallback24h;
+        });
         setTaskIds(recentTaskIds);
     }, []);
 
@@ -38,7 +42,7 @@ const DcaTaskList = () => {
 
     const containerStyle = {
         padding: '20px',
-        marginTop: '80px', 
+        marginTop: '80px',
     };
 
     return (

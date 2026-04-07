@@ -1,22 +1,45 @@
 .grid-x line,
 .grid-y line {
-  stroke: lightgray;
-  stroke-opacity: 0.3;
-  shape-rendering: crispEdges;
+    stroke: lightgray;
+    stroke-opacity: 0.3;
+    shape-rendering: crispEdges;
 }
 
 .grid-x path,
 .grid-y path {
     display: none;
 }
-.graph-title, .axis{
+
+.graph-title,
+.axis {
     font-size: 20px;
     font-weight: bold;
     fill: #333;
 }
-.axis{
+
+.axis {
     font-size: 16px;
 }
-.scale-graph{
+
+.scale-graph {
     font-size: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+
+    .graph-title,
+    .axis {
+        fill: #fdf7f3;
+    }
+
+    /* D3 axis tick marks and lines */
+    .scale-graph .tick line,
+    .scale-graph path {
+        stroke: #aaa;
+    }
+
+    /* D3 axis tick text */
+    .scale-graph .tick text {
+        fill: #fdf7f3;
+    }
 }

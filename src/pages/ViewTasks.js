@@ -35,13 +35,20 @@ const ViewTasks = () => {
                 try {
                     setMessage('Loading');
 
-                    if (!localStorage.getItem('tasks')){
+                    if (!localStorage.getItem('tasks')) {
                         localStorage.setItem('tasks', JSON.stringify([]));
                     }
-                
+
                     const combined = JSON.parse(localStorage.getItem('tasks'));
-                    console.log(combined);
-                    setTasksList(combined);
+                    const now = new Date();
+                    // Keep tasks that have no expires field (legacy) or haven't expired yet
+                    const activeTasks = combined.filter(t => !t.expires || new Date(t.expires) > now);
+                    // Persist cleaned list back so expired entries don't accumulate
+                    if (activeTasks.length !== combined.length) {
+                        localStorage.setItem('tasks', JSON.stringify(activeTasks));
+                    }
+                    console.log(activeTasks);
+                    setTasksList(activeTasks);
                     setMessage(null);
 
                 } catch (error) {
@@ -64,12 +71,12 @@ const ViewTasks = () => {
             <div>
                 <TopBar>
                     <li>
-                        <Link to="/" style={{padding: '0', margin: '0'}}>
+                        <Link to="/" style={{ padding: '0', margin: '0' }}>
                             Home
                         </Link>
                     </li>
                 </TopBar>
-                <p style={{ color: COLORS.primary, fontStyle: 'italic', marginTop: '50px'}}>{message}</p>
+                <p style={{ color: COLORS.primary, fontStyle: 'italic', marginTop: '50px' }}>{message}</p>
             </div>
         );
     }
@@ -78,22 +85,22 @@ const ViewTasks = () => {
         <div>
             <TopBar>
                 <li>
-                    <Link to="/" style={{padding: '0', margin: '0'}}>
+                    <Link to="/" style={{ padding: '0', margin: '0' }}>
                         Home
                     </Link>
                 </li>
             </TopBar>
-        <div style={{ padding: '20px', backgroundColor: COLORS.cardBg, borderRadius: '10px', margin: '20px', marginTop: '50px'}}>
-            <h1 style={{ color: COLORS.primary }}>Tasks</h1>
-            {tasksList.length ? tasksList.map(item => (
-                <TaskTile
-                    key={item.id}
-                    task_id={item.id}
-                    contactsId={item.contactsId}
-                    mappedId={item.mappedId}
-                    isSimulation={item.isSimulation}
-                    onDelete={handleDeleteTask}
-                />
+            <div style={{ padding: '20px', backgroundColor: COLORS.cardBg, borderRadius: '10px', margin: '20px', marginTop: '50px' }}>
+                <h1 style={{ color: COLORS.primary }}>Tasks</h1>
+                {tasksList.length ? tasksList.map(item => (
+                    <TaskTile
+                        key={item.id}
+                        task_id={item.id}
+                        contactsId={item.contactsId}
+                        mappedId={item.mappedId}
+                        isSimulation={item.isSimulation}
+                        onDelete={handleDeleteTask}
+                    />
                 )) : (
                     <p style={{ color: COLORS.text }}>You have no tasks.</p>
                 )}

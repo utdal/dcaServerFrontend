@@ -7,7 +7,7 @@ import MFDCASettings from '../components/MFDCASettings';
 import { ThemeProvider } from '@mui/material/styles';
 import UnifiedTopBar from '../components/UnifiedTopBar';
 import theme from '../theme';
-import{
+import {
   Box,
   Button,
   Select,
@@ -40,7 +40,7 @@ const CoevolvingPairs = () => {
   const [theta, setTheta] = useState(defaultTheta);
   const [analysisMethod, setAnalysisMethod] = useState('mfDCA');
   const isValidNumber = (val) => val.toString().trim() !== '' && !isNaN(Number(val));
- 
+
   const isFormValid =
     (inputMSA.trim() !== '' || inputFile !== null) &&
     (inputPDBID.trim() !== '' || inputPDBFile !== null) &&
@@ -51,7 +51,7 @@ const CoevolvingPairs = () => {
     isValidNumber(distThresh) &&
     ECutoff !== '-';
 
-  
+
 
   const handleFileTypeChange = (type) => {
     setSelectedFileTypes((prev) => ({
@@ -69,9 +69,9 @@ const CoevolvingPairs = () => {
   };
 
   const handleInputMSAChange = (event) => {
-    if (selectedFileTypes.Seed){
+    if (selectedFileTypes.Seed) {
       setInputMSA(event.target.value.toUpperCase());
-      
+
     }
     else setInputFile(event.target.files[0]);
 
@@ -83,7 +83,7 @@ const CoevolvingPairs = () => {
       setInputPDBFile(event.target.files[0]);
       setInputPDBID('');
     }
-    else{
+    else {
       setInputPDBID(event.target.value);
       setInputPDBFile(null);
     }
@@ -122,7 +122,7 @@ const CoevolvingPairs = () => {
   };
 
   const handleDistThreshChange = (event) => {
-    if ((!isNaN(event.target.value) || event.target.value === '') && (!event.target.value.includes('-'))){
+    if ((!isNaN(event.target.value) || event.target.value === '') && (!event.target.value.includes('-'))) {
       setDistThresh(event.target.value);
     }
   };
@@ -163,13 +163,13 @@ const CoevolvingPairs = () => {
         maxGaps: Number(maxContGaps) || undefined
       });
       msaId = msaTask.id;
-      if (localStorage.getItem('tasks')){
+      if (localStorage.getItem('tasks')) {
         let tasks = JSON.parse(localStorage.getItem('tasks'));
-        tasks.push({id: msaTask.id, isSimulation: false});
+        tasks.push({ id: msaTask.id, expires: msaTask.expires, isSimulation: false });
         localStorage.setItem('tasks', JSON.stringify(tasks));
       }
-      else{
-        localStorage.setItem('tasks', JSON.stringify([{id: msaTask.id, isSimulation: false}]));
+      else {
+        localStorage.setItem('tasks', JSON.stringify([{ id: msaTask.id, expires: msaTask.expires, isSimulation: false }]));
       }
     } else {
       const msa = await uploadMsa({ msa: inputFile });
@@ -181,11 +181,11 @@ const CoevolvingPairs = () => {
     let pdbId = null;
     if (inputPDBFile) {
       if (selectedPDBTypes.CIF === true) {
-        const pdb = await uploadPDB({ pdbFile: inputPDBFile, pdbFileType: "cif"});
+        const pdb = await uploadPDB({ pdbFile: inputPDBFile, pdbFileType: "cif" });
         pdbId = pdb.id;
       }
       else {
-        const pdb = await uploadPDB({ pdbFile: inputPDBFile, pdbFileType: "pdb"});
+        const pdb = await uploadPDB({ pdbFile: inputPDBFile, pdbFileType: "pdb" });
         pdbId = pdb.id;
       }
     }
@@ -206,7 +206,7 @@ const CoevolvingPairs = () => {
       authChainIdSupplied: isAuthChain,
       authResidueIdSupplied: isAuthResidue
     });
-    
+
     const contactsTask = await generateContacts({
       pdbId: pdbId,
       caOnly: caOnly,
@@ -215,9 +215,9 @@ const CoevolvingPairs = () => {
       authChainIdSupplied: isAuthChain,
       authResidueIdSupplied: isAuthResidue
     });
-    if (localStorage.getItem('tasks')){
+    if (localStorage.getItem('tasks')) {
       let tasks = JSON.parse(localStorage.getItem('tasks'));
-      tasks.push({id: dcaTask.id, contactsId: contactsTask.id, mappedId: residuesTask.id, isSimulation: false});
+      tasks.push({ id: dcaTask.id, expires: dcaTask.expires, contactsId: contactsTask.id, mappedId: residuesTask.id, isSimulation: false });
       localStorage.setItem('tasks', JSON.stringify(tasks));
       console.log(dcaTask.id);
       console.log(contactsTask.id);
@@ -226,20 +226,20 @@ const CoevolvingPairs = () => {
     const url = '/coevolving-pairs-results/?structure_contacts=' + contactsTask.id + '&mapped_di=' + residuesTask.id;
     window.open(url, '_blank');
   };
-  useEffect(()=>{
+  useEffect(() => {
     console.log(selectedFileTypes.Seed)
   }, [selectedFileTypes])
   return (
     <>
-       <UnifiedTopBar />
+      <UnifiedTopBar />
       <ThemeProvider theme={theme}>
-          <form onSubmit={handleSubmit}>
-            <div style={{marginTop:'50px'}}>
-              <Tooltip title='Here, a user may supply a sequence corresponding to a complete protein or a portion of that protein and identify which residue sites may be directly coupled with others.
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginTop: '50px' }}>
+            <Tooltip title='Here, a user may supply a sequence corresponding to a complete protein or a portion of that protein and identify which residue sites may be directly coupled with others.
         A Multiple Sequence Alignment provided or produced by a seed sequence that has been supplied is used as input for the coevolutionary model chosen.
         Finally, the pairs are returned, mapped to the protein structure of interest.'>
-                <Button variant='text'
-                  sx={{
+              <Button variant='text'
+                sx={{
                   background: 'none',
                   border: 'none',
                   padding: 0,
@@ -250,130 +250,130 @@ const CoevolvingPairs = () => {
                   fontSize: '40px',
                   fontWeight: 'bold'
                 }}
-                >
-                  Coevolving Pairs
-                </Button>
-              </Tooltip>
-            </div>
-            <div style={{marginTop:"40px"}}>
+              >
+                Coevolving Pairs
+              </Button>
+            </Tooltip>
+          </div>
+          <div style={{ marginTop: "40px" }}>
             <MSAInput
               inputType={selectedFileTypes.Seed ? 'Seed' : 'MSA'}
               inputMSA={selectedFileTypes.Seed ? inputMSA : inputFile}
               handleInputMSAChange={handleInputMSAChange}
               handleFileTypeChange={handleFileTypeChange}
             />
-            </div>
-            <div style={{marginTop:'40px'}}>
+          </div>
+          <div style={{ marginTop: '40px' }}>
             <PDBInput
               inputPDBID={inputPDBID}
               inputPDBFile={inputPDBFile}
               handleInputPDBChange={handleInputPDBChange}
               handlePDBChange={handlePDBChange}
             />
-            </div>
-            <div>
-              <h3 style={{marginTop:'40px'}}>PDB Settings</h3>
-              <PDBSettings
-                distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange}
-                chain1={chain1} handleChain1Change={handleChain1Change} chain2={chain2} handleChain2Change={handleChain2Change}
-                isAuthChain={isAuthChain} handleIsAuthChainChange={handleIsAuthChainChange} isAuthResidue={isAuthResidue} handleIsAuthResidueChange={handleIsAuthResidueChange}
-                selectedPDBTypes={selectedPDBTypes} />
-              <AdvancedSettings
-                  caSettings={
-                  <>
-                    <p style={{justifyContent:'center', display:'flex', color: prefersDarkScheme.matches && '#fdf7f3'}}>Coevolutionary Analysis Method</p>
-                    <Box sx={{display:'flex', justifyContent:'center',}}>
+          </div>
+          <div>
+            <h3 style={{ marginTop: '40px' }}>PDB Settings</h3>
+            <PDBSettings
+              distThresh={distThresh} handleDistThreshChange={handleDistThreshChange} caOnly={caOnly} handleCaOnlyChange={handleCaOnlyChange}
+              chain1={chain1} handleChain1Change={handleChain1Change} chain2={chain2} handleChain2Change={handleChain2Change}
+              isAuthChain={isAuthChain} handleIsAuthChainChange={handleIsAuthChainChange} isAuthResidue={isAuthResidue} handleIsAuthResidueChange={handleIsAuthResidueChange}
+              selectedPDBTypes={selectedPDBTypes} />
+            <AdvancedSettings
+              caSettings={
+                <>
+                  <p style={{ justifyContent: 'center', display: 'flex', color: prefersDarkScheme.matches && '#fdf7f3' }}>Coevolutionary Analysis Method</p>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', }}>
                     <Select
-                    labelId="coevolutionary-analysis-method"
-                    id="analysis-method-select"
-                    value={analysisMethod}
-                    onChange={handleAnalysisMethodChange}
-                    variant="filled"
-                    sx={{
-                      minWidth: '100px',
-                      marginTop: '15px',
-                      height: '48px',
-                      ...(prefersDarkScheme.matches && {
-                        backgroundColor: '#333',
-                        color: '#fdf7f3',
-                        '& .MuiSelect-icon': {
+                      labelId="coevolutionary-analysis-method"
+                      id="analysis-method-select"
+                      value={analysisMethod}
+                      onChange={handleAnalysisMethodChange}
+                      variant="filled"
+                      sx={{
+                        minWidth: '100px',
+                        marginTop: '15px',
+                        height: '48px',
+                        ...(prefersDarkScheme.matches && {
+                          backgroundColor: '#333',
                           color: '#fdf7f3',
-                        },
-                      }),
-                    }}
-                    inputProps={{
-                      sx: {
-                        padding: '10px 12px',
-                      }
-                    }}
-                    MenuProps={{
-                      PaperProps: {
-                        sx: {
-                          ...(prefersDarkScheme.matches && {
-                            backgroundColor: '#333',
+                          '& .MuiSelect-icon': {
                             color: '#fdf7f3',
-                          }),
+                          },
+                        }),
+                      }}
+                      inputProps={{
+                        sx: {
+                          padding: '10px 12px',
+                        }
+                      }}
+                      MenuProps={{
+                        PaperProps: {
+                          sx: {
+                            ...(prefersDarkScheme.matches && {
+                              backgroundColor: '#333',
+                              color: '#fdf7f3',
+                            }),
+                          },
                         },
-                      },
-                    }}
-                  >
-                    <MenuItem
-                      value={'mfDCA'}
-                      sx={prefersDarkScheme.matches && {
-                        backgroundColor: '#333',
-                        color: '#fdf7f3',
                       }}
                     >
-                      mean-field DCA
-                    </MenuItem>
+                      <MenuItem
+                        value={'mfDCA'}
+                        sx={prefersDarkScheme.matches && {
+                          backgroundColor: '#333',
+                          color: '#fdf7f3',
+                        }}
+                      >
+                        mean-field DCA
+                      </MenuItem>
 
-                    <MenuItem
-                      value={''}
-                      sx={prefersDarkScheme.matches && {
-                        backgroundColor: '#333',
-                        color: '#fdf7f3',
-                      }}
-                    >
-                      More to Come!
-                    </MenuItem>
-                  </Select>
+                      <MenuItem
+                        value={''}
+                        sx={prefersDarkScheme.matches && {
+                          backgroundColor: '#333',
+                          color: '#fdf7f3',
+                        }}
+                      >
+                        More to Come!
+                      </MenuItem>
+                    </Select>
                   </Box>
 
-                  {analysisMethod === 'mfDCA' &&(
+                  {analysisMethod === 'mfDCA' && (
                     <MFDCASettings ECutoff={ECutoff} handleECutoffChange={handleECutoffChange} defaultTheta={defaultTheta} theta={theta} handleThetaChange={handleThetaChange} />)
                   }
                 </>
-                }
-                msaSettings={
-                  <Box>
-                    <div style={{display:'flex', justifyContent:'center'}}>
-                      <p style={{width:'40vh', textAlign:'center', color: prefersDarkScheme.matches && '#fdf7f3'}}>Max Number of Continuous Gaps (as percentage of MSA length):</p>
-                    </div>
-                    <div style={{display:'flex', justifyContent:'center', marginTop:'15px'}}>
-                      <Slider
-                        defaultValue={defaultMaxGaps}
-                        value={maxContGaps}
-                        onChange={handleMaxContGapsChange}
-                        step={1}
-                        min={0}
-                        max={100}
-                        style={{width: '40%'}}
-                      />
+              }
+              msaSettings={
+                <Box>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <p style={{ width: '40vh', textAlign: 'center', color: prefersDarkScheme.matches && '#fdf7f3' }}>Max Number of Continuous Gaps (as percentage of MSA length):</p>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '15px' }}>
+                    <Slider
+                      defaultValue={defaultMaxGaps}
+                      value={maxContGaps}
+                      onChange={handleMaxContGapsChange}
+                      step={1}
+                      min={0}
+                      max={100}
+                      style={{ width: '40%' }}
+                    />
 
-                      <p style={{color:'rgba(50, 50, 50, 0.4)', alignContent:'center', marginLeft:'10px'}}>{maxContGaps}</p>
-                    </div>
-                  </Box>
-                }
-                renderMSA={selectedFileTypes.Seed}
-              ></AdvancedSettings>
+                    <p style={{ color: 'rgba(50, 50, 50, 0.4)', alignContent: 'center', marginLeft: '10px' }}>{maxContGaps}</p>
+                  </div>
+                </Box>
+              }
+              renderMSA={selectedFileTypes.Seed}
+            ></AdvancedSettings>
 
-              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, margin: '10px 20px' }} disabled={!isFormValid}>
-                Submit
-              </Button>
-            </div>
-          </form>
-          </ThemeProvider>
-        </>
+            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, margin: '10px 20px' }} disabled={!isFormValid}>
+              Submit
+            </Button>
+          </div>
+        </form>
+      </ThemeProvider>
+    </>
   );
 }
 
