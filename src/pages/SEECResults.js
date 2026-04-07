@@ -50,6 +50,11 @@ const SEECResults = () => {
                     setResult(sim);
                     try {
                         let resultUrl = sim.result_file;
+                        // Secure Mixed Content Upgrade: If the API returns HTTP but we are on HTTPS, upgrade it.
+                        if (resultUrl && resultUrl.startsWith('http://') && window.location.protocol === 'https:') {
+                            resultUrl = resultUrl.replace(/^http:\/\//i, 'https://');
+                        }
+
                         if (resultUrl && !resultUrl.startsWith('http')) {
                             resultUrl = `${apiMediaUrl}${resultUrl.startsWith('/') ? '' : '/'}${resultUrl}`;
                             console.log(resultUrl);
